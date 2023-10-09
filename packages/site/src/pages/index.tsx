@@ -1,10 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   connectSnap,
   getSnap,
   isLocalSnap,
+  sendAddWalletAddress,
   sendHello,
   shouldDisplayReconnectButton,
 } from '../utils';
@@ -108,6 +109,8 @@ const Index = () => {
     ? state.isFlask
     : state.snapsDetected;
 
+  const [monitoredAddress, setMonitoredAddress] = useState('');
+
   const handleConnectClick = async () => {
     try {
       await connectSnap();
@@ -126,6 +129,17 @@ const Index = () => {
   const handleSendHelloClick = async () => {
     try {
       await sendHello();
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
+  const handleAddWalletAddressClick = async () => {
+    try {
+      const walletAddress = await sendAddWalletAddress();
+      console.log(walletAddress);
+      setMonitoredAddress(walletAddress);
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -197,6 +211,25 @@ const Index = () => {
             button: (
               <SendHelloButton
                 onClick={handleSendHelloClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            isMetaMaskReady &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+
+        <Card
+          content={{
+            title: 'Add Wallet Address',
+            description: `Display a custom message within a confirmation screen in MetaMask.  Monitored Address: ${monitoredAddress}`,
+            button: (
+              <SendHelloButton
+                onClick={handleAddWalletAddressClick}
                 disabled={!state.installedSnap}
               />
             ),

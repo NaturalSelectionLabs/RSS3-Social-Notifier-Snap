@@ -1,4 +1,4 @@
-import { OnRpcRequestHandler } from '@metamask/snaps-types';
+import { DialogType, OnRpcRequestHandler } from '@metamask/snaps-types';
 import { panel, text } from '@metamask/snaps-ui';
 
 /**
@@ -17,7 +17,7 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
       return snap.request({
         method: 'snap_dialog',
         params: {
-          type: 'confirmation',
+          type: DialogType.Confirmation,
           content: panel([
             text(`Hello, **${origin}**!`),
             text('This custom confirmation is just for display purposes.'),
@@ -27,6 +27,18 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
           ]),
         },
       });
+    case 'addWalletAddress': {
+      return snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: DialogType.Prompt,
+          content: panel([
+            text('Please enter your wallet address:'),
+            text('This will be saved in the snap storage.'),
+          ]),
+        },
+      });
+    }
     default:
       throw new Error('Method not found.');
   }

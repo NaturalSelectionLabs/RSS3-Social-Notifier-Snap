@@ -63,4 +63,17 @@ export const sendHello = async () => {
   });
 };
 
+/**
+ * Invoke the "addWalletAddress" method from the example snap.
+ */
+export const sendAddWalletAddress = async () => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: { method: 'addWalletAddress' },
+    },
+  });
+};
+
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
