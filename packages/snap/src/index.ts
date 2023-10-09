@@ -1,4 +1,9 @@
-import { DialogType, OnRpcRequestHandler } from '@metamask/snaps-types';
+import {
+  DialogType,
+  NotificationType,
+  OnCronjobHandler,
+  OnRpcRequestHandler,
+} from '@metamask/snaps-types';
 import { panel, text } from '@metamask/snaps-ui';
 
 /**
@@ -41,5 +46,22 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
     }
     default:
       throw new Error('Method not found.');
+  }
+};
+
+export const onCronjob: OnCronjobHandler = async ({ request }) => {
+  switch (request.method) {
+    case 'execute': {
+      return snap.request({
+        method: 'snap_notify',
+        params: {
+          type: NotificationType.InApp,
+          message: `hello from cron job, ${JSON.stringify(request.params)}`,
+        },
+      });
+    }
+
+    default:
+      throw new Error(`Method:[${request.method}] not found.`);
   }
 };
