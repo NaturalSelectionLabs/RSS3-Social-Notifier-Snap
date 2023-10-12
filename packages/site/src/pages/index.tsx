@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
@@ -6,6 +6,7 @@ import {
   getSnap,
   isLocalSnap,
   sendGetState,
+  sendSetState,
   shouldDisplayReconnectButton,
 } from '../utils';
 import {
@@ -14,6 +15,7 @@ import {
   ReconnectButton,
   SendHelloButton,
   Card,
+  Button,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
 
@@ -31,6 +33,18 @@ const Container = styled.div`
     margin-bottom: 2rem;
     width: auto;
   }
+`;
+
+const WalletAddressContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  gap: 1rem;
+`;
+const WalletAddressInput = styled.input`
+  padding: 1rem;
+  width: 100%;
 `;
 
 const Heading = styled.h1`
@@ -108,6 +122,8 @@ const Index = () => {
     ? state.isFlask
     : state.snapsDetected;
 
+  const [walletAddress, setWalletAddress] = useState('');
+
   const handleConnectClick = async () => {
     try {
       await connectSnap();
@@ -130,6 +146,43 @@ const Index = () => {
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
+  const handleSendSetStateClick = async () => {
+    if (walletAddress?.startsWith('0x') && walletAddress.length === 42) {
+      try {
+        const originalState = await sendGetState();
+        // if(originalState.socialCounts.)
+
+        // check address is already added
+        const isAlreadyAdded = originalState.socialCounts.find(
+          (account) =>
+            account.address.toLocaleLowerCase() ===
+            walletAddress.toLocaleLowerCase(),
+        );
+
+        if (isAlreadyAdded) {
+          console.log('already added');
+          return;
+        }
+
+        // add address
+        await sendSetState([
+          ...originalState.socialCounts,
+          {
+            address: walletAddress,
+            total: 0,
+          },
+        ]);
+
+        console.log('added');
+      } catch (e) {
+        console.error(e);
+        dispatch({ type: MetamaskActions.SetError, payload: e });
+      }
+    } else {
+      console.log('invalid wallet address');
     }
   };
 
@@ -200,6 +253,34 @@ const Index = () => {
                 onClick={handleSendGetStateClick}
                 disabled={!state.installedSnap}
               />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            isMetaMaskReady &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+
+        <Card
+          content={{
+            title: 'Add Wallet Address',
+            description: 'Add Wallet Address to monitor.',
+            button: (
+              <WalletAddressContainer>
+                <WalletAddressInput
+                  type="text"
+                  placeholder="wallet address"
+                  onChange={(e) => setWalletAddress(e.target.value)}
+                />
+                <Button
+                  onClick={handleSendSetStateClick}
+                  disabled={!state.installedSnap}
+                >
+                  Add
+                </Button>
+              </WalletAddressContainer>
             ),
           }}
           disabled={!state.installedSnap}

@@ -1,12 +1,12 @@
 {
-  "name": "snap",
+  "name": "rss3-snap",
   "version": "0.1.0",
-  "description": "The 'Hello, world!' of MetaMask Snaps, now written in TypeScript.",
+  "description": "RSS3 snap monitor your wallet address.",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
-  "license": "(MIT-0 OR Apache-2.0)",
+  "license": "Apache-2.0",
   "main": "./dist/bundle.js",
   "files": [
     "dist/",

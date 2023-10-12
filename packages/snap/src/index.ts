@@ -106,17 +106,20 @@ async function getSocialCount(address: string) {
 export const onCronjob: OnCronjobHandler = async ({ request }) => {
   switch (request.method) {
     case 'execute': {
-      // return snap.request({
-      //   method: 'snap_dialog',
-      //   params: {
-      //     type: 'alert',
-      //     content: panel([
-      //       heading('Cronjob'),
-      //       text('This dialog was triggered by a cronjob.'),
-      //     ]),
-      //   },
-      // });
-      const accounts = await getAccounts();
+      const state = await getState();
+      let accounts = await getAccounts();
+
+      const stateAddress = state.socialCounts.map((item) =>
+        item.address.toLocaleLowerCase(),
+      );
+
+      accounts = [
+        ...new Set([
+          ...stateAddress,
+          ...accounts.map((item) => item.toLocaleLowerCase()),
+        ]),
+      ];
+
       const resultPromise = accounts.map(async (address) => {
         const resp = await getSocialCount(address);
         return {
@@ -125,7 +128,6 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
         };
       });
       const socialCounts = await Promise.all(resultPromise);
-      const state = await getState();
 
       // initial state
       if (state.socialCounts.length === 0) {
@@ -164,6 +166,10 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
         // not need to notify.
         return true;
       }
+
+      await setState({
+        socialCounts,
+      });
 
       const content: any = [heading('Social Count')];
       changedSocialCounts.forEach((socialCount) => {

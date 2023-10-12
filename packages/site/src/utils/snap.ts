@@ -52,15 +52,41 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
   }
 };
 
-/**
- * Invoke the "setState" method from the example snap.
- */
+type SocialCount = {
+  address: string;
+  total: number;
+};
 
+/**
+ * Invoke the "getState" method from the example snap.
+ */
 export const sendGetState = async () => {
-  return await window.ethereum.request({
+  const resp = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { snapId: defaultSnapOrigin, request: { method: 'getState' } },
   });
+  return resp as { socialCounts: SocialCount[] };
+};
+
+/**
+ * Invoke the "setState" method from the example snap.
+ *
+ * @param socialCounts - SocialCount[] to set.
+ */
+export const sendSetState = async (socialCounts: SocialCount[]) => {
+  const resp = await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'setState',
+        params: {
+          socialCounts,
+        },
+      },
+    },
+  });
+  return resp as boolean;
 };
 
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

@@ -1,18 +1,18 @@
 {
   "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
-  "proposedName": "TypeScript Example",
+  "description": "RSS3 snap monitor your wallet address.",
+  "proposedName": "RSS3 snap",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "YVP9V6lLzlJRL3qFpmr945BbYfEF2yy+y/MHrnd0QRk=",
+    "shasum": "1ywKWhMgSTYMWNxvwZuuheZf/593xhZ4ty8i7dptrtk=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
-        "iconPath": "images/icon.svg",
-        "packageName": "snap",
+        "iconPath": "images/icon.png",
+        "packageName": "rss3-snap",
         "registry": "https://registry.npmjs.org/"
       }
     }
