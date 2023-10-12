@@ -1,18 +1,18 @@
 {
   "version": "0.1.0",
-  "description": "dmoo cron monitor your wallet address.",
-  "proposedName": "Dmoo Cron",
+  "description": "RSS3 cron monitor your wallet address.",
+  "proposedName": "RSS3 Cron",
   "repository": {
     "type": "git",
     "url": "https://github.com/dmoosocool/rss3-snap.git"
   },
   "source": {
-    "shasum": "1ywKWhMgSTYMWNxvwZuuheZf/593xhZ4ty8i7dptrtk=",
+    "shasum": "6YvKpGu7VupbgBoFvnh+nSiglbcQ7sQMH4zShwNn2+A=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
         "iconPath": "images/icon.svg",
-        "packageName": "dmoo-cron",
+        "packageName": "rss3-cron",
         "registry": "https://registry.npmjs.org/"
       }
     }
