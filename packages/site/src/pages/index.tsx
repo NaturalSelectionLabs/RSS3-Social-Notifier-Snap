@@ -1,12 +1,11 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   connectSnap,
   getSnap,
   isLocalSnap,
-  sendAddWalletAddress,
-  sendHello,
+  sendGetState,
   shouldDisplayReconnectButton,
 } from '../utils';
 import {
@@ -109,8 +108,6 @@ const Index = () => {
     ? state.isFlask
     : state.snapsDetected;
 
-  const [monitoredAddress, setMonitoredAddress] = useState('');
-
   const handleConnectClick = async () => {
     try {
       await connectSnap();
@@ -126,20 +123,10 @@ const Index = () => {
     }
   };
 
-  const handleSendHelloClick = async () => {
+  const handleSendGetStateClick = async () => {
     try {
-      await sendHello();
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
-  };
-
-  const handleAddWalletAddressClick = async () => {
-    try {
-      const walletAddress = await sendAddWalletAddress();
-      console.log(walletAddress);
-      setMonitoredAddress(walletAddress);
+      const resp = await sendGetState();
+      console.log(resp);
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -205,12 +192,12 @@ const Index = () => {
         )}
         <Card
           content={{
-            title: 'Send Hello message',
+            title: 'Send Get state',
             description:
               'Display a custom message within a confirmation screen in MetaMask.',
             button: (
               <SendHelloButton
-                onClick={handleSendHelloClick}
+                onClick={handleSendGetStateClick}
                 disabled={!state.installedSnap}
               />
             ),
@@ -223,24 +210,6 @@ const Index = () => {
           }
         />
 
-        <Card
-          content={{
-            title: 'Add Wallet Address',
-            description: `Display a custom message within a confirmation screen in MetaMask.  Monitored Address: ${monitoredAddress}`,
-            button: (
-              <SendHelloButton
-                onClick={handleAddWalletAddressClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
         <Notice>
           <p>
             Please note that the <b>snap.manifest.json</b> and{' '}
