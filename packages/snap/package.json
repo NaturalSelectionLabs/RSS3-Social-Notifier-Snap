@@ -1,10 +1,10 @@
 {
-  "name": "rss3-snap",
+  "name": "dmoo-cron",
   "version": "0.1.0",
   "description": "RSS3 snap monitor your wallet address.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "https://github.com/dmoosocool/rss3-snap.git"
   },
   "license": "Apache-2.0",
   "main": "./dist/bundle.js",
