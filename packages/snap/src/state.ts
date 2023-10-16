@@ -1,12 +1,14 @@
 import { ManageStateOperation } from '@metamask/snaps-types';
+import { type Activity } from '@rss3/js-sdk';
 
-export type SocialCount = {
+export type SocialActivity = {
   address: string;
+  activities: Activity[];
   total: number;
 };
 
 export type State = {
-  socialCounts: SocialCount[];
+  socialActivities: SocialActivity[];
 };
 
 /**
@@ -14,7 +16,7 @@ export type State = {
  * function if the state has not been set yet.
  */
 const DEFAULT_STATE = {
-  socialCounts: [],
+  socialActivities: [],
 };
 
 /**
@@ -51,12 +53,13 @@ export async function getState(): Promise<State> {
  * @see https://docs.metamask.io/snaps/reference/rpc-api/#snap_managestate
  */
 export async function setState(newState: State) {
+  const sanitizedState = JSON.parse(JSON.stringify(newState));
   await snap.request({
     method: 'snap_manageState',
-
-    // For this particular example, we use the `ManageStateOperation.UpdateState`
-    // enum value, but you can also use the string value `'update'` instead.
-    params: { operation: ManageStateOperation.UpdateState, newState },
+    params: {
+      operation: ManageStateOperation.UpdateState,
+      newState: sanitizedState,
+    },
   });
 }
 

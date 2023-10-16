@@ -5480,6 +5480,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rss3/js-sdk@npm:^0.6.27":
+  version: 0.6.27
+  resolution: "@rss3/js-sdk@npm:0.6.27"
+  dependencies:
+    debug: ^4.3.4
+    openapi-fetch: ^0.7.10
+    qs: ^6.11.2
+  checksum: a97f8cbc726cc8c84ab8dc7d9cd122ebebcbe1222365e5b1306cceeee4374ce6f24800096935a61e1091caf08c36076ad0129494a18792474572ee51d42aece8
+  languageName: node
+  linkType: hard
+
 "@scure/base@npm:^1.0.0, @scure/base@npm:^1.1.1, @scure/base@npm:~1.1.0":
   version: 1.1.1
   resolution: "@scure/base@npm:1.1.1"
@@ -16973,7 +16984,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.29.1":
+"moment@npm:^2.29.1, moment@npm:^2.29.4":
   version: 2.29.4
   resolution: "moment@npm:2.29.4"
   checksum: 0ec3f9c2bcba38dc2451b1daed5daded747f17610b92427bebe1d08d48d8b7bdd8d9197500b072d14e326dd0ccf3e326b9e3d07c5895d3d49e39b6803b76e80e
@@ -17624,6 +17635,22 @@ __metadata:
     is-docker: ^2.1.1
     is-wsl: ^2.2.0
   checksum: 6388bfff21b40cb9bd8f913f9130d107f2ed4724ea81a8fd29798ee322b361ca31fa2cdfb491a5c31e43a3996cfe9566741238c7a741ada8d7af1cb78d85cf26
+  languageName: node
+  linkType: hard
+
+"openapi-fetch@npm:^0.7.10":
+  version: 0.7.10
+  resolution: "openapi-fetch@npm:0.7.10"
+  dependencies:
+    openapi-typescript-helpers: ^0.0.4
+  checksum: cf9042de76d58585bcb4b93e069f7846031a4a86e0ccae36f8caa0b41f5237369badea88b81fbd801a0d4f456997bc7c6cbded68b2c1b6b78d2d42b19955e3be
+  languageName: node
+  linkType: hard
+
+"openapi-typescript-helpers@npm:^0.0.4":
+  version: 0.0.4
+  resolution: "openapi-typescript-helpers@npm:0.0.4"
+  checksum: d06d62f9669db5110f32ef36a70f9f2698dd7ad03ba41968baf13e1091caaf23c4af6f8a79103cfd68f65046da4284dcc2f75e9950e9170115189b545e3030fc
   languageName: node
   linkType: hard
 
@@ -19105,7 +19132,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.11.0":
+"qs@npm:^6.11.0, qs@npm:^6.11.2":
   version: 6.11.2
   resolution: "qs@npm:6.11.2"
   dependencies:
@@ -20182,6 +20209,7 @@ __metadata:
     "@metamask/snaps-types": ^2.0.0
     "@metamask/snaps-ui": ^2.0.0
     "@metamask/utils": ^8.1.0
+    "@rss3/js-sdk": ^0.6.27
     "@typescript-eslint/eslint-plugin": ^5.33.0
     "@typescript-eslint/parser": ^5.33.0
     buffer: ^6.0.3
@@ -20194,6 +20222,7 @@ __metadata:
     eslint-plugin-prettier: ^4.2.1
     ethers: ^6.7.1
     jest: ^29.5.0
+    moment: ^2.29.4
     prettier: ^2.2.1
     prettier-plugin-packagejson: ^2.2.11
     rimraf: ^3.0.2

@@ -54,6 +54,7 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
 
 type SocialCount = {
   address: string;
+  activities: any;
   total: number;
 };
 

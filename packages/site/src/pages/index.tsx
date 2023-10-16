@@ -162,6 +162,7 @@ const Index = () => {
           ...originalState.socialCounts,
           {
             address: walletAddress,
+            activities: [],
             total: 0,
           },
         ]);

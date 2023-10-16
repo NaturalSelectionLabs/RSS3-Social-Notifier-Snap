@@ -3,9 +3,11 @@ import {
   OnCronjobHandler,
   OnRpcRequestHandler,
 } from '@metamask/snaps-types';
-import { heading, panel, text } from '@metamask/snaps-ui';
+import { divider, heading, panel, text } from '@metamask/snaps-ui';
 import { assert } from '@metamask/utils';
+
 import { State, clearState, getState, setState } from './state';
+import { format, getSocialActivities } from './fetch';
 
 export type FetchSocialCountParams = {
   accounts: string[];
@@ -22,11 +24,11 @@ export type FetchSocialCountParams = {
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
   switch (request.method) {
     case 'setState': {
-      const { socialCounts } = request.params as State;
+      const { socialActivities } = request.params as State;
       const state = await getState();
       await setState({
         ...state,
-        socialCounts,
+        socialActivities,
       });
       return true;
     }
@@ -47,10 +49,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
         'Required accounts parameter was not specified.',
       );
       const resultPromise = params.accounts.map(async (address) => {
-        const resp = await getSocialCount(address);
+        const resp = await getSocialActivities(address);
         return {
           address,
-          total: resp.total,
+          total: resp.length,
         };
       });
       return await Promise.all(resultPromise);
@@ -89,27 +91,13 @@ async function getAccounts() {
   return accounts as string[];
 }
 
-/**
- * Get social count by rss3.
- *
- * @param address - The wallet address.
- * @returns The social count.
- */
-async function getSocialCount(address: string) {
-  // https://api.rss3.io/v1/notes/dmoosocool.eth?tag=social
-  const resp = await fetch(
-    `https://api.rss3.io/v1/notes/${address}?tag=social`,
-  );
-  return await resp.json();
-}
-
 export const onCronjob: OnCronjobHandler = async ({ request }) => {
   switch (request.method) {
     case 'execute': {
       const state = await getState();
       let accounts = await getAccounts();
 
-      const stateAddress = state.socialCounts.map((item) =>
+      const stateAddress = state.socialActivities.map((item) =>
         item.address.toLocaleLowerCase(),
       );
 
@@ -121,26 +109,25 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
       ];
 
       const resultPromise = accounts.map(async (address) => {
-        const resp = await getSocialCount(address);
+        const resp = await getSocialActivities(address);
         return {
           address,
-          total: resp.total,
+          activities: resp,
+          total: resp.length,
         };
       });
-      const socialCounts = await Promise.all(resultPromise);
+      const socialActivities = await Promise.all(resultPromise);
 
       // initial state
-      if (state.socialCounts.length === 0) {
+      if (state.socialActivities.length === 0) {
         await setState({
-          socialCounts,
+          socialActivities,
         });
 
         const content: any = [heading('Social Count')];
-        socialCounts.forEach((socialCount) => {
+        socialActivities.forEach((activity) => {
           content.push(
-            text(
-              `address: ${socialCount.address}, count: ${socialCount.total}`,
-            ),
+            text(`address: ${activity.address}, count: ${activity.total}`),
           );
         });
 
@@ -154,11 +141,10 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
       }
 
       // filter the changed social count
-      const changedSocialCounts = socialCounts.filter((socialCount) =>
-        state.socialCounts.find(
+      const changedSocialCounts = socialActivities.filter((activity) =>
+        state.socialActivities.find(
           (item) =>
-            item.address === socialCount.address &&
-            item.total !== socialCount.total,
+            item.address === activity.address && item.total !== activity.total,
         ),
       );
 
@@ -168,14 +154,20 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
       }
 
       await setState({
-        socialCounts,
+        socialActivities,
       });
 
-      const content: any = [heading('Social Count')];
-      changedSocialCounts.forEach((socialCount) => {
-        content.push(
-          text(`address: ${socialCount.address}, count: ${socialCount.total}`),
-        );
+      const content: any = [heading('Content from Readable Web3 by INDEX')];
+      changedSocialCounts.forEach((activity, i) => {
+        content.push(text(`${activity.address} has new feed`));
+
+        activity.activities.forEach((item) => {
+          content.push(text(format(item).toString()));
+        });
+
+        if (i !== changedSocialCounts.length) {
+          content.push(divider());
+        }
       });
 
       return snap.request({
