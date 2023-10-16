@@ -2,7 +2,7 @@ import { ManageStateOperation } from '@metamask/snaps-types';
 
 export type SocialActivity = {
   address: string;
-  activities: string;
+  activities: string[];
   total: number;
 };
 

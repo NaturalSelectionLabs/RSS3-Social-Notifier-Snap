@@ -52,9 +52,9 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
   }
 };
 
-type SocialCount = {
+type SocialActivity = {
   address: string;
-  activities: any;
+  activities: string[];
   total: number;
 };
 
@@ -66,15 +66,15 @@ export const sendGetState = async () => {
     method: 'wallet_invokeSnap',
     params: { snapId: defaultSnapOrigin, request: { method: 'getState' } },
   });
-  return resp as { socialCounts: SocialCount[] };
+  return resp as { socialActivities: SocialActivity[] };
 };
 
 /**
  * Invoke the "setState" method from the example snap.
  *
- * @param socialCounts - SocialCount[] to set.
+ * @param socialActivities - SocialCount[] to set.
  */
-export const sendSetState = async (socialCounts: SocialCount[]) => {
+export const sendSetState = async (socialActivities: SocialActivity[]) => {
   const resp = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
@@ -82,7 +82,7 @@ export const sendSetState = async (socialCounts: SocialCount[]) => {
       request: {
         method: 'setState',
         params: {
-          socialCounts,
+          socialActivities,
         },
       },
     },

@@ -86,7 +86,7 @@ describe('onRpcRequest', () => {
 
       const resp = {
         address,
-        activities: mockActivities.join('|'),
+        activities: mockActivities,
         total: mockData.data.length,
       };
       const response = await request({
@@ -108,7 +108,7 @@ describe('onRpcRequest', () => {
         await request({
           method: 'setState',
           params: {
-            socialCounts: [
+            socialActivities: [
               {
                 address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
                 activities: '',
@@ -125,7 +125,7 @@ describe('onRpcRequest', () => {
       ).toRespondWith(true);
 
       expect(await request({ method: 'getState' })).toRespondWith({
-        socialCounts: [
+        socialActivities: [
           {
             address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
             activities: '',
@@ -143,74 +143,73 @@ describe('onRpcRequest', () => {
     });
   });
 
-  // describe('getState', () => {
-  //   it('returns the state if no state has been set', async () => {
-  //     const { request, close } = await installSnap();
-  //     const response = await request({
-  //       method: 'getState',
-  //     });
+  describe('getState', () => {
+    it('returns the state if no state has been set', async () => {
+      const { request, close } = await installSnap();
+      const response = await request({
+        method: 'getState',
+      });
+      expect(response).toRespondWith({
+        socialActivities: [],
+      });
+      await close();
+    });
 
-  //     expect(response).toRespondWith({
-  //       socialActivities: [],
-  //     });
-  //     await close();
-  //   });
+    it('returns the state', async () => {
+      const { request, close } = await installSnap();
+      await request({
+        method: 'setState',
+        params: {
+          socialActivities: [
+            {
+              address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
+              activities: mockData.data,
+              total: mockData.data.length,
+            },
+          ],
+        },
+      });
 
-  //   it('returns the state', async () => {
-  //     const { request, close } = await installSnap();
-  //     await request({
-  //       method: 'setState',
-  //       params: {
-  //         socialActivities: [
-  //           {
-  //             address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
-  //             activities: mockData.data,
-  //             total: mockData.data.length,
-  //           },
-  //         ],
-  //       },
-  //     });
+      const response = await request({ method: 'getState' });
 
-  //     const response = await request({ method: 'getState' });
+      expect(response).toRespondWith({
+        socialActivities: [
+          {
+            address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
+            activities: mockData.data,
+            total: mockData.data.length,
+          },
+        ],
+      });
 
-  //     expect(response).toRespondWith({
-  //       socialActivities: [
-  //         {
-  //           address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
-  //           activities: mockData.data,
-  //           total: mockData.data.length,
-  //         },
-  //       ],
-  //     });
+      await close();
+    });
+  });
 
-  //     await close();
-  //   });
-  // });
+  describe('clearState', () => {
+    it('clear the state', async () => {
+      const { request, close } = await installSnap();
+      await request({
+        method: 'setState',
+        params: {
+          socialActivities: [
+            {
+              address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
+              activities: mockData,
+              total: 0,
+            },
+          ],
+        },
+      });
 
-  // describe('clearState', () => {
-  //   it('clear the state', async () => {
-  //     const { request, close } = await installSnap();
-  //     await request({
-  //       method: 'setState',
-  //       params: {
-  //         socialActivities: [
-  //           {
-  //             address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
-  //             activities: mockData,
-  //             total: 0,
-  //           },
-  //         ],
-  //       },
-  //     });
+      expect(await request({ method: 'clearState' })).toRespondWith(true);
+      expect(await request({ method: 'getState' })).toRespondWith({
+        socialActivities: [],
+      });
 
-  //     expect(await request({ method: 'clearState' })).toRespondWith(true);
-  //     expect(await request({ method: 'getState' })).toRespondWith({
-  //       socialActivities: [],
-  //     });
-
-  //     await close();
-  //   });
-  // });
+      await close();
+    });
+  });
 
   it('throws an error if the requested method does not exist', async () => {
     const { request, close } = await installSnap();

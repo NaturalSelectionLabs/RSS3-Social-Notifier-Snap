@@ -143,10 +143,9 @@ const Index = () => {
     if (walletAddress?.startsWith('0x') && walletAddress.length === 42) {
       try {
         const originalState = await sendGetState();
-        // if(originalState.socialCounts.)
 
         // check address is already added
-        const isAlreadyAdded = originalState.socialCounts.find(
+        const isAlreadyAdded = originalState.socialActivities.find(
           (account) =>
             account.address.toLocaleLowerCase() ===
             walletAddress.toLocaleLowerCase(),
@@ -159,7 +158,7 @@ const Index = () => {
 
         // add address
         await sendSetState([
-          ...originalState.socialCounts,
+          ...originalState.socialActivities,
           {
             address: walletAddress,
             activities: [],

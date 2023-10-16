@@ -24,7 +24,7 @@ export async function getSocialActivities(address: string) {
 
   return {
     address,
-    activities: activities.join('|'),
+    activities,
     total: activities.length,
   };
 }

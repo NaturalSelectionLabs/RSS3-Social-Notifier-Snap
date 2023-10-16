@@ -105,10 +105,9 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
         ]),
       ];
 
-      const resultPromise = accounts.map(async (address) => {
-        const resp = await getSocialActivities(address);
-        return resp;
-      });
+      const resultPromise = accounts.map((address) =>
+        getSocialActivities(address),
+      );
       const socialActivities = await Promise.all(resultPromise);
 
       // initial state
@@ -150,17 +149,13 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
         socialActivities,
       });
 
-      const content: any = [heading('Content from Readable Web3 by INDEX')];
-      changedSocialCounts.forEach((activity, i) => {
-        content.push(text(`${activity.address} has new feed`));
-
-        activity.activities.split('|').forEach((item) => {
+      const content: any = [heading('New Social Count')];
+      changedSocialCounts.forEach((activity) => {
+        content.push(heading(`${activity.address} has new feed`));
+        activity.activities.forEach((item) => {
           content.push(text(item));
-        });
-
-        if (i !== changedSocialCounts.length) {
           content.push(divider());
-        }
+        });
       });
 
       return snap.request({
