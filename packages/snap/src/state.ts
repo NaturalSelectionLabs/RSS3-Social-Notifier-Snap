@@ -1,9 +1,8 @@
 import { ManageStateOperation } from '@metamask/snaps-types';
-import { type Activity } from '@rss3/js-sdk';
 
 export type SocialActivity = {
   address: string;
-  activities: Activity[];
+  activities: string;
   total: number;
 };
 
@@ -53,12 +52,11 @@ export async function getState(): Promise<State> {
  * @see https://docs.metamask.io/snaps/reference/rpc-api/#snap_managestate
  */
 export async function setState(newState: State) {
-  const sanitizedState = JSON.parse(JSON.stringify(newState));
   await snap.request({
     method: 'snap_manageState',
     params: {
       operation: ManageStateOperation.UpdateState,
-      newState: sanitizedState,
+      newState,
     },
   });
 }

@@ -1,7 +1,6 @@
 import moment from 'moment';
 import {
   Activity,
-  dataClient,
   formatAddressAndNS,
   format as sdkFormat,
 } from '@rss3/js-sdk';
@@ -17,8 +16,17 @@ import {
  * @returns The social count.
  */
 export async function getSocialActivities(address: string) {
-  const resp = await dataClient().activities(address, { tag: ['social'] });
-  return resp.data;
+  const resp = await fetch(
+    `https://testnet.rss3.io/data/accounts/${address}/activities?tag=social`,
+  );
+  const { data } = (await resp.json()) as { data: Activity[] };
+  const activities = data.map((item: Activity) => format(item).join(''));
+
+  return {
+    address,
+    activities: activities.join('|'),
+    total: activities.length,
+  };
 }
 
 /**

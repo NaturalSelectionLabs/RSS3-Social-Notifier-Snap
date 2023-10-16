@@ -7,7 +7,7 @@ import { divider, heading, panel, text } from '@metamask/snaps-ui';
 import { assert } from '@metamask/utils';
 
 import { State, clearState, getState, setState } from './state';
-import { format, getSocialActivities } from './fetch';
+import { getSocialActivities } from './fetch';
 
 export type FetchSocialCountParams = {
   accounts: string[];
@@ -48,13 +48,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
         params?.accounts,
         'Required accounts parameter was not specified.',
       );
-      const resultPromise = params.accounts.map(async (address) => {
-        const resp = await getSocialActivities(address);
-        return {
-          address,
-          total: resp.length,
-        };
-      });
+      const resultPromise = params.accounts.map((address) =>
+        getSocialActivities(address),
+      );
+
       return await Promise.all(resultPromise);
     }
 
@@ -110,11 +107,7 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
 
       const resultPromise = accounts.map(async (address) => {
         const resp = await getSocialActivities(address);
-        return {
-          address,
-          activities: resp,
-          total: resp.length,
-        };
+        return resp;
       });
       const socialActivities = await Promise.all(resultPromise);
 
@@ -161,8 +154,8 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
       changedSocialCounts.forEach((activity, i) => {
         content.push(text(`${activity.address} has new feed`));
 
-        activity.activities.forEach((item) => {
-          content.push(text(format(item).toString()));
+        activity.activities.split('|').forEach((item) => {
+          content.push(text(item));
         });
 
         if (i !== changedSocialCounts.length) {
