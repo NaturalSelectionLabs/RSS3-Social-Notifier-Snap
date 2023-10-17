@@ -17,7 +17,7 @@ import {
  */
 export async function getSocialActivities(address: string) {
   const resp = await fetch(
-    `https://testnet.rss3.io/data/accounts/${address}/activities?tag=social`,
+    `https://testnet.rss3.io/data/accounts/${address}/activities?tag=social&direction=out`,
   );
   const { data } = (await resp.json()) as { data: Activity[] };
   const activities = data.map((item: Activity) => format(item).join(''));
