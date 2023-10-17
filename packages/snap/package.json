@@ -1,7 +1,7 @@
 {
   "name": "rss3-metamask-snap",
   "version": "0.1.0",
-  "description": "A Snap that enables address activity subscription and notification.",
+  "description": "Get notifications when monitored addresses produce new activities.",
   "repository": {
     "type": "git",
     "url": "https://github.com/NaturalSelectionLabs/RSS3-MetaMask-Snap.git"

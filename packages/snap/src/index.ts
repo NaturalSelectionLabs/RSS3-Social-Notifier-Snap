@@ -116,7 +116,7 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
           socialActivities,
         });
 
-        const content: any = [heading('Social Count')];
+        const content: any = [heading('Activity')];
         socialActivities.forEach((activity) => {
           content.push(
             text(`address: ${activity.address}, count: ${activity.total}`),
@@ -149,9 +149,9 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
         socialActivities,
       });
 
-      const content: any = [heading('New Social Count')];
+      const content: any = [heading('New Activity')];
       changedSocialCounts.forEach((activity) => {
-        content.push(heading(`${activity.address} has new feed`));
+        content.push(heading(`${activity.address} has new activities`));
         activity.activities.forEach((item) => {
           content.push(text(item));
           content.push(divider());

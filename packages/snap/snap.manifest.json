@@ -1,13 +1,13 @@
 {
   "version": "0.1.0",
-  "description": "A Snap that enables address activity subscription and notification.",
-  "proposedName": "RSS3 MetaMask Snap",
+  "description": "Get notifications when monitored addresses produce new activities.",
+  "proposedName": "Address Activity Monitor",
   "repository": {
     "type": "git",
     "url": "https://github.com/NaturalSelectionLabs/RSS3-MetaMask-Snap.git"
   },
   "source": {
-    "shasum": "OQuWsDgxMisFYstB9/AopB48fDU1GR6BY+XQ0LSzSIM=",
+    "shasum": "ISVxt71Qvzo9lZjQuFYxiS8auSYyNTMJHxeCgNXrHvE=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
