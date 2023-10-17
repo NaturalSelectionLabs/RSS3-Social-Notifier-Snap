@@ -1,10 +1,10 @@
 {
   "version": "0.1.0",
-  "description": "RSS3 cron monitor your wallet address.",
-  "proposedName": "RSS3 Cron",
+  "description": "A Snap that enables address activity subscription and notification.",
+  "proposedName": "RSS3 MetaMask Snap",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dmoosocool/rss3-snap.git"
+    "url": "https://github.com/NaturalSelectionLabs/RSS3-MetaMask-Snap.git"
   },
   "source": {
     "shasum": "OQuWsDgxMisFYstB9/AopB48fDU1GR6BY+XQ0LSzSIM=",
@@ -12,7 +12,7 @@
       "npm": {
         "filePath": "dist/bundle.js",
         "iconPath": "images/icon.svg",
-        "packageName": "rss3-cron",
+        "packageName": "rss3-metamask-snap",
         "registry": "https://registry.npmjs.org/"
       }
     }

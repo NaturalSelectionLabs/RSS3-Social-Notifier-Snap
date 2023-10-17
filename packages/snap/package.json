@@ -1,10 +1,10 @@
 {
-  "name": "rss3-cron",
+  "name": "rss3-metamask-snap",
   "version": "0.1.0",
-  "description": "RSS3 snap monitor your wallet address.",
+  "description": "A Snap that enables address activity subscription and notification.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dmoosocool/rss3-snap.git"
+    "url": "https://github.com/NaturalSelectionLabs/RSS3-MetaMask-Snap.git"
   },
   "license": "Apache-2.0",
   "main": "./dist/bundle.js",
