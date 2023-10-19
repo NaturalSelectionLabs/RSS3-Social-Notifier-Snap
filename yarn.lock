@@ -5480,14 +5480,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rss3/js-sdk@npm:^0.6.27":
-  version: 0.6.27
-  resolution: "@rss3/js-sdk@npm:0.6.27"
+"@rss3/js-sdk@npm:^0.6.38":
+  version: 0.6.38
+  resolution: "@rss3/js-sdk@npm:0.6.38"
   dependencies:
     debug: ^4.3.4
     openapi-fetch: ^0.7.10
     qs: ^6.11.2
-  checksum: a97f8cbc726cc8c84ab8dc7d9cd122ebebcbe1222365e5b1306cceeee4374ce6f24800096935a61e1091caf08c36076ad0129494a18792474572ee51d42aece8
+  checksum: c447860f7803bc886cfc93acf857a0ee7da3c0c004a0ff932786c1bece616afa2587923c5ac3ecfb2683a610607a187829651d66f0b50701a1d367a2fa3c3aa1
   languageName: node
   linkType: hard
 
@@ -20209,7 +20209,7 @@ __metadata:
     "@metamask/snaps-types": ^2.0.0
     "@metamask/snaps-ui": ^2.0.0
     "@metamask/utils": ^8.1.0
-    "@rss3/js-sdk": ^0.6.27
+    "@rss3/js-sdk": ^0.6.38
     "@typescript-eslint/eslint-plugin": ^5.33.0
     "@typescript-eslint/parser": ^5.33.0
     buffer: ^6.0.3

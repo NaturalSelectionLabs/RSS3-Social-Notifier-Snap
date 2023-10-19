@@ -3,11 +3,9 @@ import {
   Activity,
   formatAddressAndNS,
   format as sdkFormat,
-} from '@rss3/js-sdk';
-import {
-  type Theme,
   themePlain,
-} from '@rss3/js-sdk/lib/readable/activity/theme';
+  type Theme,
+} from '@rss3/js-sdk';
 import { CronActivity } from './state';
 
 export const getSocialActivitiesUrl = (address: string) =>
