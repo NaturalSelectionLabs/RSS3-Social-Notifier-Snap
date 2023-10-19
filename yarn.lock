@@ -20193,9 +20193,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rss3-cron@workspace:packages/snap":
+"rss3-metamask-snap@workspace:packages/snap":
   version: 0.0.0-use.local
-  resolution: "rss3-cron@workspace:packages/snap"
+  resolution: "rss3-metamask-snap@workspace:packages/snap"
   dependencies:
     "@jest/globals": ^29.5.0
     "@lavamoat/allow-scripts": ^2.0.3
