@@ -90,4 +90,69 @@ export const sendSetState = async (socialActivities: SocialActivity[]) => {
   return resp as boolean;
 };
 
+export const sendClearState = async () => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'clearState',
+      },
+    },
+  });
+};
+
+export const addOwnWalletAddress = async () => {
+  const resp = await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'addOwnWalletAddresses',
+      },
+    },
+  });
+
+  return resp;
+};
+
+export const showAlert = async (title: string, content: string) => {
+  await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'showAlert',
+        params: {
+          title,
+          content,
+        },
+      },
+    },
+  });
+};
+
+export const showLastUpdated = async () => {
+  await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'showLastUpdated',
+      },
+    },
+  });
+};
+
+export const showAllActivities = async () => {
+  await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'showAllActivities',
+      },
+    },
+  });
+};
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

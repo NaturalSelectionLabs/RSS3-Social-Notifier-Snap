@@ -125,7 +125,7 @@ export async function addMultipleAddressesToState(addresses: string[]) {
   );
 
   if (needToAddAccounts.length === 0) {
-    return;
+    return [];
   }
 
   const newAccounts: SocialActivity[] = needToAddAccounts.map((account) => {
@@ -140,4 +140,6 @@ export async function addMultipleAddressesToState(addresses: string[]) {
     ...state,
     socialActivities: [...new Set([...state.socialActivities, ...newAccounts])],
   });
+
+  return needToAddAccounts;
 }

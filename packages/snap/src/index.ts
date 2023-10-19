@@ -72,6 +72,44 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       return await addMultipleAddressesToState(accounts);
     }
 
+    case 'showLastUpdated': {
+      const state = await getState();
+      const content: any = [heading('Last Updated')];
+      state.lastUpdatedActivities.forEach((activity) => {
+        content.push(heading(`${activity.address} has new feed`));
+        activity.activities.forEach((item) => {
+          content.push(text(item.text));
+          content.push(divider());
+        });
+      });
+      return snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: DialogType.Alert,
+          content: panel(content),
+        },
+      });
+    }
+
+    case 'showAllActivities': {
+      const state = await getState();
+      const content: any = [heading('All Activities')];
+      state.socialActivities.forEach((activity) => {
+        content.push(heading(`${activity.address} has new feed`));
+        activity.activities.forEach((item) => {
+          content.push(text(item.text));
+          content.push(divider());
+        });
+      });
+      return snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: DialogType.Alert,
+          content: panel(content),
+        },
+      });
+    }
+
     case 'addAccount': {
       const { account } = request.params as { account: string | undefined };
       if (!account) {
@@ -79,6 +117,21 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       }
       return await addAddressToState(account);
     }
+
+    case 'showAlert': {
+      const { title, content } = request.params as {
+        title: string;
+        content: string;
+      };
+      return snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: DialogType.Alert,
+          content: panel([heading(title), text(content)]),
+        },
+      });
+    }
+
     default:
       throw new Error('Method not found.');
   }
@@ -217,6 +270,8 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
       return { result: true };
     }
 
+    // Don't know the reason why the Dialog.Alert component cannot be detected in e2e testing.
+    // This is a temporary solution. It will be deleted once a better resolution is found in the future.
     case 'executeForTest': {
       const state = await getState();
       const accounts = state.socialActivities.map((item) =>

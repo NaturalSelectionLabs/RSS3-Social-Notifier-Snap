@@ -2,12 +2,17 @@ import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
+  addOwnWalletAddress,
   connectSnap,
   getSnap,
   isLocalSnap,
+  sendClearState,
   sendGetState,
   sendSetState,
   shouldDisplayReconnectButton,
+  showAlert,
+  showAllActivities,
+  showLastUpdated,
 } from '../utils';
 import {
   ConnectButton,
@@ -39,8 +44,10 @@ const WalletAddressContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-items: center;
   flex: 1;
   gap: 1rem;
+  width: 100%;
 `;
 const WalletAddressInput = styled.input`
   padding: 1rem;
@@ -61,8 +68,10 @@ const CardContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
-  max-width: 64.8rem;
+  justify-content: center;
+  items-align: center;
+  gap: 2.4rem;
+  max-width: 128rem;
   width: 100%;
   height: 100%;
   margin-top: 1.5rem;
@@ -104,6 +113,37 @@ const ErrorMessage = styled.div`
     max-width: 100%;
   }
 `;
+const supportedNSList = [
+  '.eth',
+  '.lens',
+  '.csb',
+  '.bnb',
+  '.bit',
+  '.crypto',
+  '.zil',
+  '.nft',
+  '.x',
+  '.wallet',
+  '.bitcoin',
+  '.dao',
+  '.888',
+  '.blockchain',
+  '.avax',
+  '.arb',
+  '.cyber',
+];
+const isValidNS = (handle: string | null) => {
+  if (!handle) {
+    return false;
+  }
+  let valid = false;
+  supportedNSList.forEach((ns) => {
+    if (handle.endsWith(ns)) {
+      valid = true;
+    }
+  });
+  return valid;
+};
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
@@ -132,7 +172,21 @@ const Index = () => {
   const handleSendGetStateClick = async () => {
     try {
       const resp = await sendGetState();
-      console.log(resp);
+      await showAlert('Get State', JSON.stringify(resp, null, 2));
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
+  const handleSendAddYourWalletClick = async () => {
+    try {
+      const resp = await addOwnWalletAddress();
+      if (resp && (resp as string[]).length > 0) {
+        await showAlert('added', JSON.stringify(resp, null, 2));
+      } else {
+        await showAlert('added', 'your wallet address is already added.');
+      }
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
@@ -140,7 +194,10 @@ const Index = () => {
   };
 
   const handleSendSetStateClick = async () => {
-    if (walletAddress?.startsWith('0x') && walletAddress.length === 42) {
+    if (
+      isValidNS(walletAddress) ||
+      (walletAddress?.startsWith('0x') && walletAddress.length === 42)
+    ) {
       try {
         const originalState = await sendGetState();
 
@@ -152,7 +209,10 @@ const Index = () => {
         );
 
         if (isAlreadyAdded) {
-          console.log('already added');
+          await showAlert(
+            'already added',
+            `your wallet address:[${walletAddress}] is already added.`,
+          );
           return;
         }
 
@@ -166,13 +226,52 @@ const Index = () => {
           },
         ]);
 
-        console.log('added');
+        await showAlert(
+          'added',
+          `your wallet address:[${walletAddress}] is added.`,
+        );
       } catch (e) {
         console.error(e);
         dispatch({ type: MetamaskActions.SetError, payload: e });
       }
     } else {
-      console.log('invalid wallet address');
+      await showAlert(
+        'invalid wallet address',
+        `please check your input. supported ns: ${supportedNSList.join(', ')}`,
+      );
+    }
+  };
+
+  const handleSendClearStateClick = async () => {
+    try {
+      const resp = await sendClearState();
+      if (resp) {
+        await showAlert(
+          'Clear state success',
+          'You can choose to add a new address or use a suffix supported by RSS3 for monitoring.',
+        );
+      }
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
+  const handleShowLastUpdatedClick = async () => {
+    try {
+      await showLastUpdated();
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
+  const handleShowAllActivitiesClick = async () => {
+    try {
+      await showAllActivities();
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
     }
   };
 
@@ -230,9 +329,29 @@ const Index = () => {
             disabled={!state.installedSnap}
           />
         )}
+
         <Card
           content={{
-            title: 'Send Get state',
+            title: 'Send clean state',
+            description: 'Clean all data in MetaMask.',
+            button: (
+              <SendHelloButton
+                onClick={handleSendClearStateClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            isMetaMaskReady &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+
+        <Card
+          content={{
+            title: 'Send Get State',
             description:
               'Display a custom message within a confirmation screen in MetaMask.',
             button: (
@@ -252,8 +371,70 @@ const Index = () => {
 
         <Card
           content={{
+            title: 'Add Your wallet',
+            description: 'Auto add your wallet addresses to monitor.',
+            button: (
+              <SendHelloButton
+                onClick={handleSendAddYourWalletClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            isMetaMaskReady &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+
+        <Card
+          content={{
+            title: 'Show last updated',
+            description: 'Show the last updated activities.',
+            button: (
+              <SendHelloButton
+                onClick={handleShowLastUpdatedClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            isMetaMaskReady &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+
+        <Card
+          content={{
+            title: 'show all activities',
+            description: 'Show all activities.',
+            button: (
+              <SendHelloButton
+                onClick={handleShowAllActivitiesClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            isMetaMaskReady &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+
+        <Card
+          content={{
             title: 'Add Wallet Address',
-            description: 'Add Wallet Address to monitor.',
+            description: (
+              <>
+                <p>Add Wallet Address or Namespace to monitor</p>
+                <p>Supported NS list: ${supportedNSList.join(', ')}</p>
+              </>
+            ),
             button: (
               <WalletAddressContainer>
                 <WalletAddressInput
@@ -277,15 +458,6 @@ const Index = () => {
             !shouldDisplayReconnectButton(state.installedSnap)
           }
         />
-
-        {/* <Notice>
-          <p>
-            Please note that the <b>snap.manifest.json</b> and{' '}
-            <b>package.json</b> must be located in the server root directory and
-            the bundle must be hosted at the location specified by the location
-            field.
-          </p>
-        </Notice> */}
       </CardContainer>
     </Container>
   );
