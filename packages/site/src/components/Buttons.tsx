@@ -80,7 +80,7 @@ export const ConnectButton = (props: ComponentProps<typeof Button>) => {
   return (
     <Button {...props}>
       <FlaskFox />
-      <ButtonText>Connect</ButtonText>
+      <ButtonText>Install</ButtonText>
     </Button>
   );
 };
@@ -89,13 +89,13 @@ export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
   return (
     <Button {...props}>
       <FlaskFox />
-      <ButtonText>Reconnect</ButtonText>
+      <ButtonText>Reinstall</ButtonText>
     </Button>
   );
 };
 
 export const SendHelloButton = (props: ComponentProps<typeof Button>) => {
-  return <Button {...props}>Send message</Button>;
+  return <Button {...props}>Trigger Now</Button>;
 };
 
 export const HeaderButtons = ({

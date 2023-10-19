@@ -60,6 +60,15 @@ const Heading = styled.h1`
   text-align: center;
 `;
 
+const SubHeading = styled.h2`
+  margin-top: 0;
+  margin-bottom: 2.4rem;
+  line-height: 1.8;
+  font-size: 2rem;
+  text-align: left;
+  max-width: 128rem;
+`;
+
 const Span = styled.span`
   color: ${(props) => props.theme.colors.primary.default};
 `;
@@ -183,9 +192,12 @@ const Index = () => {
     try {
       const resp = await addOwnWalletAddress();
       if (resp && (resp as string[]).length > 0) {
-        await showAlert('added', JSON.stringify(resp, null, 2));
+        await showAlert('Monitored', JSON.stringify(resp, null, 2));
       } else {
-        await showAlert('added', 'your wallet address is already added.');
+        await showAlert(
+          'Already Monitored',
+          'the wallet address is already monitored.',
+        );
       }
     } catch (e) {
       console.error(e);
@@ -210,8 +222,8 @@ const Index = () => {
 
         if (isAlreadyAdded) {
           await showAlert(
-            'already added',
-            `your wallet address:[${walletAddress}] is already added.`,
+            'Already Monitored',
+            `The wallet address: ${walletAddress}  is already monitored.`,
           );
           return;
         }
@@ -227,8 +239,8 @@ const Index = () => {
         ]);
 
         await showAlert(
-          'added',
-          `your wallet address:[${walletAddress}] is added.`,
+          'Succeeded',
+          `The wallet address: ${walletAddress} is being monitored.`,
         );
       } catch (e) {
         console.error(e);
@@ -247,8 +259,8 @@ const Index = () => {
       const resp = await sendClearState();
       if (resp) {
         await showAlert(
-          'Clear state success',
-          'You can choose to add a new address or use a suffix supported by RSS3 for monitoring.',
+          'Clear Succeeded',
+          'Start adding some new addresses now!',
         );
       }
     } catch (e) {
@@ -278,8 +290,16 @@ const Index = () => {
   return (
     <Container>
       <Heading>
-        Welcome to <Span>RSS3 Cron</Span>
+        Welcome to <Span>RSS3 Activity Monitor Snap</Span>
       </Heading>
+      <SubHeading>
+        This Snap for <Span>MetaMask</Span> allows you to monitor the activities
+        of any address. <br></br>
+        1. Connect to the Snap and install. <br></br>
+        2. Start monitoring any address. <br></br>
+        3. When there is a new activity produced by any of your monitored
+        addresses, <Span>you will be notified</Span>.
+      </SubHeading>
       <CardContainer>
         {state.error && (
           <ErrorMessage>
@@ -300,9 +320,8 @@ const Index = () => {
         {!state.installedSnap && (
           <Card
             content={{
-              title: 'Connect',
-              description:
-                'Get started by connecting to and installing the example snap.',
+              title: 'Install',
+              description: 'Get started by installing this snap.',
               button: (
                 <ConnectButton
                   onClick={handleConnectClick}
@@ -316,9 +335,9 @@ const Index = () => {
         {shouldDisplayReconnectButton(state.installedSnap) && (
           <Card
             content={{
-              title: 'Reconnect',
+              title: 'Reinstall',
               description:
-                'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
+                "Reinstall to update the snap, or if something isn't right.",
               button: (
                 <ReconnectButton
                   onClick={handleConnectClick}
@@ -332,8 +351,9 @@ const Index = () => {
 
         <Card
           content={{
-            title: 'Send clean state',
-            description: 'Clean all data in MetaMask.',
+            title: 'Reset Snap State',
+            description:
+              'Clean all the data saved in this Snap. This does not affect your wallet in anyway.',
             button: (
               <SendHelloButton
                 onClick={handleSendClearStateClick}
@@ -349,7 +369,7 @@ const Index = () => {
           }
         />
 
-        <Card
+        {/* <Card
           content={{
             title: 'Send Get State',
             description:
@@ -367,12 +387,12 @@ const Index = () => {
             Boolean(state.installedSnap) &&
             !shouldDisplayReconnectButton(state.installedSnap)
           }
-        />
+        /> */}
 
-        <Card
+        {/* <Card
           content={{
             title: 'Add Your wallet',
-            description: 'Auto add your wallet addresses to monitor.',
+            description: 'Monitor your current wallet address.',
             button: (
               <SendHelloButton
                 onClick={handleSendAddYourWalletClick}
@@ -386,12 +406,12 @@ const Index = () => {
             Boolean(state.installedSnap) &&
             !shouldDisplayReconnectButton(state.installedSnap)
           }
-        />
+        /> */}
 
         <Card
           content={{
-            title: 'Show last updated',
-            description: 'Show the last updated activities.',
+            title: 'Show Last Updated',
+            description: 'Show the activities included in the last updated',
             button: (
               <SendHelloButton
                 onClick={handleShowLastUpdatedClick}
@@ -409,8 +429,9 @@ const Index = () => {
 
         <Card
           content={{
-            title: 'show all activities',
-            description: 'Show all activities.',
+            title: 'Show All Activities',
+            description:
+              'View all activities from all the addresses monitored.',
             button: (
               <SendHelloButton
                 onClick={handleShowAllActivitiesClick}
@@ -428,18 +449,23 @@ const Index = () => {
 
         <Card
           content={{
-            title: 'Add Wallet Address',
+            title: 'Monitor Any Address',
             description: (
               <>
-                <p>Add Wallet Address or Namespace to monitor</p>
-                <p>Supported NS list: ${supportedNSList.join(', ')}</p>
+                <p>Start monitoring a new address.</p>
+                <p>
+                  Supported Web3 Name Service: {supportedNSList.join(', ')}.
+                </p>
+                <p>
+                  And of course, your favorite and easy-to-memorize 0x address.
+                </p>
               </>
             ),
             button: (
               <WalletAddressContainer>
                 <WalletAddressInput
                   type="text"
-                  placeholder="wallet address"
+                  placeholder="someone.eth, or 0x..."
                   onChange={(e) => setWalletAddress(e.target.value)}
                 />
                 <Button

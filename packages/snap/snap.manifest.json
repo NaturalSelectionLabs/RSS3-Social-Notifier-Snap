@@ -1,13 +1,13 @@
 {
   "version": "0.1.0",
   "description": "Get notifications when monitored addresses produce new activities.",
-  "proposedName": "Address Activity Monitor",
+  "proposedName": "Activity Monitor",
   "repository": {
     "type": "git",
     "url": "https://github.com/NaturalSelectionLabs/RSS3-MetaMask-Snap.git"
   },
   "source": {
-    "shasum": "yB7TZjvVi85bqWX2la6Fh0TEymGhoQzwANq5+1cos4Q=",
+    "shasum": "XHExyM2bxV7WjC+2oje3cdBj8mYPDUVzqQ2CBmgB6uk=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

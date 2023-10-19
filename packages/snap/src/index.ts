@@ -76,7 +76,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       const state = await getState();
       const content: any = [heading('Last Updated')];
       state.lastUpdatedActivities.forEach((activity) => {
-        content.push(heading(`${activity.address} has new feed`));
+        content.push(heading(`${activity.address}`));
         activity.activities.forEach((item) => {
           content.push(text(item.text));
           content.push(divider());
@@ -95,7 +95,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       const state = await getState();
       const content: any = [heading('All Activities')];
       state.socialActivities.forEach((activity) => {
-        content.push(heading(`${activity.address} has new feed`));
+        content.push(heading(`${activity.address}`));
         activity.activities.forEach((item) => {
           content.push(text(item.text));
           content.push(divider());
@@ -247,7 +247,7 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
           total: diffActivities.length,
         });
 
-        content.push(heading(`${activity.address} has new feed`));
+        content.push(heading(`${activity.address}`));
         diffActivities.forEach((item) => {
           content.push(text(item.text));
           content.push(divider());
@@ -333,7 +333,7 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
           total: diffActivities.length,
         });
 
-        content.push(heading(`${activity.address} has new feed`));
+        content.push(heading(`${activity.address}`));
         diffActivities.forEach((item) => {
           content.push(text(item.text));
           content.push(divider());

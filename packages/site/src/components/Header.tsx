@@ -63,7 +63,7 @@ export const Header = ({
     <HeaderWrapper>
       <LogoWrapper>
         <SnapLogo color={theme.colors.icon.default} size={36} />
-        <Title>RSS3-Cron</Title>
+        <Title>RSS3 Activity Monitor Snap</Title>
       </LogoWrapper>
       <RightContainer>
         <Toggle
