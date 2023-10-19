@@ -1,9 +1,9 @@
 import { installSnap } from '@metamask/snaps-jest';
 import { expect } from '@jest/globals';
-import { heading, panel, text } from '@metamask/snaps-ui';
 import { type Activity } from '@rss3/js-sdk';
-import { format } from './fetch';
+import { format, getSocialActivitiesUrl } from './fetch';
 
+const DEFAULT_WALLET_ADDRESS = '0xc6d5a3c98ec9073b54fa0969957bd582e8d874bf';
 const MOCK_ADDRESSES = [
   '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0', // dmoosocool.eth
   '0xc8b960d09c0078c18dcbe7eb9ab9d816bcca8944', // diygod.eth
@@ -54,7 +54,10 @@ const mockData = {
   },
 };
 const mockActivities = mockData.data.map((item: unknown) => {
-  return format(item as Activity).join('');
+  return {
+    id: (item as Activity).id,
+    text: format(item as Activity).join(''),
+  };
 });
 describe('onRpcRequest', () => {
   describe('getAccounts', () => {
@@ -64,9 +67,7 @@ describe('onRpcRequest', () => {
         method: 'getAccounts',
       });
       // Currently, snaps-jest will always return this account.
-      expect(response).toRespondWith([
-        '0xc6d5a3c98ec9073b54fa0969957bd582e8d874bf',
-      ]);
+      expect(response).toRespondWith([DEFAULT_WALLET_ADDRESS]);
       await close();
     });
   });
@@ -75,7 +76,7 @@ describe('onRpcRequest', () => {
     it('fetch social count by account', async () => {
       const { request, close, mock } = await installSnap();
       const address = MOCK_ADDRESSES[0];
-      const url = `https://testnet.rss3.io/data/accounts/${address}/activities?tag=social`;
+      const url = getSocialActivitiesUrl(address);
       mock({
         url,
         response: {
@@ -120,6 +121,7 @@ describe('onRpcRequest', () => {
                 total: 0,
               },
             ],
+            lastUpdatedActivities: [],
           },
         }),
       ).toRespondWith(true);
@@ -137,6 +139,7 @@ describe('onRpcRequest', () => {
             total: 0,
           },
         ],
+        lastUpdatedActivities: [],
       });
 
       await close();
@@ -151,6 +154,7 @@ describe('onRpcRequest', () => {
       });
       expect(response).toRespondWith({
         socialActivities: [],
+        lastUpdatedActivities: [],
       });
       await close();
     });
@@ -167,6 +171,7 @@ describe('onRpcRequest', () => {
               total: mockData.data.length,
             },
           ],
+          lastUpdatedActivities: [],
         },
       });
 
@@ -180,6 +185,7 @@ describe('onRpcRequest', () => {
             total: mockData.data.length,
           },
         ],
+        lastUpdatedActivities: [],
       });
 
       await close();
@@ -199,12 +205,14 @@ describe('onRpcRequest', () => {
               total: 0,
             },
           ],
+          lastUpdatedActivities: [],
         },
       });
 
       expect(await request({ method: 'clearState' })).toRespondWith(true);
       expect(await request({ method: 'getState' })).toRespondWith({
         socialActivities: [],
+        lastUpdatedActivities: [],
       });
 
       await close();
@@ -235,24 +243,146 @@ describe('onRpcRequest', () => {
 
 describe('onCronjob', () => {
   describe('execute', () => {
-    it('shows a dialog', async () => {
+    it('defaults to not showing a dialog', async () => {
       const { runCronjob } = await installSnap();
-      const request = runCronjob({
-        method: 'execute',
+      expect(
+        await runCronjob({
+          method: 'execute',
+        }),
+      ).toRespondWith({ result: false, message: 'No accounts' });
+    });
+
+    it('not update state if no new feed', async () => {
+      const { runCronjob, request, mock } = await installSnap();
+
+      // mock to add own wallet addresses
+      await request({
+        method: 'addOwnWalletAddresses',
+      });
+      const state = await request({ method: 'getState' });
+      expect(state).toRespondWith({
+        socialActivities: [
+          {
+            activities: [],
+            address: DEFAULT_WALLET_ADDRESS,
+            total: 0,
+          },
+        ],
+        lastUpdatedActivities: [],
       });
 
-      const ui = await request.getInterface();
+      // mock to fetched social activities
+      const url = getSocialActivitiesUrl(DEFAULT_WALLET_ADDRESS);
+      mock({
+        url,
+        response: {
+          contentType: 'application/json',
+          body: JSON.stringify({ data: [] }),
+        },
+      });
 
-      expect(ui).toRender(
-        panel([
-          heading('Social Count'),
-          text('address: 0xc6d5a3c98ec9073b54fa0969957bd582e8d874bf, count: 0'),
-        ]),
-      );
+      expect(
+        await runCronjob({
+          method: 'execute',
+        }),
+      ).toRespondWith({
+        cached: [
+          {
+            activities: [],
+            address: '0xc6d5a3c98ec9073b54fa0969957bd582e8d874bf',
+            total: 0,
+          },
+        ],
+        data: [
+          {
+            activities: [],
+            address: '0xc6d5a3c98ec9073b54fa0969957bd582e8d874bf',
+            total: 0,
+          },
+        ],
+        message: 'No new feed',
+        result: false,
+      });
+    });
 
-      await ui.ok();
-      const response = await request;
-      expect(response).toRespondWith(null);
+    it('shows a dialog', async () => {
+      const { request, runCronjob, mock } = await installSnap();
+      // mock to add own wallet addresses
+      await request({
+        method: 'addOwnWalletAddresses',
+      });
+      const state = await request({ method: 'getState' });
+      expect(state).toRespondWith({
+        socialActivities: [
+          {
+            address: DEFAULT_WALLET_ADDRESS,
+            activities: [],
+            total: 0,
+          },
+        ],
+        lastUpdatedActivities: [],
+      });
+
+      const execute = runCronjob({
+        method: 'executeForTest',
+      });
+
+      // mock to fetched social activities
+      const url = getSocialActivitiesUrl(DEFAULT_WALLET_ADDRESS);
+      mock({
+        url,
+        response: {
+          contentType: 'application/json',
+          body: JSON.stringify(mockData),
+        },
+      });
+      const response = await execute;
+
+      expect(await request({ method: 'getState' })).toRespondWith({
+        lastUpdatedActivities: [
+          {
+            activities: [
+              {
+                id: '0x9d75a18af694dc99913210360a0c1d64e57c132b3a225112efef0acb7b6560ef',
+                text: 'dmoo.csb published a post "test" on xlog Oct 12, 2023',
+              },
+            ],
+            address: '0xc6d5a3c98ec9073b54fa0969957bd582e8d874bf',
+            total: 1,
+          },
+        ],
+        socialActivities: [
+          {
+            activities: [
+              {
+                id: '0x9d75a18af694dc99913210360a0c1d64e57c132b3a225112efef0acb7b6560ef',
+                text: 'dmoo.csb published a post "test" on xlog Oct 12, 2023',
+              },
+            ],
+            address: '0xc6d5a3c98ec9073b54fa0969957bd582e8d874bf',
+            total: 1,
+          },
+        ],
+      });
+
+      expect(response).toRespondWith({
+        content: {
+          children: [
+            { type: 'heading', value: 'New Social Count' },
+            {
+              type: 'heading',
+              value: '0xc6d5a3c98ec9073b54fa0969957bd582e8d874bf has new feed',
+            },
+            {
+              type: 'text',
+              value: 'dmoo.csb published a post "test" on xlog Oct 12, 2023',
+            },
+            { type: 'divider' },
+          ],
+          type: 'panel',
+        },
+        result: true,
+      });
     });
   });
 });

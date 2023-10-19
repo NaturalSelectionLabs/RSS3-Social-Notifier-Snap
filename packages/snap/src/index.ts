@@ -6,8 +6,16 @@ import {
 import { divider, heading, panel, text } from '@metamask/snaps-ui';
 import { assert } from '@metamask/utils';
 
-import { State, clearState, getState, setState } from './state';
-import { getSocialActivities } from './fetch';
+import {
+  SocialActivity,
+  State,
+  addAddressToState,
+  addMultipleAddressesToState,
+  clearState,
+  getState,
+  setState,
+} from './state';
+import { diff, getSocialActivities } from './fetch';
 
 export type FetchSocialCountParams = {
   accounts: string[];
@@ -58,6 +66,19 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case 'getAccounts': {
       return await getAccounts();
     }
+
+    case 'addOwnWalletAddresses': {
+      const accounts = await getAccounts();
+      return await addMultipleAddressesToState(accounts);
+    }
+
+    case 'addAccount': {
+      const { account } = request.params as { account: string | undefined };
+      if (!account) {
+        return true;
+      }
+      return await addAddressToState(account);
+    }
     default:
       throw new Error('Method not found.');
   }
@@ -92,79 +113,185 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
   switch (request.method) {
     case 'execute': {
       const state = await getState();
-      let accounts = await getAccounts();
-
-      const stateAddress = state.socialActivities.map((item) =>
+      const accounts = state.socialActivities.map((item) =>
         item.address.toLocaleLowerCase(),
       );
 
-      accounts = [
-        ...new Set([
-          ...stateAddress,
-          ...accounts.map((item) => item.toLocaleLowerCase()),
-        ]),
-      ];
+      // no accounts
+      if (accounts.length === 0) {
+        // for debug
+
+        // await snap.request({
+        //   method: 'snap_dialog',
+        //   params: {
+        //     type: DialogType.Alert,
+        //     content: panel([heading('No accounts')]),
+        //   },
+        // });
+        return { result: false, message: 'No accounts' };
+      }
 
       const resultPromise = accounts.map((address) =>
         getSocialActivities(address),
       );
       const socialActivities = await Promise.all(resultPromise);
 
-      // initial state
-      if (state.socialActivities.length === 0) {
-        await setState({
-          socialActivities,
-        });
-
-        const content: any = [heading('Activity')];
-        socialActivities.forEach((activity) => {
-          content.push(
-            text(`address: ${activity.address}, count: ${activity.total}`),
-          );
-        });
-
-        return snap.request({
-          method: 'snap_dialog',
-          params: {
-            type: DialogType.Alert,
-            content: panel(content),
-          },
-        });
-      }
-
       // filter the changed social count
       const changedSocialCounts = socialActivities.filter((activity) =>
         state.socialActivities.find(
           (item) =>
-            item.address === activity.address && item.total !== activity.total,
+            item.address.toLocaleLowerCase() ===
+              activity.address.toLocaleLowerCase() &&
+            item.total < activity.total,
         ),
       );
 
+      // not need to notify.
       if (changedSocialCounts.length === 0) {
-        // not need to notify.
-        return true;
+        // for debug
+
+        // await snap.request({
+        //   method: 'snap_dialog',
+        //   params: {
+        //     type: DialogType.Alert,
+        //     content: panel([
+        //       heading('No new feed'),
+        //       text(JSON.stringify(state.socialActivities)),
+        //       text(JSON.stringify(socialActivities)),
+        //     ]),
+        //   },
+        // });
+        return {
+          result: false,
+          message: 'No new feed',
+          cached: state.socialActivities,
+          data: socialActivities,
+        };
+      }
+
+      const diffArray: SocialActivity[] = [];
+      const content: any = [heading('New Social Count')];
+
+      for (const activity of changedSocialCounts) {
+        const cachedActivity = state.socialActivities.find(
+          (item) =>
+            item.address.toLocaleLowerCase() ===
+            activity.address.toLocaleLowerCase(),
+        );
+
+        if (!cachedActivity) {
+          continue;
+        }
+
+        const diffActivities = diff(
+          cachedActivity.activities,
+          activity.activities,
+        );
+
+        diffArray.push({
+          address: cachedActivity.address,
+          activities: diffActivities,
+          total: diffActivities.length,
+        });
+
+        content.push(heading(`${activity.address} has new feed`));
+        diffActivities.forEach((item) => {
+          content.push(text(item.text));
+          content.push(divider());
+        });
       }
 
       await setState({
+        ...state,
         socialActivities,
+        lastUpdatedActivities: diffArray,
       });
 
-      const content: any = [heading('New Activity')];
-      changedSocialCounts.forEach((activity) => {
-        content.push(heading(`${activity.address} has new activities`));
-        activity.activities.forEach((item) => {
-          content.push(text(item));
-          content.push(divider());
-        });
-      });
-
-      return snap.request({
+      await snap.request({
         method: 'snap_dialog',
         params: {
           type: DialogType.Alert,
           content: panel(content),
         },
       });
+      return { result: true };
+    }
+
+    case 'executeForTest': {
+      const state = await getState();
+      const accounts = state.socialActivities.map((item) =>
+        item.address.toLocaleLowerCase(),
+      );
+
+      // no accounts
+      if (accounts.length === 0) {
+        return { result: false, message: 'No accounts' };
+      }
+
+      const resultPromise = accounts.map((address) =>
+        getSocialActivities(address),
+      );
+      const socialActivities = await Promise.all(resultPromise);
+
+      // filter the changed social count
+      const changedSocialCounts = socialActivities.filter((activity) =>
+        state.socialActivities.find(
+          (item) =>
+            item.address.toLocaleLowerCase() ===
+              activity.address.toLocaleLowerCase() &&
+            item.total < activity.total,
+        ),
+      );
+
+      // not need to notify.
+      if (changedSocialCounts.length === 0) {
+        return {
+          result: false,
+          message: 'No new feed',
+          cached: state.socialActivities,
+          data: socialActivities,
+        };
+      }
+
+      const diffArray: SocialActivity[] = [];
+      const content: any = [heading('New Social Count')];
+
+      for (const activity of changedSocialCounts) {
+        const cachedActivity = state.socialActivities.find(
+          (item) =>
+            item.address.toLocaleLowerCase() ===
+            activity.address.toLocaleLowerCase(),
+        );
+
+        if (!cachedActivity) {
+          continue;
+        }
+
+        const diffActivities = diff(
+          cachedActivity.activities,
+          activity.activities,
+        );
+
+        diffArray.push({
+          address: cachedActivity.address,
+          activities: diffActivities,
+          total: diffActivities.length,
+        });
+
+        content.push(heading(`${activity.address} has new feed`));
+        diffActivities.forEach((item) => {
+          content.push(text(item.text));
+          content.push(divider());
+        });
+      }
+
+      await setState({
+        ...state,
+        socialActivities,
+        lastUpdatedActivities: diffArray,
+      });
+
+      return { result: true, content: panel(content) };
     }
 
     default:

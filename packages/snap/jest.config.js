@@ -4,4 +4,6 @@ module.exports = {
     '^.+\\.(t|j)sx?$': 'ts-jest',
   },
   transformIgnorePatterns: ['node_modules/(?!(moment|@rss3/js-sdk)/)'],
+
+  // testTimeout: 60000,
 };

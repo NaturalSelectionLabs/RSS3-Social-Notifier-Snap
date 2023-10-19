@@ -1,13 +1,19 @@
 import { ManageStateOperation } from '@metamask/snaps-types';
 
+export type CronActivity = {
+  id: string;
+  text: string;
+};
+
 export type SocialActivity = {
   address: string;
-  activities: string[];
+  activities: CronActivity[];
   total: number;
 };
 
 export type State = {
   socialActivities: SocialActivity[];
+  lastUpdatedActivities: SocialActivity[];
 };
 
 /**
@@ -16,6 +22,7 @@ export type State = {
  */
 const DEFAULT_STATE = {
   socialActivities: [],
+  lastUpdatedActivities: [],
 };
 
 /**
@@ -75,5 +82,62 @@ export async function clearState() {
     // For this particular example, we use the `ManageStateOperation.ClearState`
     // enum value, but you can also use the string value `'clear'` instead.
     params: { operation: ManageStateOperation.ClearState },
+  });
+}
+
+/**
+ * Add a new address to the state's social activities.
+ *
+ * @param address - The address to add to the state's social activities.
+ */
+export async function addAddressToState(address: string) {
+  const state = await getState();
+  const alreadyExist = state.socialActivities.find(
+    (item) => item.address === address,
+  );
+  if (alreadyExist) {
+    return;
+  }
+
+  await setState({
+    ...state,
+    socialActivities: [
+      ...state.socialActivities,
+      {
+        address,
+        activities: [],
+        total: 0,
+      },
+    ],
+  });
+}
+
+/**
+ * Add multiple addresses to the state's social activities.
+ *
+ * @param addresses - An array of addresses to add to the state's social activities.
+ */
+export async function addMultipleAddressesToState(addresses: string[]) {
+  const state = await getState();
+  const needToAddAccounts = addresses.filter(
+    (address) =>
+      !state.socialActivities.some((item) => item.address === address),
+  );
+
+  if (needToAddAccounts.length === 0) {
+    return;
+  }
+
+  const newAccounts: SocialActivity[] = needToAddAccounts.map((account) => {
+    return {
+      address: account,
+      activities: [],
+      total: 0,
+    };
+  });
+
+  await setState({
+    ...state,
+    socialActivities: [...new Set([...state.socialActivities, ...newAccounts])],
   });
 }
