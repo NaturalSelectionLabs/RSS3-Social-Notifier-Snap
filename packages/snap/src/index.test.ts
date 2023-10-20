@@ -371,7 +371,7 @@ describe('onCronjob', () => {
             { type: 'heading', value: 'New Social Count' },
             {
               type: 'heading',
-              value: '0xc6d5a3c98ec9073b54fa0969957bd582e8d874bf has new feed',
+              value: '0xc6d5a3c98ec9073b54fa0969957bd582e8d874bf',
             },
             {
               type: 'text',
