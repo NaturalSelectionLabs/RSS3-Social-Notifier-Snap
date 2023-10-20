@@ -155,4 +155,17 @@ export const showAllActivities = async () => {
     },
   });
 };
+
+export const showAllMonitoredAddresses = async () => {
+  await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'showAllMonitoredAddresses',
+      },
+    },
+  });
+};
+
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

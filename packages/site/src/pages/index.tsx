@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
-  addOwnWalletAddress,
+  // addOwnWalletAddress,
   connectSnap,
   getSnap,
   isLocalSnap,
@@ -12,6 +12,7 @@ import {
   shouldDisplayReconnectButton,
   showAlert,
   showAllActivities,
+  showAllMonitoredAddresses,
   showLastUpdated,
 } from '../utils';
 import {
@@ -178,32 +179,32 @@ const Index = () => {
     }
   };
 
-  const handleSendGetStateClick = async () => {
-    try {
-      const resp = await sendGetState();
-      await showAlert('Get State', JSON.stringify(resp, null, 2));
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
-  };
+  // const handleSendGetStateClick = async () => {
+  //   try {
+  //     const resp = await sendGetState();
+  //     await showAlert('Get State', JSON.stringify(resp, null, 2));
+  //   } catch (e) {
+  //     console.error(e);
+  //     dispatch({ type: MetamaskActions.SetError, payload: e });
+  //   }
+  // };
 
-  const handleSendAddYourWalletClick = async () => {
-    try {
-      const resp = await addOwnWalletAddress();
-      if (resp && (resp as string[]).length > 0) {
-        await showAlert('Monitored', JSON.stringify(resp, null, 2));
-      } else {
-        await showAlert(
-          'Already Monitored',
-          'the wallet address is already monitored.',
-        );
-      }
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
-  };
+  // const handleSendAddYourWalletClick = async () => {
+  //   try {
+  //     const resp = await addOwnWalletAddress();
+  //     if (resp && (resp as string[]).length > 0) {
+  //       await showAlert('Monitored', JSON.stringify(resp, null, 2));
+  //     } else {
+  //       await showAlert(
+  //         'Already Monitored',
+  //         'the wallet address is already monitored.',
+  //       );
+  //     }
+  //   } catch (e) {
+  //     console.error(e);
+  //     dispatch({ type: MetamaskActions.SetError, payload: e });
+  //   }
+  // };
 
   const handleSendSetStateClick = async () => {
     if (
@@ -287,6 +288,15 @@ const Index = () => {
     }
   };
 
+  const handleShowAllAddressesClick = async () => {
+    try {
+      await showAllMonitoredAddresses();
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
   return (
     <Container>
       <Heading>
@@ -300,12 +310,12 @@ const Index = () => {
         3. When there is a new activity produced by any of your monitored
         addresses, <Span>you will be notified</Span>.
       </SubHeading>
+      {state.error && (
+        <ErrorMessage>
+          <b>An error happened:</b> {state.error.message}
+        </ErrorMessage>
+      )}
       <CardContainer>
-        {state.error && (
-          <ErrorMessage>
-            <b>An error happened:</b> {state.error.message}
-          </ErrorMessage>
-        )}
         {!isMetaMaskReady && (
           <Card
             content={{
@@ -435,6 +445,25 @@ const Index = () => {
             button: (
               <SendHelloButton
                 onClick={handleShowAllActivitiesClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            isMetaMaskReady &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+
+        <Card
+          content={{
+            title: 'Show All Addresses',
+            description: 'View all addresses from all the addresses monitored.',
+            button: (
+              <SendHelloButton
+                onClick={handleShowAllAddressesClick}
                 disabled={!state.installedSnap}
               />
             ),

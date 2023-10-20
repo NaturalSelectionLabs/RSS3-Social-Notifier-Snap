@@ -31,6 +31,8 @@ export type FetchSocialCountParams = {
  */
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
   switch (request.method) {
+    /** Basic function */
+    // set the state
     case 'setState': {
       const { socialActivities } = request.params as State;
       const state = await getState();
@@ -41,15 +43,53 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       return true;
     }
 
+    // get the state
     case 'getState': {
       return await getState();
     }
 
+    // clear the state
     case 'clearState': {
       await clearState();
       return true;
     }
 
+    // get accounts by own wallet
+    case 'getAccounts': {
+      return await getAccounts();
+    }
+
+    // add account to state
+    case 'addAccount': {
+      const { account } = request.params as { account: string | undefined };
+      if (!account) {
+        return true;
+      }
+      return await addAddressToState(account);
+    }
+
+    // add multiple accounts by own wallet to state
+    case 'addOwnWalletAddresses': {
+      const accounts = await getAccounts();
+      return await addMultipleAddressesToState(accounts);
+    }
+
+    // User-defined Dialog.Alert
+    case 'showAlert': {
+      const { title, content } = request.params as {
+        title: string;
+        content: string;
+      };
+      return snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: DialogType.Alert,
+          content: panel([heading(title), text(content)]),
+        },
+      });
+    }
+
+    // fetch the social activities by @rss3/js-sdk.
     case 'fetchSocialCount': {
       const params = request.params as FetchSocialCountParams | undefined;
       assert(
@@ -63,15 +103,9 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       return await Promise.all(resultPromise);
     }
 
-    case 'getAccounts': {
-      return await getAccounts();
-    }
+    /** Helper function */
 
-    case 'addOwnWalletAddresses': {
-      const accounts = await getAccounts();
-      return await addMultipleAddressesToState(accounts);
-    }
-
+    // show the last updated activities
     case 'showLastUpdated': {
       const state = await getState();
       const content: any = [heading('Last Updated')];
@@ -91,6 +125,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       });
     }
 
+    // show the all activities
     case 'showAllActivities': {
       const state = await getState();
       const content: any = [heading('All Activities')];
@@ -110,24 +145,19 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       });
     }
 
-    case 'addAccount': {
-      const { account } = request.params as { account: string | undefined };
-      if (!account) {
-        return true;
-      }
-      return await addAddressToState(account);
-    }
-
-    case 'showAlert': {
-      const { title, content } = request.params as {
-        title: string;
-        content: string;
-      };
+    // show the all monitored addresses
+    case 'showAllMonitoredAddresses': {
+      const state = await getState();
+      const content: any = [heading('All Monitored Addresses')];
+      state.socialActivities.forEach((activity) => {
+        content.push(text(activity.address));
+        content.push(divider());
+      });
       return snap.request({
         method: 'snap_dialog',
         params: {
           type: DialogType.Alert,
-          content: panel([heading(title), text(content)]),
+          content: panel(content),
         },
       });
     }
