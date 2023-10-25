@@ -1,0 +1,9 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "ignorePaths": [
+    "**/*.{json,sh,svg,webp,mock.ts,yaml,xml,snap,html}",
+    "tsconfig.tsbuildinfo"
+  ],
+  "words": ["Crossbell", "Farcaster"]
+}

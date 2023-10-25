@@ -1,14 +1,14 @@
 import { GatsbyBrowser } from 'gatsby';
-import { StrictMode } from 'react';
+import React from 'react';
 import { App } from './src/App';
 import { Root } from './src/Root';
 
 export const wrapRootElement: GatsbyBrowser['wrapRootElement'] = ({
   element,
 }) => (
-  <StrictMode>
+  <React.StrictMode>
     <Root>{element}</Root>
-  </StrictMode>
+  </React.StrictMode>
 );
 
 export const wrapPageElement: GatsbyBrowser['wrapPageElement'] = ({
