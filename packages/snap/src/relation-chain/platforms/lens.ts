@@ -1,7 +1,6 @@
 import { Client, cacheExchange, fetchExchange, gql } from '@urql/core';
 import CrossFetch from 'cross-fetch';
-import { TRelationChainResult, type TProfile } from '../types';
-import { Chain } from '..';
+import { TRelationChainResult, type TProfile, Chain } from '..';
 
 // only need handle, ownedBy and picture.
 const QueryFollowing = gql`
