@@ -47,6 +47,22 @@ const QueryProfileByHandle = gql`
       id
       name
       ownedBy
+      picture {
+        ... on NftImage {
+          contractAddress
+          tokenId
+          uri
+          verified
+        }
+        ... on MediaSet {
+          original {
+            url
+            width
+            height
+            mimeType
+          }
+        }
+      }
     }
   }
 `;
@@ -58,6 +74,22 @@ const QueryProfileByWalletAddress = gql`
       name
       ownedBy
       handle
+      picture {
+        ... on NftImage {
+          contractAddress
+          tokenId
+          uri
+          verified
+        }
+        ... on MediaSet {
+          original {
+            url
+            width
+            height
+            mimeType
+          }
+        }
+      }
     }
   }
 `;
@@ -125,6 +157,7 @@ export async function getAddressByHandle(handle: string) {
       return {
         walletAddress: handle,
         handle: data.defaultProfile.handle,
+        avatar: data.defaultProfile.picture?.original?.url,
       };
     }
   }
@@ -135,6 +168,7 @@ export async function getAddressByHandle(handle: string) {
       return {
         walletAddress: data.profile.ownedBy as `0x${string}`,
         handle,
+        avatar: data.profile.picture?.original?.url,
       };
     }
   }
@@ -160,11 +194,11 @@ export async function handler(
   let hasNextPage = true;
   let errorMessage = '';
 
-  const lendProfile = await getAddressByHandle(handle);
+  const lensProfile = await getAddressByHandle(handle);
 
-  if (lendProfile === null) {
+  if (lensProfile === null) {
     return {
-      owner: handle,
+      owner: { handle },
       platform: Chain.Lens,
       status: false,
       message: `invalid handle: ${handle}, please check again.`,
@@ -173,7 +207,7 @@ export async function handler(
 
   while (hasNextPage) {
     const { data, error } = await queryMethod(
-      lendProfile.walletAddress,
+      lensProfile.walletAddress,
       limit,
       cursor,
     );
@@ -194,7 +228,11 @@ export async function handler(
   }
 
   return {
-    owner: handle,
+    owner: {
+      handle: lensProfile.handle,
+      address: lensProfile.walletAddress,
+      avatar: lensProfile.avatar,
+    },
     platform: Chain.Lens,
     status: errorMessage === '',
     message: errorMessage || 'success',

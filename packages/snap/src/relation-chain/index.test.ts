@@ -52,7 +52,12 @@ describe('get following from relation chain', () => {
       };
       const result = await LensHandler(MOCK_HANDLE, 20, mockQueryMethod);
       expect(result).toStrictEqual({
-        owner: MOCK_HANDLE,
+        owner: {
+          address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
+          avatar:
+            'https://ik.imagekit.io/lens/media-snapshot/f947319b5f4c063e88cda751fde67a259d96ecca1558db949696374f583fa3f2.png',
+          handle: 'dmoosocool.lens',
+        },
         platform: Chain.Lens,
         status: true,
         message: 'success',
@@ -105,7 +110,12 @@ describe('get following from relation chain', () => {
       };
       const result = await LensHandler('dmoosocool.lens', 20, mockQueryMethod);
       expect(result).toStrictEqual({
-        owner: 'dmoosocool.lens',
+        owner: {
+          address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
+          avatar:
+            'https://ik.imagekit.io/lens/media-snapshot/f947319b5f4c063e88cda751fde67a259d96ecca1558db949696374f583fa3f2.png',
+          handle: 'dmoosocool.lens',
+        },
         platform: Chain.Lens,
         status: true,
         message: 'success',
@@ -132,7 +142,12 @@ describe('get following from relation chain', () => {
       const result = await LensHandler(MOCK_HANDLE, 20, mockQueryMethod);
 
       expect(result).toStrictEqual({
-        owner: MOCK_HANDLE,
+        owner: {
+          address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
+          avatar:
+            'https://ik.imagekit.io/lens/media-snapshot/f947319b5f4c063e88cda751fde67a259d96ecca1558db949696374f583fa3f2.png',
+          handle: 'dmoosocool.lens',
+        },
         platform: Chain.Lens,
         status: false,
         message: '[Network] Network error',
