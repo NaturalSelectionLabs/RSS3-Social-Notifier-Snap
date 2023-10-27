@@ -5,8 +5,10 @@ const config: GatsbyConfig = {
   jsxRuntime: 'automatic',
 
   plugins: [
-    'gatsby-plugin-svgr',
-    'gatsby-plugin-styled-components',
+    'gatsby-plugin-image',
+    'gatsby-plugin-sharp',
+    'gatsby-transformer-sharp',
+    'gatsby-plugin-postcss',
     {
       resolve: 'gatsby-plugin-manifest',
       options: {

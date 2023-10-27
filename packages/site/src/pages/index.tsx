@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react';
-import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   // addOwnWalletAddress,
@@ -21,108 +20,11 @@ import {
   ReconnectButton,
   SendHelloButton,
   Card,
-  Button,
+  // Button,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
+import { Button } from '@/components/ui/button';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  margin-top: 7.6rem;
-  margin-bottom: 7.6rem;
-  ${({ theme }) => theme.mediaQueries.small} {
-    padding-left: 2.4rem;
-    padding-right: 2.4rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    width: auto;
-  }
-`;
-
-const WalletAddressContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-items: center;
-  flex: 1;
-  gap: 1rem;
-  width: 100%;
-`;
-const WalletAddressInput = styled.input`
-  padding: 1rem;
-  width: 100%;
-`;
-
-const Heading = styled.h1`
-  margin-top: 0;
-  margin-bottom: 2.4rem;
-  text-align: center;
-`;
-
-const SubHeading = styled.h2`
-  margin-top: 0;
-  margin-bottom: 2.4rem;
-  line-height: 1.8;
-  font-size: 2rem;
-  text-align: left;
-  max-width: 128rem;
-`;
-
-const Span = styled.span`
-  color: ${(props) => props.theme.colors.primary.default};
-`;
-
-const CardContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  items-align: center;
-  gap: 2.4rem;
-  max-width: 128rem;
-  width: 100%;
-  height: 100%;
-  margin-top: 1.5rem;
-`;
-
-// const Notice = styled.div`
-//   background-color: ${({ theme }) => theme.colors.background.alternative};
-//   border: 1px solid ${({ theme }) => theme.colors.border.default};
-//   color: ${({ theme }) => theme.colors.text.alternative};
-//   border-radius: ${({ theme }) => theme.radii.default};
-//   padding: 2.4rem;
-//   margin-top: 2.4rem;
-//   max-width: 60rem;
-//   width: 100%;
-
-//   & > * {
-//     margin: 0;
-//   }
-//   ${({ theme }) => theme.mediaQueries.small} {
-//     margin-top: 1.2rem;
-//     padding: 1.6rem;
-//   }
-// `;
-
-const ErrorMessage = styled.div`
-  background-color: ${({ theme }) => theme.colors.error.muted};
-  border: 1px solid ${({ theme }) => theme.colors.error.default};
-  color: ${({ theme }) => theme.colors.error.alternative};
-  border-radius: ${({ theme }) => theme.radii.default};
-  padding: 2.4rem;
-  margin-bottom: 2.4rem;
-  margin-top: 2.4rem;
-  max-width: 60rem;
-  width: 100%;
-  ${({ theme }) => theme.mediaQueries.small} {
-    padding: 1.6rem;
-    margin-bottom: 1.2rem;
-    margin-top: 1.2rem;
-    max-width: 100%;
-  }
-`;
 const supportedNSList = [
   '.eth',
   '.lens',
@@ -178,33 +80,6 @@ const Index = () => {
       dispatch({ type: MetamaskActions.SetError, payload: e });
     }
   };
-
-  // const handleSendGetStateClick = async () => {
-  //   try {
-  //     const resp = await sendGetState();
-  //     await showAlert('Get State', JSON.stringify(resp, null, 2));
-  //   } catch (e) {
-  //     console.error(e);
-  //     dispatch({ type: MetamaskActions.SetError, payload: e });
-  //   }
-  // };
-
-  // const handleSendAddYourWalletClick = async () => {
-  //   try {
-  //     const resp = await addOwnWalletAddress();
-  //     if (resp && (resp as string[]).length > 0) {
-  //       await showAlert('Monitored', JSON.stringify(resp, null, 2));
-  //     } else {
-  //       await showAlert(
-  //         'Already Monitored',
-  //         'the wallet address is already monitored.',
-  //       );
-  //     }
-  //   } catch (e) {
-  //     console.error(e);
-  //     dispatch({ type: MetamaskActions.SetError, payload: e });
-  //   }
-  // };
 
   const handleSendSetStateClick = async () => {
     if (
@@ -298,24 +173,25 @@ const Index = () => {
   };
 
   return (
-    <Container>
-      <Heading>
-        Welcome to <Span>RSS3 Activity Monitor Snap</Span>
-      </Heading>
-      <SubHeading>
-        This Snap for <Span>MetaMask</Span> allows you to monitor the activities
+    <div className="flex flex-col items-center flex-1 my-32">
+      <h1 className="mt-0 mb-10 text-center text-4xl">
+        Welcome to{' '}
+        <span className="text-[#0072ff]">RSS3 Activity Monitor Snap</span>
+      </h1>
+      <h2 className="mt-0 mb-10 leading-10 text-lg text-left max-2xl">
+        This Snap for <span>MetaMask</span> allows you to monitor the activities
         of any address. <br></br>
         1. Connect to the Snap and install. <br></br>
         2. Start monitoring any address. <br></br>
         3. When there is a new activity produced by any of your monitored
-        addresses, <Span>you will be notified</Span>.
-      </SubHeading>
+        addresses, <span>you will be notified</span>.
+      </h2>
       {state.error && (
-        <ErrorMessage>
+        <div>
           <b>An error happened:</b> {state.error.message}
-        </ErrorMessage>
+        </div>
       )}
-      <CardContainer>
+      <div>
         {!isMetaMaskReady && (
           <Card
             content={{
@@ -491,8 +367,8 @@ const Index = () => {
               </>
             ),
             button: (
-              <WalletAddressContainer>
-                <WalletAddressInput
+              <div className="flex flex-row items-center justify-center gap-4 w-full">
+                <input
                   type="text"
                   placeholder="someone.eth, or 0x..."
                   onChange={(e) => setWalletAddress(e.target.value)}
@@ -503,7 +379,7 @@ const Index = () => {
                 >
                   Add
                 </Button>
-              </WalletAddressContainer>
+              </div>
             ),
           }}
           disabled={!state.installedSnap}
@@ -513,8 +389,8 @@ const Index = () => {
             !shouldDisplayReconnectButton(state.installedSnap)
           }
         />
-      </CardContainer>
-    </Container>
+      </div>
+    </div>
   );
 };
 

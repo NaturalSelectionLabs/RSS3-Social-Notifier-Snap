@@ -1,19 +1,7 @@
-import styled from 'styled-components';
-
-const FooterWrapper = styled.footer`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding-top: 2.4rem;
-  padding-bottom: 2.4rem;
-  border-top: 1px solid ${(props) => props.theme.colors.border.default};
-`;
-
 export const Footer = () => {
   return (
-    <FooterWrapper>
+    <footer className="flex flex-row items-center justify-center my-10 border-t border-solid">
       <span> powered by RSS3 </span>
-    </FooterWrapper>
+    </footer>
   );
 };

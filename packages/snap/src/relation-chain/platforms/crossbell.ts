@@ -1,8 +1,9 @@
-import { Chain, TProfile, type TRelationChainResult } from '..';
+import { Platform, TProfile, type TRelationChainResult } from '..';
+import { isValidWalletAddress } from '../utils';
 
 const API = `https://indexer.crossbell.io/v1`;
 
-type TCSBProfile = {
+export type TCSBProfile = {
   characterId: string;
   handle: string;
   owner: string;
@@ -116,27 +117,11 @@ async function getCSBCharacterIdByHandle(
  */
 async function getCharacterId(handle: string) {
   let result: TCharacterResult | null = null;
-  if (handle.startsWith('0x') && handle.length === 42) {
+  if (isValidWalletAddress(handle)) {
     result = await getCSBCharacterIdByWalletAddress(handle);
   } else if (handle.endsWith('.csb')) {
     result = await getCSBCharacterIdByHandle(handle);
   }
-  return result;
-}
-
-/**
- * Converts the given Crossbell API profiles to a standard profile.
- *
- * @param profiles - The Crossbell API profiles to convert.
- * @returns The converted profiles.
- */
-function coverCSBProfilesToProfile(profiles: TCSBProfile[]): TProfile[] {
-  const result: TProfile[] = profiles.map((item) => ({
-    handle: `${item.handle}.csb`,
-    address: item.owner,
-    avatar: item.metadata.uri,
-  }));
-
   return result;
 }
 
@@ -163,7 +148,7 @@ async function getFollowingByCharacterId(id: string) {
         cursor: string | null;
       };
       const csbProfiles = data.list.map((item) => item.toCharacter);
-      const profiles = coverCSBProfilesToProfile(csbProfiles);
+      const profiles = format(csbProfiles);
       following.push(...profiles);
 
       if (data.cursor === null) {
@@ -181,6 +166,22 @@ async function getFollowingByCharacterId(id: string) {
 }
 
 /**
+ * Converts the given Crossbell API profiles to a standard profile.
+ *
+ * @param profiles - The Crossbell API profiles to convert.
+ * @returns The converted profiles.
+ */
+export function format(profiles: TCSBProfile[]): TProfile[] {
+  const result: TProfile[] = profiles.map((item) => ({
+    handle: `${item.handle}.csb`,
+    address: item.owner,
+    avatar: item.metadata.uri,
+  }));
+
+  return result;
+}
+
+/**
  * Retrieves the relation chain for the given handle from the Crossbell API.
  *
  * @param handle - The handle to retrieve the relation chain for.
@@ -195,7 +196,7 @@ export async function handler(
   const characterResult = await getCharacterId(handle);
   if (characterResult === null) {
     return {
-      platform: Chain.Crossbell,
+      platform: Platform.Crossbell,
       owner: {
         handle,
       },
@@ -206,7 +207,7 @@ export async function handler(
 
   if (!characterResult.status) {
     return {
-      platform: Chain.Crossbell,
+      platform: Platform.Crossbell,
       owner: {
         handle,
       },
@@ -220,7 +221,7 @@ export async function handler(
   const csbHandle = data?.handle ? `${data.handle}.csb` : handle;
   if (data?.characterId === undefined) {
     return {
-      platform: Chain.Crossbell,
+      platform: Platform.Crossbell,
       owner: {
         handle: csbHandle,
       },
@@ -236,7 +237,7 @@ export async function handler(
 
   // 3. Return result
   return {
-    platform: Chain.Crossbell,
+    platform: Platform.Crossbell,
     owner: {
       handle: csbHandle,
       address: characterResult.data?.owner,

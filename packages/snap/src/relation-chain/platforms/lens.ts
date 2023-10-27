@@ -1,6 +1,7 @@
 import { Client, cacheExchange, fetchExchange, gql } from '@urql/core';
 import CrossFetch from 'cross-fetch';
-import { TRelationChainResult, type TProfile, Chain } from '..';
+import { TRelationChainResult, type TProfile, Platform } from '..';
+import { isValidWalletAddress } from '../utils';
 
 // only need handle, ownedBy and picture.
 const QueryFollowing = gql`
@@ -148,7 +149,7 @@ const query = async (handle: string, limit: number, cursor?: string) => {
  * @param handle - The user's handle.
  */
 export async function getAddressByHandle(handle: string) {
-  if (handle.startsWith('0x') && handle.length === 42) {
+  if (isValidWalletAddress(handle)) {
     const { data } = await client.query(QueryProfileByWalletAddress, {
       address: handle,
     });
@@ -198,7 +199,7 @@ export async function handler(
   if (lensProfile === null) {
     return {
       owner: { handle },
-      platform: Chain.Lens,
+      platform: Platform.Lens,
       status: false,
       message: `invalid handle: ${handle}, please check again.`,
     };
@@ -232,7 +233,7 @@ export async function handler(
       address: lensProfile.walletAddress,
       avatar: lensProfile.avatar,
     },
-    platform: Chain.Lens,
+    platform: Platform.Lens,
     status: errorMessage === '',
     message: errorMessage || 'success',
     following,

@@ -1,5 +1,4 @@
 /* eslint-disable*/
-
 /// <reference types="react-scripts" />
 
 import { MetaMaskInpageProvider } from '@metamask/providers';
@@ -15,4 +14,9 @@ declare global {
       providers?: MetaMaskInpageProvider[];
     };
   }
+}
+
+declare module '*.svg' {
+  const content: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
+  export default content;
 }

@@ -1,11 +1,11 @@
-export enum Chain {
+export enum Platform {
   Lens = 'Lens',
   Crossbell = 'Crossbell',
   Farcaster = 'Farcaster',
 }
 
 export type TRelationChainResult = {
-  platform: Chain;
+  platform: Platform;
   status: boolean;
   message: string;
   owner: TProfile;
@@ -20,3 +20,8 @@ export type TProfile = {
 };
 
 export { handler as LensHandler, format as LensFormat } from './platforms/lens';
+export {
+  handler as CrossbellHandler,
+  format as CrossbellFormat,
+  type TCSBProfile,
+} from './platforms/crossbell';

@@ -16,6 +16,7 @@ import {
   setState,
 } from './state';
 import { diff, getSocialActivities } from './fetch';
+import { getProfilesBySearch } from './relation-chain/profile';
 
 export type FetchSocialCountParams = {
   accounts: string[];
@@ -160,6 +161,11 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
           content: panel(content),
         },
       });
+    }
+
+    case 'getProfilesBySearch': {
+      const { search } = request.params as { search: string };
+      return await getProfilesBySearch(search);
     }
 
     default:
