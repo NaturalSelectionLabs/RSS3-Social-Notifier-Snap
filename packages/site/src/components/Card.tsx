@@ -15,8 +15,8 @@ export const Card = ({ content, disabled = false, fullWidth }: CardProps) => {
   const { title, description, button } = content;
   return (
     <div
-      className={cn('flex flex-col my-10 p-10 border border-solid', [
-        fullWidth ? 'w-full' : 'w-[400px]',
+      className={cn('flex flex-col p-4 border border-solid rounded-lg', [
+        fullWidth ? 'w-full' : 'w-[300px]',
         disabled ? 'opacity-40' : '',
       ])}
     >

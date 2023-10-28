@@ -165,7 +165,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
 
     case 'getProfilesBySearch': {
       const { search } = request.params as { search: string };
-      return await getProfilesBySearch(search);
+      return getProfilesBySearch(search);
     }
 
     default:

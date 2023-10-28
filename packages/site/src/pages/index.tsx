@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   // addOwnWalletAddress,
@@ -19,11 +20,21 @@ import {
   InstallFlaskButton,
   ReconnectButton,
   SendHelloButton,
-  Card,
+  // Card,
   // Button,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
 
 const supportedNSList = [
   '.eth',
@@ -173,222 +184,172 @@ const Index = () => {
   };
 
   return (
-    <div className="flex flex-col items-center flex-1 my-32">
-      <h1 className="mt-0 mb-10 text-center text-4xl">
+    <div className="container my-12">
+      <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
         Welcome to{' '}
         <span className="text-[#0072ff]">RSS3 Activity Monitor Snap</span>
       </h1>
-      <h2 className="mt-0 mb-10 leading-10 text-lg text-left max-2xl">
-        This Snap for <span>MetaMask</span> allows you to monitor the activities
-        of any address. <br></br>
-        1. Connect to the Snap and install. <br></br>
-        2. Start monitoring any address. <br></br>
-        3. When there is a new activity produced by any of your monitored
-        addresses, <span>you will be notified</span>.
+      <h2 className="mt-5 mb-10 text-base text-left max-2xl text-muted-foreground sm:text-lg">
+        <p>
+          This Snap for <span>MetaMask</span> allows you to monitor the
+          activities of any address.
+        </p>
+        <p>1. Connect to the Snap and install.</p>
+        <p>2. Start monitoring any address.</p>
+        <p>
+          3. When there is a new activity produced by any of your monitored
+          addresses, <span>you will be notified</span>.
+        </p>
       </h2>
       {state.error && (
-        <div>
-          <b>An error happened:</b> {state.error.message}
+        <div className="max-w-[600px] my-4">
+          <Alert variant="destructive">
+            <ExclamationTriangleIcon className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              <b>An error happened:</b> {state.error.message}
+            </AlertDescription>
+          </Alert>
         </div>
       )}
-      <div>
+      <div className="grid grid-cols-4 items-start justify-start gap-4">
         {!isMetaMaskReady && (
-          <Card
-            content={{
-              title: 'Install',
-              description:
-                'Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.',
-              button: <InstallFlaskButton />,
-            }}
-            fullWidth
-          />
+          <Card>
+            <CardHeader>
+              <CardTitle>Install</CardTitle>
+              <CardDescription>
+                Snaps is pre-release software only available in MetaMask Flask,
+                a canary distribution for developers with access to upcoming
+                features.
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <InstallFlaskButton />
+            </CardFooter>
+          </Card>
         )}
         {!state.installedSnap && (
-          <Card
-            content={{
-              title: 'Install',
-              description: 'Get started by installing this snap.',
-              button: (
-                <ConnectButton
-                  onClick={handleConnectClick}
-                  disabled={!isMetaMaskReady}
-                />
-              ),
-            }}
-            disabled={!isMetaMaskReady}
-          />
+          <Card>
+            <CardHeader>
+              <CardTitle>Install</CardTitle>
+              <CardDescription>
+                Get started by installing this snap.
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <ConnectButton
+                onClick={handleConnectClick}
+                disabled={!isMetaMaskReady}
+              />
+            </CardFooter>
+          </Card>
         )}
         {shouldDisplayReconnectButton(state.installedSnap) && (
-          <Card
-            content={{
-              title: 'Reinstall',
-              description:
-                "Reinstall to update the snap, or if something isn't right.",
-              button: (
-                <ReconnectButton
-                  onClick={handleConnectClick}
-                  disabled={!state.installedSnap}
-                />
-              ),
-            }}
-            disabled={!state.installedSnap}
-          />
+          <Card>
+            <CardHeader>
+              <CardTitle>Reinstall</CardTitle>
+              <CardDescription>
+                Reinstall to update the snap, or if something isn't right.
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <ReconnectButton
+                onClick={handleConnectClick}
+                disabled={!state.installedSnap}
+              />
+            </CardFooter>
+          </Card>
         )}
 
-        <Card
-          content={{
-            title: 'Reset Snap State',
-            description:
-              'Clean all the data saved in this Snap. This does not affect your wallet in anyway.',
-            button: (
-              <SendHelloButton
-                onClick={handleSendClearStateClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>Reset Snap State</CardTitle>
+            <CardDescription>
+              Clean all the data saved in this Snap. This does not affect your
+              wallet in anyway.
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <SendHelloButton
+              onClick={handleSendClearStateClick}
+              disabled={!state.installedSnap}
+            />
+          </CardFooter>
+        </Card>
 
-        {/* <Card
-          content={{
-            title: 'Send Get State',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleSendGetStateClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        /> */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Show Last Updated</CardTitle>
+            <CardDescription>
+              Show the activities included in the last updated
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <SendHelloButton
+              onClick={handleShowLastUpdatedClick}
+              disabled={!state.installedSnap}
+            />
+          </CardFooter>
+        </Card>
 
-        {/* <Card
-          content={{
-            title: 'Add Your wallet',
-            description: 'Monitor your current wallet address.',
-            button: (
-              <SendHelloButton
-                onClick={handleSendAddYourWalletClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        /> */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Show All Activities</CardTitle>
+            <CardDescription>
+              View all activities from all the addresses monitored.
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <SendHelloButton
+              onClick={handleShowAllActivitiesClick}
+              disabled={!state.installedSnap}
+            />
+          </CardFooter>
+        </Card>
 
-        <Card
-          content={{
-            title: 'Show Last Updated',
-            description: 'Show the activities included in the last updated',
-            button: (
-              <SendHelloButton
-                onClick={handleShowLastUpdatedClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>Show All Addresses</CardTitle>
+            <CardDescription>
+              View all addresses from all the addresses monitored.
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <SendHelloButton
+              onClick={handleShowAllAddressesClick}
+              disabled={!state.installedSnap}
+            />
+          </CardFooter>
+        </Card>
 
-        <Card
-          content={{
-            title: 'Show All Activities',
-            description:
-              'View all activities from all the addresses monitored.',
-            button: (
-              <SendHelloButton
-                onClick={handleShowAllActivitiesClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>Monitor Any Address</CardTitle>
+            <CardDescription>
+              <p>Start monitoring a new address.</p>
+              <p>Supported Web3 Name Service: {supportedNSList.join(', ')}.</p>
+              <p>
+                And of course, your favorite and easy-to-memorize 0x address.
+              </p>
+            </CardDescription>
+          </CardHeader>
 
-        <Card
-          content={{
-            title: 'Show All Addresses',
-            description: 'View all addresses from all the addresses monitored.',
-            button: (
-              <SendHelloButton
-                onClick={handleShowAllAddressesClick}
-                disabled={!state.installedSnap}
+          <CardContent>
+            <div className="flex flex-row items-center gap-4">
+              <Input
+                type="text"
+                placeholder="someone.eth, or 0x..."
+                onChange={(e) => setWalletAddress(e.target.value)}
               />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
-
-        <Card
-          content={{
-            title: 'Monitor Any Address',
-            description: (
-              <>
-                <p>Start monitoring a new address.</p>
-                <p>
-                  Supported Web3 Name Service: {supportedNSList.join(', ')}.
-                </p>
-                <p>
-                  And of course, your favorite and easy-to-memorize 0x address.
-                </p>
-              </>
-            ),
-            button: (
-              <div className="flex flex-row items-center justify-center gap-4 w-full">
-                <input
-                  type="text"
-                  placeholder="someone.eth, or 0x..."
-                  onChange={(e) => setWalletAddress(e.target.value)}
-                />
-                <Button
-                  onClick={handleSendSetStateClick}
-                  disabled={!state.installedSnap}
-                >
-                  Add
-                </Button>
-              </div>
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
+              <Button
+                onClick={handleSendSetStateClick}
+                disabled={!state.installedSnap}
+              >
+                Add
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

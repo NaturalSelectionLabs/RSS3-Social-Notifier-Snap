@@ -1,4 +1,4 @@
-import { Profile } from '@rss3/js-sdk';
+import type { Profile } from '@rss3/js-sdk';
 import { isSupportedNS, isValidWalletAddress } from './utils';
 import { Platform } from '.';
 
