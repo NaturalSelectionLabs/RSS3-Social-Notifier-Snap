@@ -10,6 +10,12 @@ export type TCSBProfile = {
   primary: boolean;
   metadata: {
     uri?: string;
+    content?: {
+      bio?: string;
+      name: string;
+      type: string;
+      avatars: string[];
+    };
   };
 };
 
@@ -241,7 +247,7 @@ export async function handler(
     owner: {
       handle: csbHandle,
       address: characterResult.data?.owner,
-      avatar: characterResult.data?.metadata.uri,
+      avatar: characterResult.data?.metadata.content?.avatars?.[0],
     },
     status: true,
     message: 'success',

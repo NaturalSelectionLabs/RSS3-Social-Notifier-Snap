@@ -58,10 +58,31 @@ export type SocialActivity = {
   activities: string[];
   total: number;
 };
+export type TProfile = {
+  handle: string;
+  address?: string;
+  avatar?: string;
+};
+
+export enum Platform {
+  Crossbell = 'Crossbell',
+  Farcaster = 'Farcaster',
+  Lens = 'Lens',
+}
+
+export type TRelationChainResult = {
+  platform: Platform;
+  status: boolean;
+  message: string;
+  owner: TProfile;
+  followers?: TProfile[];
+  following?: TProfile[];
+};
 
 export type SocialMonitor = {
   search: string;
   profiles: Profile[];
+  following?: TRelationChainResult[];
   latestUpdateTime?: string;
   activities?: SocialActivity[];
   lastUpdatedActivities?: SocialActivity[];

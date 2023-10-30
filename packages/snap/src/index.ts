@@ -26,6 +26,7 @@ import { getProfilesBySearch } from './profiles';
 // } from './relation-chain';
 import { handler as CrossbellHandler } from './crossbel';
 import { handler as LensHandler } from './lens';
+import { handler as FarcasterHandler } from './farcaster';
 
 export enum Platform {
   Crossbell = 'Crossbell',
@@ -462,15 +463,22 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
               };
             }
 
+            if (profile.platform === Platform.Farcaster) {
+              return {
+                handle: profile.handle,
+                execute: FarcasterHandler,
+              };
+            }
+
             return undefined;
           });
 
-        const following: TProfile[] = [];
+        const following: TRelationChainResult[] = [];
         const promises = handles.map(async (exec) => {
           if (exec?.handle) {
             const fol = await exec.execute(exec.handle);
-            if (fol.following) {
-              following.push(...fol.following);
+            if (fol) {
+              following.push(fol);
             }
           }
         });
