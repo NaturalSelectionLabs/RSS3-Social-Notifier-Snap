@@ -1,6 +1,12 @@
 import type { Profile } from '@rss3/js-sdk';
 import { isSupportedNS, isValidWalletAddress } from './utils';
-import { Platform } from '.';
+import {
+  executeCrossbell,
+  executeFarcaster,
+  executeLens,
+  Platform,
+  TProfile,
+} from '.';
 
 export const profileApi = (search: string) =>
   `https://testnet.rss3.io/data/accounts/${search}/profiles`;
@@ -18,4 +24,37 @@ export async function getProfilesBySearch(key: string) {
     return data.filter((item) => item.platform in Platform);
   }
   return [];
+}
+
+/**
+ * Get All Following by search key and platforms.
+ *
+ * @param key - Wallet address or supported namespace.
+ * @param platforms - The platforms to get following.
+ */
+export async function getAllFollowing(key: string, platforms: string[]) {
+  const executeArray = [
+    { platforms: Platform.Lens, handler: executeLens },
+    {
+      platforms: Platform.Crossbell,
+      handler: executeCrossbell,
+    },
+    {
+      platforms: Platform.Farcaster,
+      handler: executeFarcaster,
+    },
+  ];
+
+  const following: TProfile[] = [];
+
+  executeArray.forEach(async (item) => {
+    if (platforms.includes(item.platforms)) {
+      const resp = await item.handler(key);
+      if (resp) {
+        following.push(...resp);
+      }
+    }
+  });
+
+  return following;
 }

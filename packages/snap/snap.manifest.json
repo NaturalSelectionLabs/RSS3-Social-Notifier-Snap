@@ -7,7 +7,7 @@
     "url": "https://github.com/NaturalSelectionLabs/RSS3-MetaMask-Snap.git"
   },
   "source": {
-    "shasum": "IJkp+CqMVt3Y9h7K5k8Wr/hDAKGsueHNBz3dYA3DWBE=",
+    "shasum": "Ie3vtzByxVHKjmIuvOZzTWp3UWD0sVfcZ5SrcmkCpA4=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -33,6 +33,12 @@
           "expression": "* * * * *",
           "request": {
             "method": "execute"
+          }
+        },
+        {
+          "expression": "* * * * *",
+          "request": {
+            "method": "executeFollow"
           }
         }
       ]

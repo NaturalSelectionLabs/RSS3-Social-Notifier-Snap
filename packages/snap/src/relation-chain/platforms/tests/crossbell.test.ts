@@ -3,7 +3,7 @@ import {
   CrossbellHandler,
   CrossbellFormat,
   type TCSBProfile,
-  Chain,
+  Platform,
 } from '../..';
 
 describe('get following by crossbell', () => {
@@ -42,7 +42,7 @@ describe('get following by crossbell', () => {
         avatar:
           'ipfs://bafkreih4o2egau6vewd6xjyklalp5emtcwdtwglgefiypbstqovpqevkn4',
       },
-      platform: Chain.Crossbell,
+      platform: Platform.Crossbell,
       status: true,
       message: 'success',
       following: CrossbellFormat(mockFollowing as unknown as TCSBProfile[]),
@@ -56,11 +56,6 @@ describe('get following by crossbell', () => {
       mockFetchFollowingMethod,
     );
 
-    const following = CrossbellFormat(
-      mockFollowing as unknown as TCSBProfile[],
-    );
-    console.log(following);
-
     expect(resp).toStrictEqual({
       owner: {
         address: '0xe584ca8f30b93b3ed47270297a3e920e2d6d25f0',
@@ -68,7 +63,7 @@ describe('get following by crossbell', () => {
           'ipfs://bafkreih4o2egau6vewd6xjyklalp5emtcwdtwglgefiypbstqovpqevkn4',
         handle: 'dmoo.csb',
       },
-      platform: Chain.Crossbell,
+      platform: Platform.Crossbell,
       status: true,
       message: 'success',
       following: CrossbellFormat(mockFollowing as unknown as TCSBProfile[]),

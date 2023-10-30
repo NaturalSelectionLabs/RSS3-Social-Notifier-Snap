@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals';
 import { CombinedError } from '@urql/core';
-import { Chain } from '../..';
+import { Platform } from '../..';
 import { handler as LensHandler, format as LensFormat } from '../lens';
 
 const MOCK_HANDLE = '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0'; // dmoo.lens
@@ -54,7 +54,7 @@ describe('get following by lens', () => {
           'https://ik.imagekit.io/lens/media-snapshot/f947319b5f4c063e88cda751fde67a259d96ecca1558db949696374f583fa3f2.png',
         handle: 'dmoosocool.lens',
       },
-      platform: Chain.Lens,
+      platform: Platform.Lens,
       status: true,
       message: 'success',
       following: LensFormat(mockData),
@@ -112,7 +112,7 @@ describe('get following by lens', () => {
           'https://ik.imagekit.io/lens/media-snapshot/f947319b5f4c063e88cda751fde67a259d96ecca1558db949696374f583fa3f2.png',
         handle: 'dmoosocool.lens',
       },
-      platform: Chain.Lens,
+      platform: Platform.Lens,
       status: true,
       message: 'success',
       following: LensFormat(mockData),
@@ -144,7 +144,7 @@ describe('get following by lens', () => {
           'https://ik.imagekit.io/lens/media-snapshot/f947319b5f4c063e88cda751fde67a259d96ecca1558db949696374f583fa3f2.png',
         handle: 'dmoosocool.lens',
       },
-      platform: Chain.Lens,
+      platform: Platform.Lens,
       status: false,
       message: '[Network] Network error',
       following: [],

@@ -1,4 +1,5 @@
 import { MetaMaskInpageProvider } from '@metamask/providers';
+import type { Profile } from '@rss3/js-sdk';
 import { defaultSnapOrigin } from '../config';
 import { GetSnapsResponse, Snap } from '../types';
 
@@ -52,10 +53,18 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
   }
 };
 
-type SocialActivity = {
+export type SocialActivity = {
   address: string;
   activities: string[];
   total: number;
+};
+
+export type SocialMonitor = {
+  search: string;
+  profiles: Profile[];
+  latestUpdateTime?: string;
+  activities?: SocialActivity[];
+  lastUpdatedActivities?: SocialActivity[];
 };
 
 /**
@@ -66,7 +75,11 @@ export const sendGetState = async () => {
     method: 'wallet_invokeSnap',
     params: { snapId: defaultSnapOrigin, request: { method: 'getState' } },
   });
-  return resp as { socialActivities: SocialActivity[] };
+  return resp as {
+    socialActivities: SocialActivity[];
+    lastUpdatedActivities: SocialActivity[];
+    monitor: SocialMonitor[];
+  };
 };
 
 /**
@@ -180,13 +193,16 @@ export const showAllSocialPlatforms = async () => {
   });
 };
 
-export const getAllFollowing = async (search: string, platforms: string[]) => {
+export const getProfilesFilterBySearch = async (
+  search: string,
+  platforms: string[],
+) => {
   return await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
       request: {
-        method: 'getAllFollowing',
+        method: 'getProfilesFilterBySearch',
         params: {
           search,
           platforms,
@@ -196,4 +212,34 @@ export const getAllFollowing = async (search: string, platforms: string[]) => {
   });
 };
 
+export const addProfilesToMonitorFollowing = async (
+  search: string,
+  profiles: Profile[],
+) => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'addProfilesToMonitorFollowing',
+        params: {
+          search,
+          profiles,
+        },
+      },
+    },
+  });
+};
+
+export const getProfilesToMonitorFollowing = async () => {
+  return (await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'getProfilesToMonitorFollowing',
+      },
+    },
+  })) as SocialMonitor[];
+};
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

@@ -6,6 +6,8 @@ import {
 import { divider, heading, panel, text } from '@metamask/snaps-ui';
 import { assert } from '@metamask/utils';
 
+import { Profile } from '@rss3/js-sdk';
+import moment from 'moment';
 import {
   SocialActivity,
   State,
@@ -16,7 +18,12 @@ import {
   setState,
 } from './state';
 import { diff, getSocialActivities } from './fetch';
+import { getProfilesBySearch } from './profiles';
+// import { getAllFollowing } from './relation-chain/profile';
+
+// import {} from './relation-chain';
 // import { getProfilesBySearch } from './relation-chain/profile';
+
 export enum Platform {
   Crossbell = 'Crossbell',
   Farcaster = 'Farcaster',
@@ -167,14 +174,43 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       });
     }
 
-    // case 'getProfilesBySearch': {
-    //   const { search } = request.params as { search: string };
-    //   return getProfilesBySearch(search);
-    // }
+    case 'getProfilesBySearch': {
+      const { search } = request.params as { search: string };
+      return getProfilesBySearch(search);
+    }
 
     case 'getSupportedSocialPlatforms': {
       return [Platform.Crossbell, Platform.Farcaster, Platform.Lens];
     }
+
+    case 'getProfilesFilterBySearch': {
+      const { search, platforms } = request.params as {
+        search: string;
+        platforms: string[];
+      };
+      const profiles = await getProfilesBySearch(search);
+      return profiles.filter((item) => platforms.includes(item.platform));
+    }
+
+    case 'addProfilesToMonitorFollowing': {
+      const { search, profiles } = request.params as {
+        search: string;
+        profiles: Profile[];
+      };
+      const state = await getState();
+      const monitor = state.monitor.filter((item) => item.search !== search);
+      await setState({
+        ...state,
+        monitor: [...monitor, { search, profiles }],
+      });
+      return true;
+    }
+
+    case 'getProfilesToMonitorFollowing': {
+      const state = await getState();
+      return state.monitor;
+    }
+
     default:
       throw new Error('Method not found.');
   }
@@ -215,15 +251,6 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
 
       // no accounts
       if (accounts.length === 0) {
-        // for debug
-
-        // await snap.request({
-        //   method: 'snap_dialog',
-        //   params: {
-        //     type: DialogType.Alert,
-        //     content: panel([heading('No accounts')]),
-        //   },
-        // });
         return { result: false, message: 'No accounts' };
       }
 
@@ -244,19 +271,6 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
 
       // not need to notify.
       if (changedSocialCounts.length === 0) {
-        // for debug
-
-        // await snap.request({
-        //   method: 'snap_dialog',
-        //   params: {
-        //     type: DialogType.Alert,
-        //     content: panel([
-        //       heading('No new feed'),
-        //       text(JSON.stringify(state.socialActivities)),
-        //       text(JSON.stringify(socialActivities)),
-        //     ]),
-        //   },
-        // });
         return {
           result: false,
           message: 'No new feed',
@@ -390,6 +404,20 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
       });
 
       return { result: true, content: panel(content) };
+    }
+
+    case 'executeFollow': {
+      const state = await getState();
+      const monitor = state.monitor.map((item) => {
+        item.latestUpdateTime = moment().format('YYYY/MM/DD hh:mm:ss');
+        return item;
+      });
+
+      await setState({
+        ...state,
+        monitor,
+      });
+      return true;
     }
 
     default:

@@ -1,9 +1,16 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 import * as z from 'zod';
+import { type Profile } from '@rss3/js-sdk';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getAllFollowing, showAllSocialPlatforms } from '@/utils';
+import {
+  addProfilesToMonitorFollowing,
+  getProfilesFilterBySearch,
+  isLocalSnap,
+  showAllSocialPlatforms,
+} from '@/utils';
 import {
   Form,
   FormControl,
@@ -13,10 +20,13 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-// import { toast } from '@/components/ui/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
+import { MetaMaskContext, MetamaskActions } from '@/hooks';
+import { defaultSnapOrigin } from '@/config';
+import { Card, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
 
 const FormSchema = z.object({
   platforms: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -28,8 +38,18 @@ const FormSchema = z.object({
     .min(1, { message: 'You have to enter at least one keyword.' }),
 });
 
-const Monitor = () => {
+const MonitorCreate = () => {
+  const [state, dispatch] = useContext(MetaMaskContext);
+  const isMetaMaskReady = isLocalSnap(defaultSnapOrigin)
+    ? state.isFlask
+    : state.snapsDetected;
+
   const [socialPlatforms, setSocialPlatforms] = useState<string[]>([]);
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [selectProfilesHandle, setSelectedProfileHandle] = useState<string[]>(
+    [],
+  );
+  const [searchValue, setSearchValue] = useState<string>('');
   const platforms = useMemo(() => {
     if (socialPlatforms.length === 0) {
       return [];
@@ -53,22 +73,49 @@ const Monitor = () => {
     );
   }, []);
 
-  if (socialPlatforms.length === 0) {
+  if (socialPlatforms.length === 0 || !isMetaMaskReady) {
     return <div>loading...</div>;
   }
 
   const onSubmit = async function (data: z.infer<typeof FormSchema>) {
     const { search, platforms: selectedPlatforms } = data;
-    console.log(search, selectedPlatforms);
-    const resp = await getAllFollowing(search, selectedPlatforms);
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(resp, null, 2)}</code>
-        </pre>
-      ),
-    });
+    try {
+      const resp = (await getProfilesFilterBySearch(
+        search,
+        selectedPlatforms,
+      )) as Profile[];
+      setSearchValue(search);
+      setProfiles(resp);
+    } catch (e) {
+      // console.error('error');
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
+  const addProfilesToMonitorFollowingHandler = async () => {
+    if (selectProfilesHandle.length === 0) {
+      return;
+    }
+
+    try {
+      const selectedProfiles = profiles.filter(
+        (item) => item.handle && selectProfilesHandle.includes(item.handle),
+      );
+      // console.log(searchValue);
+      // console.log(selectedProfiles);
+      const isSuccess = await addProfilesToMonitorFollowing(
+        searchValue,
+        selectedProfiles,
+      );
+
+      if (isSuccess) {
+        // const snapState = await sendGetState();
+        // console.log(snapState);
+      }
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
   };
 
   return (
@@ -166,9 +213,63 @@ const Monitor = () => {
           <Button type="submit">query</Button>
         </form>
       </Form>
-      {/* {socialPlatforms.join(',')} */}
+      {profiles.length > 0 && (
+        <div className="flex flex-col items-start justify-center gap-3 mt-10">
+          <h3 className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base">
+            Select you want to monitor profiles
+          </h3>
+          <div className="flex flex-wrap items-start justify-start gap-3">
+            {profiles.map((item) => (
+              <Card
+                key={item.handle}
+                onClick={() => {
+                  setSelectedProfileHandle((prev) => {
+                    if (item.handle) {
+                      if (prev.includes(item.handle)) {
+                        return prev.filter((value) => value !== item.handle);
+                      }
+                      return [...prev, item.handle];
+                    }
+                    return prev;
+                  });
+                }}
+                className={cn(
+                  'relative w-[360px] cursor-pointer',
+                  item.handle &&
+                    selectProfilesHandle.includes(item.handle) &&
+                    'border-2 border-primary',
+                )}
+              >
+                <CardContent className="my-3 space-y-2">
+                  <div className="flex justify-end">
+                    <Badge>{item.platform}</Badge>
+                  </div>
+                  <div className="flex flex-row items-center gap-3">
+                    <Avatar>
+                      <AvatarImage src={item.profileURI?.[0]} />
+                      <AvatarFallback>
+                        {item.handle?.slice(0, 2).toLocaleUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <h3 className="text-sm text-muted-foreground">
+                      {item.handle}
+                    </h3>
+                  </div>
+                  <p className="text-sm line-clamp-1 min-h-[20px]">
+                    {item.bio}{' '}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Button onClick={addProfilesToMonitorFollowingHandler}>
+            Submit your monitor
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Monitor;
+export default MonitorCreate;

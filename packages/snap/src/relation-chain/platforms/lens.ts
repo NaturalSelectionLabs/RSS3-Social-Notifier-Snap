@@ -133,7 +133,7 @@ export const format = (data: any): TProfile[] => {
  * @param cursor - The cursor for pagination.
  * @returns An object containing the user's following relation chain information.
  */
-const query = async (handle: string, limit: number, cursor?: string) => {
+export const query = async (handle: string, limit: number, cursor?: string) => {
   const queryOptions = {
     address: handle,
     limit,

@@ -130,7 +130,7 @@ async function getCharacterId(handle: string) {
  *
  * @param id - The character ID to retrieve the followers for.
  */
-async function getFollowingByCharacterId(id: string) {
+export async function getFollowingByCharacterId(id: string) {
   const following: TProfile[] = [];
   let hasNextPage = true;
   let cursor: string | undefined;

@@ -1,4 +1,5 @@
 import { ManageStateOperation } from '@metamask/snaps-types';
+import { Profile } from '@rss3/js-sdk';
 
 export type CronActivity = {
   id: string;
@@ -11,9 +12,18 @@ export type SocialActivity = {
   total: number;
 };
 
+export type SocialMonitor = {
+  search: string;
+  profiles: Profile[];
+  latestUpdateTime?: string;
+  activities?: SocialActivity[];
+  lastUpdatedActivities?: SocialActivity[];
+};
+
 export type State = {
   socialActivities: SocialActivity[];
   lastUpdatedActivities: SocialActivity[];
+  monitor: SocialMonitor[];
 };
 
 /**
@@ -23,6 +33,7 @@ export type State = {
 const DEFAULT_STATE = {
   socialActivities: [],
   lastUpdatedActivities: [],
+  monitor: [],
 };
 
 /**

@@ -1,4 +1,4 @@
-import { Chain } from '../..';
+import { Platform } from '../..';
 import {
   getOwnerProfileByUsername,
   userByUsernameApi,
@@ -215,7 +215,7 @@ describe('getOwnerProfileByUsername', () => {
         avatar: 'https://i.imgur.com/W2qp6Rg.jpg',
         handle: 'henryqw',
       },
-      platform: Chain.Farcaster,
+      platform: Platform.Farcaster,
       status: true,
       message: 'success',
       following: [
