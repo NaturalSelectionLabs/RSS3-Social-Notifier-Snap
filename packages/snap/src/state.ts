@@ -17,10 +17,8 @@ export type SocialActivity = {
 export type SocialMonitor = {
   search: string;
   profiles: Profile[];
-  following?: TRelationChainResult[];
+  watchedProfiles?: TRelationChainResult[];
   latestUpdateTime?: string;
-  activities?: SocialActivity[];
-  lastUpdatedActivities?: SocialActivity[];
 };
 
 export type State = {

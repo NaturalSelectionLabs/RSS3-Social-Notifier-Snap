@@ -31,16 +31,6 @@ const MonitorList = () => {
   const handleGetState = async () => {
     const snapState = await sendGetState();
     console.log(snapState);
-    // toast({
-    //   title: 'You submitted the following values:',
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">
-    //         {JSON.stringify(snapState.monitor, null, 2)}
-    //       </code>
-    //     </pre>
-    //   ),
-    // });
   };
 
   useEffect(() => {
@@ -80,33 +70,35 @@ const MonitorList = () => {
                   </span>
                 </p>
                 <div className="flex flex-wrap items-center justify-start gap-3">
-                  {monitor.following?.map((fol) => (
+                  {monitor.watchedProfiles?.map((wProfile) => (
                     <Card
-                      key={fol.owner.handle}
+                      key={wProfile.owner.handle}
                       onClick={() => {
-                        console.log(fol);
+                        console.log(wProfile);
                       }}
                       className={cn('relative w-[360px] cursor-pointer')}
                     >
                       <CardContent className="my-3 space-y-2">
                         <div className="flex justify-between">
-                          <Badge>{fol.platform}</Badge>
+                          <Badge>{wProfile.platform}</Badge>
                           {/* <Badge></Badge> */}
                         </div>
                         <div className="flex flex-row items-center gap-3">
                           <Avatar>
                             <AvatarImage
-                              src={replaceIpfs(fol.owner.avatar ?? '')}
+                              src={replaceIpfs(wProfile.owner.avatar ?? '')}
                             />
                             <AvatarFallback>
-                              {fol.owner.handle.slice(0, 2).toLocaleUpperCase()}
+                              {wProfile.owner.handle
+                                .slice(0, 2)
+                                .toLocaleUpperCase()}
                             </AvatarFallback>
                           </Avatar>
                           <h3 className="text-sm text-muted-foreground">
-                            {fol.owner.handle}
+                            {wProfile.owner.handle}
                           </h3>
                         </div>
-                        <p>Following: {fol.following?.length ?? 0}</p>
+                        <p>Following: {wProfile.following?.length ?? 0}</p>
                       </CardContent>
                     </Card>
                   ))}

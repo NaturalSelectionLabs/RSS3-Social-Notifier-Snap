@@ -20,7 +20,7 @@ import {
 } from './state';
 import { diff, getSocialActivities } from './fetch';
 import { getProfilesBySearch } from './profiles';
-import { handler as CrossbellHandler } from './crossbel';
+import { handler as CrossbellHandler } from './crossbell';
 import { handler as LensHandler } from './lens';
 import { handler as FarcasterHandler } from './farcaster';
 
@@ -455,19 +455,19 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
             return undefined;
           });
 
-        const following: TRelationChainResult[] = [];
+        const watchedProfiles: TRelationChainResult[] = [];
         const promises = handles.map(async (exec) => {
           if (exec?.handle) {
             const fol = await exec.execute(exec.handle);
             if (fol) {
-              following.push(fol);
+              watchedProfiles.push(fol);
             }
           }
         });
         await Promise.all(promises);
         return {
           ...item,
-          following,
+          watchedProfiles,
         };
       });
 

@@ -81,13 +81,9 @@ export function format(activity: Activity) {
  * Get social count by rss3.
  *
  * @param addresses - The wallet address array.
- * @param sinceTimestamp - The timestamp.
  * @returns The social count array.
  */
-export async function getMultiple(
-  addresses: (string | undefined)[],
-  sinceTimestamp?: string,
-) {
+export async function getMultiple(addresses: string[]) {
   const activities: CronActivity[] = [];
   let hasNextPage = true;
   let cursor: string | undefined;
@@ -103,11 +99,7 @@ export async function getMultiple(
   const executeAddresses = filtedAddresses;
 
   // 1 day ago
-  const timestamp =
-    sinceTimestamp === undefined
-      ? moment().subtract(1, 'day').unix()
-      : moment(sinceTimestamp).subtract(1, 'day').unix();
-
+  const timestamp = moment().subtract(1, 'day').unix();
   while (hasNextPage) {
     const params = {
       action_limit: 10,
