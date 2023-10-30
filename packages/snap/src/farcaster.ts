@@ -71,7 +71,15 @@ export async function getOwnerProfileByUsername(username: string) {
   /**
    * If there are no errors, return the owner profile.
    */
-  const { result } = json as { result: { user: TFarcasterUser } };
+  const { result } = json as {
+    result: {
+      user: TFarcasterUser;
+      extras: {
+        fid: number;
+        custodyAddress: string;
+      };
+    };
+  };
   return {
     handle: result.user.username,
     avatar: result.user.pfp.url,
@@ -79,6 +87,7 @@ export async function getOwnerProfileByUsername(username: string) {
     followerCount: result.user.followerCount,
     followingCount: result.user.followingCount,
     bio: result.user.profile.bio.text,
+    address: result.extras.custodyAddress,
   };
 }
 
@@ -88,13 +97,50 @@ export async function getOwnerProfileByUsername(username: string) {
  * @param data - The response data from FarCaster API.
  * @returns An array of TProfile objects.
  */
-export function format(data: TFarcasterUser[]): TProfile[] {
-  return data.map((item) => {
+export async function format(data: TFarcasterUser[]): Promise<TProfile[]> {
+  const promises = data.map(async (item) => {
+    const resp = await fetch(userByUsernameApi(item.username));
+    const json = (await resp.json()) as
+      | { result: { user: TFarcasterUser } }
+      | TFarcasterError;
+
+    /**
+     * If there are errors, return the handle.
+     */
+    if ((json as TFarcasterError)?.errors) {
+      return {
+        handle: item.username,
+        avatar: item.pfp.url,
+      };
+    }
+
+    /**
+     * If there are no errors, return the owner profile.
+     */
+    const { result } = json as {
+      result: {
+        user: TFarcasterUser;
+        extras: {
+          fid: number;
+          custodyAddress: string;
+        };
+      };
+    };
+
     return {
       handle: item.username,
       avatar: item.pfp.url,
+      address: result.extras.custodyAddress,
     };
   });
+
+  return await Promise.all(promises);
+  // return data.map((item) => {
+  //   return {
+  //     handle: item.username,
+  //     avatar: item.pfp.url,
+  //   };
+  // });
 }
 
 /**
@@ -114,7 +160,7 @@ export async function getFollowingByFid(fid: number) {
         : `${getFollowingByFidApi(fid)}&cursor=${cursor}`;
     const resp = await fetch(url);
     const data = (await resp.json()) as TFarcasterFollowingResponse;
-    following.push(...format(data.result.users));
+    following.push(...(await format(data.result.users)));
     if (data.next === undefined) {
       hasNextPage = false;
     } else {
@@ -137,6 +183,7 @@ export async function handler(handle: string): Promise<TRelationChainResult> {
     return {
       owner: {
         handle,
+        address: owner.address,
       },
       status: false,
       message: `${handle} not found`,
@@ -149,6 +196,7 @@ export async function handler(handle: string): Promise<TRelationChainResult> {
     owner: {
       handle: owner.handle,
       avatar: owner.avatar,
+      address: owner.address,
     },
     status: true,
     message: 'success',

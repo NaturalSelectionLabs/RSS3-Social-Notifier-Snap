@@ -19,11 +19,6 @@ import {
 } from './state';
 import { diff, getSocialActivities } from './fetch';
 import { getProfilesBySearch } from './profiles';
-// import {
-//   executeCrossbell,
-//   executeFarcaster,
-//   executeLens,
-// } from './relation-chain';
 import { handler as CrossbellHandler } from './crossbel';
 import { handler as LensHandler } from './lens';
 import { handler as FarcasterHandler } from './farcaster';
@@ -47,6 +42,8 @@ export type TProfile = {
   handle: string;
   address?: string;
   avatar?: string;
+  activities?: SocialActivity[];
+  lastActivities?: SocialActivity[];
 };
 
 export type FetchSocialCountParams = {
@@ -430,19 +427,6 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
       const state = await getState();
       const monitorPromises = state.monitor.map(async (item) => {
         item.latestUpdateTime = moment().format('YYYY/MM/DD hh:mm:ss');
-
-        // const executeArray = [
-        //   { platform: Platform.Lens, handler: executeLens },
-        //   {
-        //     platform: Platform.Crossbell,
-        //     handler: executeCrossbell,
-        //   },
-        //   {
-        //     platform: Platform.Farcaster,
-        //     handler: executeFarcaster,
-        //   },
-        // ];
-
         const handles = item.profiles
           .filter((profile) => profile.handle !== undefined)
           .map((profile) => {
@@ -482,7 +466,6 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
             }
           }
         });
-
         await Promise.all(promises);
         return {
           ...item,

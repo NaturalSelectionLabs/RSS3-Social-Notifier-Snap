@@ -62,6 +62,8 @@ export type TProfile = {
   handle: string;
   address?: string;
   avatar?: string;
+  activities?: SocialActivity[];
+  lastActivities?: SocialActivity[];
 };
 
 export enum Platform {
