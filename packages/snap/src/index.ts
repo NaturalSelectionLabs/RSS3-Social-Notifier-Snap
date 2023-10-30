@@ -16,8 +16,12 @@ import {
   setState,
 } from './state';
 import { diff, getSocialActivities } from './fetch';
-import { getProfilesBySearch } from './relation-chain/profile';
-
+// import { getProfilesBySearch } from './relation-chain/profile';
+export enum Platform {
+  Crossbell = 'Crossbell',
+  Farcaster = 'Farcaster',
+  Lens = 'Lens',
+}
 export type FetchSocialCountParams = {
   accounts: string[];
 };
@@ -163,11 +167,14 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       });
     }
 
-    case 'getProfilesBySearch': {
-      const { search } = request.params as { search: string };
-      return getProfilesBySearch(search);
-    }
+    // case 'getProfilesBySearch': {
+    //   const { search } = request.params as { search: string };
+    //   return getProfilesBySearch(search);
+    // }
 
+    case 'getSupportedSocialPlatforms': {
+      return [Platform.Crossbell, Platform.Farcaster, Platform.Lens];
+    }
     default:
       throw new Error('Method not found.');
   }

@@ -1,5 +1,6 @@
 import { FunctionComponent, ReactNode } from 'react';
 import { Footer, Header } from './components';
+import { Toaster } from '@/components/ui/toaster';
 
 export type AppProps = {
   children: ReactNode;
@@ -13,6 +14,7 @@ export const App: FunctionComponent<AppProps> = ({ children }) => {
         {children}
         <Footer />
       </div>
+      <Toaster />
     </>
   );
 };

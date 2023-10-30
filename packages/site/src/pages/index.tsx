@@ -20,8 +20,6 @@ import {
   InstallFlaskButton,
   ReconnectButton,
   SendHelloButton,
-  // Card,
-  // Button,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
 import {
@@ -187,7 +185,9 @@ const Index = () => {
     <div className="container my-12">
       <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
         Welcome to{' '}
-        <span className="text-[#0072ff]">RSS3 Activity Monitor Snap</span>
+        <span className="text-[#0072ff] drop-shadow-lg">
+          RSS3 Activity Monitor Snap
+        </span>
       </h1>
       <h2 className="mt-5 mb-10 text-base text-left max-2xl text-muted-foreground sm:text-lg">
         <p>

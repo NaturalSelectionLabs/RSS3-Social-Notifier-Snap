@@ -1,8 +1,4 @@
-export enum Platform {
-  Lens = 'Lens',
-  Crossbell = 'Crossbell',
-  Farcaster = 'Farcaster',
-}
+import { Platform } from '..';
 
 export type TRelationChainResult = {
   platform: Platform;
@@ -25,3 +21,4 @@ export {
   format as CrossbellFormat,
   type TCSBProfile,
 } from './platforms/crossbell';
+export { Platform };

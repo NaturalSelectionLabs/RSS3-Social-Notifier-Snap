@@ -168,4 +168,32 @@ export const showAllMonitoredAddresses = async () => {
   });
 };
 
+export const showAllSocialPlatforms = async () => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'getSupportedSocialPlatforms',
+      },
+    },
+  });
+};
+
+export const getAllFollowing = async (search: string, platforms: string[]) => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'getAllFollowing',
+        params: {
+          search,
+          platforms,
+        },
+      },
+    },
+  });
+};
+
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

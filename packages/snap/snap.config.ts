@@ -7,6 +7,10 @@ const config: SnapConfig = {
   server: {
     port: 8080,
   },
+  stats: {
+    buffer: false,
+    builtIns: false,
+  },
 };
 
 export default config;
