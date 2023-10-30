@@ -19,16 +19,35 @@ import {
 } from './state';
 import { diff, getSocialActivities } from './fetch';
 import { getProfilesBySearch } from './profiles';
-// import { getAllFollowing } from './relation-chain/profile';
-
-// import {} from './relation-chain';
-// import { getProfilesBySearch } from './relation-chain/profile';
+// import {
+//   executeCrossbell,
+//   executeFarcaster,
+//   executeLens,
+// } from './relation-chain';
+import { handler as CrossbellHandler } from './crossbel';
+import { handler as LensHandler } from './lens';
 
 export enum Platform {
   Crossbell = 'Crossbell',
   Farcaster = 'Farcaster',
   Lens = 'Lens',
 }
+
+export type TRelationChainResult = {
+  platform: Platform;
+  status: boolean;
+  message: string;
+  owner: TProfile;
+  followers?: TProfile[];
+  following?: TProfile[];
+};
+
+export type TProfile = {
+  handle: string;
+  address?: string;
+  avatar?: string;
+};
+
 export type FetchSocialCountParams = {
   accounts: string[];
 };
@@ -408,11 +427,62 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
 
     case 'executeFollow': {
       const state = await getState();
-      const monitor = state.monitor.map((item) => {
+      const monitorPromises = state.monitor.map(async (item) => {
         item.latestUpdateTime = moment().format('YYYY/MM/DD hh:mm:ss');
-        return item;
+
+        // const executeArray = [
+        //   { platform: Platform.Lens, handler: executeLens },
+        //   {
+        //     platform: Platform.Crossbell,
+        //     handler: executeCrossbell,
+        //   },
+        //   {
+        //     platform: Platform.Farcaster,
+        //     handler: executeFarcaster,
+        //   },
+        // ];
+
+        const handles = item.profiles
+          .filter((profile) => profile.handle !== undefined)
+          .map((profile) => {
+            // const execute = executeArray.find(
+            //   (list) => list.platform === profile.platform,
+            // );
+            if (profile.platform === Platform.Crossbell) {
+              return {
+                handle: profile.handle,
+                execute: CrossbellHandler,
+              };
+            }
+
+            if (profile.platform === Platform.Lens) {
+              return {
+                handle: profile.handle,
+                execute: LensHandler,
+              };
+            }
+
+            return undefined;
+          });
+
+        const following: TProfile[] = [];
+        const promises = handles.map(async (exec) => {
+          if (exec?.handle) {
+            const fol = await exec.execute(exec.handle);
+            if (fol.following) {
+              following.push(...fol.following);
+            }
+          }
+        });
+
+        await Promise.all(promises);
+        return {
+          ...item,
+          following,
+        };
       });
 
+      const monitor = await Promise.all(monitorPromises);
       await setState({
         ...state,
         monitor,

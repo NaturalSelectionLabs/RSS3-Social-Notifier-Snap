@@ -1,5 +1,6 @@
 import { ManageStateOperation } from '@metamask/snaps-types';
 import { Profile } from '@rss3/js-sdk';
+import { TProfile } from './relation-chain';
 
 export type CronActivity = {
   id: string;
@@ -15,6 +16,7 @@ export type SocialActivity = {
 export type SocialMonitor = {
   search: string;
   profiles: Profile[];
+  following?: TProfile[];
   latestUpdateTime?: string;
   activities?: SocialActivity[];
   lastUpdatedActivities?: SocialActivity[];
