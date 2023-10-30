@@ -5,6 +5,7 @@ import { TRelationChainResult } from '.';
 export type CronActivity = {
   id: string;
   text: string;
+  owner?: string;
 };
 
 export type SocialActivity = {

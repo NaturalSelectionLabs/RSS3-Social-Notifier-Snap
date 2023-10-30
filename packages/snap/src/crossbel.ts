@@ -1,4 +1,7 @@
 import { isValidWalletAddress } from './utils';
+import { getMultiple } from './fetch';
+// import { CronActivity } from './state';
+import { CronActivity, getState } from './state';
 import { Platform, TProfile, TRelationChainResult } from '.';
 
 const API = `https://indexer.crossbell.io/v1`;
@@ -135,8 +138,14 @@ async function getCharacterId(handle: string) {
  * Retrieves the followers for the given character ID from the Crossbell API.
  *
  * @param id - The character ID to retrieve the followers for.
+ * @param handle - The Handle.
+ * @param timestamp - The timestamp.
  */
-export async function getFollowingByCharacterId(id: string) {
+export async function getFollowingByCharacterId(
+  id: string,
+  handle: string,
+  timestamp?: string,
+) {
   const following: TProfile[] = [];
   let hasNextPage = true;
   let cursor: string | undefined;
@@ -168,7 +177,69 @@ export async function getFollowingByCharacterId(id: string) {
     }
   }
 
-  return following;
+  const addresses = following
+    .map((item) => item.address)
+    .filter((addr) => addr !== undefined)
+    .slice(0, 50) as string[];
+
+  // Each 50 addresses is a set of requests
+  const addressesGroup: string[][] = [];
+  for (let i = 0; i < addresses.length; i += 100) {
+    addressesGroup.push(addresses.slice(i, i + 100));
+  }
+
+  const groupAddresses: {
+    owner: string;
+    activities: CronActivity[];
+    oldActivities: CronActivity[];
+  }[] = [];
+
+  const addressGroupPromise = addressesGroup.map(async (group) => {
+    const activities = await getMultiple(group, timestamp);
+    const executeActivitiesPromise = activities.map(async (activity) => {
+      const state = await getState();
+      // async;
+      const { monitor } = state;
+      const cachedFollowing = monitor.find((item) => item.search === handle);
+      let oldActivities: CronActivity[] = [];
+      if (cachedFollowing?.activities) {
+        oldActivities =
+          cachedFollowing.activities.find((item) => item.address === handle)
+            ?.activities ?? [];
+      }
+      // activity.oldActivities = oldActivities;
+      return {
+        ...activity,
+        oldActivities,
+      };
+    });
+    const executeActivities = await Promise.all(executeActivitiesPromise);
+    groupAddresses.push(...executeActivities);
+  });
+
+  await Promise.all(addressGroupPromise);
+
+  const fetchedFollowing = following.map((item) => {
+    if (item.address !== undefined) {
+      const findOut = groupAddresses.find((addr) => {
+        if (addr.owner === undefined || item.address === undefined) {
+          return false;
+        }
+        return addr.owner.toLowerCase() === item.address.toLowerCase();
+      });
+
+      if (findOut) {
+        return {
+          ...item,
+          activities: findOut.activities,
+          lastActivities: findOut.oldActivities,
+        };
+      }
+    }
+    return item;
+  });
+
+  return fetchedFollowing;
 }
 
 /**
@@ -239,7 +310,14 @@ export async function handler(
   }
 
   // 2. Get following
-  const following = await fetchMethod(data.characterId);
+
+  const { monitor } = await getState();
+
+  const timestamp =
+    monitor.find((item) => item.search === handle)?.latestUpdateTime ??
+    undefined;
+
+  const following = await fetchMethod(data.characterId, handle, timestamp);
 
   // 3. Return result
   return {

@@ -1,5 +1,8 @@
 import { Client, cacheExchange, fetchExchange, gql } from '@urql/core';
 import { isValidWalletAddress } from './utils';
+import { getMultiple } from './fetch';
+// import { CronActivity } from './state';
+import { CronActivity, getState } from './state';
 import { TRelationChainResult, type TProfile, Platform } from '.';
 
 // only need handle, ownedBy and picture.
@@ -226,6 +229,68 @@ export async function handler(
     }
   }
 
+  const addresses = following
+    .map((item) => item.address)
+    .filter((addr) => addr !== undefined) as string[];
+
+  // Each 100 addresses is a set of requests
+  const addressesGroup: string[][] = [];
+  for (let i = 0; i < addresses.length; i += 100) {
+    addressesGroup.push(addresses.slice(i, i + 100));
+  }
+
+  const groupAddresses: {
+    owner: string;
+    activities: CronActivity[];
+    oldActivities: CronActivity[];
+  }[] = [];
+  const { monitor } = await getState();
+
+  const timestamp =
+    monitor.find((item) => item.search === handle)?.latestUpdateTime ??
+    undefined;
+  const addressGroupPromise = addressesGroup.map(async (group) => {
+    const activities = await getMultiple(group, timestamp);
+    const executeActivitiesPromise = activities.map(async (activity) => {
+      const cachedFollowing = monitor.find((item) => item.search === handle);
+      let oldActivities: CronActivity[] = [];
+      if (cachedFollowing?.activities) {
+        oldActivities =
+          cachedFollowing.activities.find((item) => item.address === handle)
+            ?.activities ?? [];
+      }
+      return {
+        ...activity,
+        oldActivities,
+      };
+    });
+
+    const executeActivities = await Promise.all(executeActivitiesPromise);
+    groupAddresses.push(...executeActivities);
+  });
+
+  await Promise.all(addressGroupPromise);
+
+  const fetchedFollowing = following.map((item) => {
+    if (item.address !== undefined) {
+      const findOut = groupAddresses.find((addr) => {
+        if (addr.owner === undefined || item.address === undefined) {
+          return false;
+        }
+        return addr.owner.toLowerCase() === item.address.toLowerCase();
+      });
+
+      if (findOut) {
+        return {
+          ...item,
+          activities: findOut.activities,
+          lastActivities: findOut.oldActivities,
+        };
+      }
+    }
+    return item;
+  });
+
   return {
     owner: {
       handle: lensProfile.handle,
@@ -235,6 +300,6 @@ export async function handler(
     platform: Platform.Lens,
     status: errorMessage === '',
     message: errorMessage || 'success',
-    following,
+    following: fetchedFollowing,
   };
 }

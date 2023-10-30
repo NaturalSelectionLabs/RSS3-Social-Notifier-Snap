@@ -58,12 +58,19 @@ export type SocialActivity = {
   activities: string[];
   total: number;
 };
+
+export type CronActivity = {
+  id: string;
+  text: string;
+  owner?: string;
+};
+
 export type TProfile = {
   handle: string;
   address?: string;
   avatar?: string;
-  activities?: SocialActivity[];
-  lastActivities?: SocialActivity[];
+  activities?: CronActivity[];
+  lastActivities?: CronActivity[];
 };
 
 export enum Platform {

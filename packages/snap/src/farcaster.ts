@@ -1,3 +1,5 @@
+import { getMultiple } from './fetch';
+import { CronActivity, getState } from './state';
 import { Platform, TProfile, TRelationChainResult } from '.';
 
 const API = 'https://api.warpcast.com/v2';
@@ -147,9 +149,15 @@ export async function format(data: TFarcasterUser[]): Promise<TProfile[]> {
  * Returns the following profiles for a given Farcaster ID.
  *
  * @param fid - The Farcaster ID to get the following profiles for.
+ * @param handle - The handle.
+ * @param timestamp - The timestamp.
  * @returns An array of TProfile objects representing the following profiles.
  */
-export async function getFollowingByFid(fid: number) {
+export async function getFollowingByFid(
+  fid: number,
+  handle: string,
+  timestamp?: string,
+) {
   let cursor: string | undefined;
   let hasNextPage = true;
   const following: TProfile[] = [];
@@ -168,7 +176,64 @@ export async function getFollowingByFid(fid: number) {
     }
   }
 
-  return following;
+  const addresses = following
+    .map((item) => item.address)
+    .filter((addr) => addr !== undefined) as string[];
+
+  // Each 100 addresses is a set of requests
+  const addressesGroup: string[][] = [];
+  for (let i = 0; i < addresses.length; i += 100) {
+    addressesGroup.push(addresses.slice(i, i + 100));
+  }
+
+  const groupAddresses: {
+    owner: string;
+    activities: CronActivity[];
+    oldActivities: CronActivity[];
+  }[] = [];
+
+  const addressGroupPromise = addressesGroup.map(async (group) => {
+    const activities = await getMultiple(group, timestamp);
+    const executeActivitiesPromise = activities.map(async (activity) => {
+      const state = await getState();
+      const { monitor } = state;
+      const cachedFollowing = monitor.find((item) => item.search === handle);
+      let oldActivities: CronActivity[] = [];
+      if (cachedFollowing?.activities) {
+        oldActivities =
+          cachedFollowing.activities.find((item) => item.address === handle)
+            ?.activities ?? [];
+      }
+      return {
+        ...activity,
+        oldActivities,
+      };
+    });
+    const executeActivities = await Promise.all(executeActivitiesPromise);
+    groupAddresses.push(...executeActivities);
+  });
+
+  await Promise.all(addressGroupPromise);
+  const fetchedFollowing = following.map((item) => {
+    if (item.address !== undefined) {
+      const findOut = groupAddresses.find((addr) => {
+        if (addr.owner === undefined || item.address === undefined) {
+          return false;
+        }
+        return addr.owner.toLowerCase() === item.address.toLowerCase();
+      });
+
+      if (findOut) {
+        return {
+          ...item,
+          activities: findOut.activities,
+          lastActivities: findOut.oldActivities,
+        };
+      }
+    }
+    return item;
+  });
+  return fetchedFollowing;
 }
 
 /**
@@ -191,7 +256,13 @@ export async function handler(handle: string): Promise<TRelationChainResult> {
     };
   }
 
-  const following = await getFollowingByFid(owner.fid);
+  const { monitor } = await getState();
+
+  const timestamp =
+    monitor.find((item) => item.search === handle)?.latestUpdateTime ??
+    undefined;
+
+  const following = await getFollowingByFid(owner.fid, handle, timestamp);
   return {
     owner: {
       handle: owner.handle,

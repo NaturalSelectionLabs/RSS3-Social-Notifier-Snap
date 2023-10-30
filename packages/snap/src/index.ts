@@ -9,6 +9,7 @@ import { assert } from '@metamask/utils';
 import { Profile } from '@rss3/js-sdk';
 import moment from 'moment';
 import {
+  CronActivity,
   SocialActivity,
   State,
   addAddressToState,
@@ -42,8 +43,8 @@ export type TProfile = {
   handle: string;
   address?: string;
   avatar?: string;
-  activities?: SocialActivity[];
-  lastActivities?: SocialActivity[];
+  activities?: CronActivity[];
+  lastActivities?: CronActivity[];
 };
 
 export type FetchSocialCountParams = {
@@ -430,9 +431,6 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
         const handles = item.profiles
           .filter((profile) => profile.handle !== undefined)
           .map((profile) => {
-            // const execute = executeArray.find(
-            //   (list) => list.platform === profile.platform,
-            // );
             if (profile.platform === Platform.Crossbell) {
               return {
                 handle: profile.handle,
