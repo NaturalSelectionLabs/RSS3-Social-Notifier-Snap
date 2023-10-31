@@ -19,7 +19,7 @@ Powered by RSS3's social aggretation capability, a truly platform-agnostic way t
 
 ## Getting Started
 
-Simply visit <snap.rss3.io> and install the Snap.
+Simply visit <https://snap.rss3.io> and install the Snap.
 
 Permissionless, no registation required.
 

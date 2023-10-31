@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useContext } from 'react';
+import { formatAddressAndNS } from '@rss3/js-sdk';
 import * as z from 'zod';
 import { type Profile } from '@rss3/js-sdk';
 import { useForm } from 'react-hook-form';
@@ -6,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { navigate } from 'gatsby';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+
 import {
   addProfilesToMonitorFollowing,
   getProfilesFilterBySearch,
@@ -255,11 +257,7 @@ const MonitorCreate = () => {
                       </AvatarFallback>
                     </Avatar>
                     <h3 className="text-sm text-muted-foreground">
-                      {(item.handle?.length ?? 0) > 10
-                        ? `${item.handle?.slice(0, 6)}...${item.handle?.slice(
-                            -8,
-                          )}`
-                        : item.handle}
+                      {item.handle && formatAddressAndNS(item.handle)}
                     </h3>
                   </div>
                   <p className="text-sm line-clamp-1 min-h-[20px]">
