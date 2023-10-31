@@ -3,6 +3,7 @@ import * as z from 'zod';
 import { type Profile } from '@rss3/js-sdk';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { navigate } from 'gatsby';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -109,6 +110,7 @@ const MonitorCreate = () => {
       );
 
       if (isSuccess) {
+        navigate('/monitor/list');
         // const snapState = await sendGetState();
         // console.log(snapState);
       }

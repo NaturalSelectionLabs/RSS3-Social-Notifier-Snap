@@ -1,5 +1,6 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { navigate } from 'gatsby';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   // addOwnWalletAddress,
@@ -7,13 +8,13 @@ import {
   getSnap,
   isLocalSnap,
   sendClearState,
-  sendGetState,
-  sendSetState,
+  // sendGetState,
+  // sendSetState,
   shouldDisplayReconnectButton,
   showAlert,
-  showAllActivities,
-  showAllMonitoredAddresses,
-  showLastUpdated,
+  // showAllActivities,
+  // showAllMonitoredAddresses,
+  // showLastUpdated,
 } from '../utils';
 import {
   ConnectButton,
@@ -24,47 +25,48 @@ import {
 import { defaultSnapOrigin } from '../config';
 import {
   Card,
-  CardContent,
+  // CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+// import { Input } from '@/components/ui/input';
 
-const supportedNSList = [
-  '.eth',
-  '.lens',
-  '.csb',
-  '.bnb',
-  '.bit',
-  '.crypto',
-  '.zil',
-  '.nft',
-  '.x',
-  '.wallet',
-  '.bitcoin',
-  '.dao',
-  '.888',
-  '.blockchain',
-  '.avax',
-  '.arb',
-  '.cyber',
-];
-const isValidNS = (handle: string | null) => {
-  if (!handle) {
-    return false;
-  }
-  let valid = false;
-  supportedNSList.forEach((ns) => {
-    if (handle.endsWith(ns)) {
-      valid = true;
-    }
-  });
-  return valid;
-};
+// const supportedNSList = [
+//   '.eth',
+//   '.lens',
+//   '.csb',
+//   '.bnb',
+//   '.bit',
+//   '.crypto',
+//   '.zil',
+//   '.nft',
+//   '.x',
+//   '.wallet',
+//   '.bitcoin',
+//   '.dao',
+//   '.888',
+//   '.blockchain',
+//   '.avax',
+//   '.arb',
+//   '.cyber',
+// ];
+// const isValidNS = (handle: string | null) => {
+//   if (!handle) {
+//     return false;
+//   }
+//   let valid = false;
+//   supportedNSList.forEach((ns) => {
+//     if (handle.endsWith(ns)) {
+//       valid = true;
+//     }
+//   });
+//   return valid;
+// };
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
@@ -73,7 +75,7 @@ const Index = () => {
     ? state.isFlask
     : state.snapsDetected;
 
-  const [walletAddress, setWalletAddress] = useState('');
+  // const [walletAddress, setWalletAddress] = useState('');
 
   const handleConnectClick = async () => {
     try {
@@ -90,54 +92,54 @@ const Index = () => {
     }
   };
 
-  const handleSendSetStateClick = async () => {
-    if (
-      isValidNS(walletAddress) ||
-      (walletAddress?.startsWith('0x') && walletAddress.length === 42)
-    ) {
-      try {
-        const originalState = await sendGetState();
+  // const handleSendSetStateClick = async () => {
+  //   if (
+  //     isValidNS(walletAddress) ||
+  //     (walletAddress?.startsWith('0x') && walletAddress.length === 42)
+  //   ) {
+  //     try {
+  //       const originalState = await sendGetState();
 
-        // check address is already added
-        const isAlreadyAdded = originalState.socialActivities.find(
-          (account) =>
-            account.address.toLocaleLowerCase() ===
-            walletAddress.toLocaleLowerCase(),
-        );
+  //       // check address is already added
+  //       const isAlreadyAdded = originalState.socialActivities.find(
+  //         (account) =>
+  //           account.address.toLocaleLowerCase() ===
+  //           walletAddress.toLocaleLowerCase(),
+  //       );
 
-        if (isAlreadyAdded) {
-          await showAlert(
-            'Already Monitored',
-            `The wallet address: ${walletAddress}  is already monitored.`,
-          );
-          return;
-        }
+  //       if (isAlreadyAdded) {
+  //         await showAlert(
+  //           'Already Monitored',
+  //           `The wallet address: ${walletAddress}  is already monitored.`,
+  //         );
+  //         return;
+  //       }
 
-        // add address
-        await sendSetState([
-          ...originalState.socialActivities,
-          {
-            address: walletAddress,
-            activities: [],
-            total: 0,
-          },
-        ]);
+  //       // add address
+  //       await sendSetState([
+  //         ...originalState.socialActivities,
+  //         {
+  //           address: walletAddress,
+  //           activities: [],
+  //           total: 0,
+  //         },
+  //       ]);
 
-        await showAlert(
-          'Succeeded',
-          `The wallet address: ${walletAddress} is being monitored.`,
-        );
-      } catch (e) {
-        console.error(e);
-        dispatch({ type: MetamaskActions.SetError, payload: e });
-      }
-    } else {
-      await showAlert(
-        'invalid wallet address',
-        `please check your input. supported ns: ${supportedNSList.join(', ')}`,
-      );
-    }
-  };
+  //       await showAlert(
+  //         'Succeeded',
+  //         `The wallet address: ${walletAddress} is being monitored.`,
+  //       );
+  //     } catch (e) {
+  //       console.error(e);
+  //       dispatch({ type: MetamaskActions.SetError, payload: e });
+  //     }
+  //   } else {
+  //     await showAlert(
+  //       'invalid wallet address',
+  //       `please check your input. supported ns: ${supportedNSList.join(', ')}`,
+  //     );
+  //   }
+  // };
 
   const handleSendClearStateClick = async () => {
     try {
@@ -154,32 +156,32 @@ const Index = () => {
     }
   };
 
-  const handleShowLastUpdatedClick = async () => {
-    try {
-      await showLastUpdated();
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
-  };
+  // const handleShowLastUpdatedClick = async () => {
+  //   try {
+  //     await showLastUpdated();
+  //   } catch (e) {
+  //     console.error(e);
+  //     dispatch({ type: MetamaskActions.SetError, payload: e });
+  //   }
+  // };
 
-  const handleShowAllActivitiesClick = async () => {
-    try {
-      await showAllActivities();
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
-  };
+  // const handleShowAllActivitiesClick = async () => {
+  //   try {
+  //     await showAllActivities();
+  //   } catch (e) {
+  //     console.error(e);
+  //     dispatch({ type: MetamaskActions.SetError, payload: e });
+  //   }
+  // };
 
-  const handleShowAllAddressesClick = async () => {
-    try {
-      await showAllMonitoredAddresses();
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
-  };
+  // const handleShowAllAddressesClick = async () => {
+  //   try {
+  //     await showAllMonitoredAddresses();
+  //   } catch (e) {
+  //     console.error(e);
+  //     dispatch({ type: MetamaskActions.SetError, payload: e });
+  //   }
+  // };
 
   return (
     <div className="container my-12">
@@ -212,12 +214,12 @@ const Index = () => {
           </Alert>
         </div>
       )}
-      <div className="grid grid-cols-4 items-start justify-start gap-4">
+      <div className="grid lg:grid-cols-3 grid-cols-2 items-start justify-start gap-4">
         {!isMetaMaskReady && (
           <Card>
             <CardHeader>
               <CardTitle>Install</CardTitle>
-              <CardDescription>
+              <CardDescription className="h-[120px]">
                 Snaps is pre-release software only available in MetaMask Flask,
                 a canary distribution for developers with access to upcoming
                 features.
@@ -232,7 +234,7 @@ const Index = () => {
           <Card>
             <CardHeader>
               <CardTitle>Install</CardTitle>
-              <CardDescription>
+              <CardDescription className="h-[120px]">
                 Get started by installing this snap.
               </CardDescription>
             </CardHeader>
@@ -248,7 +250,7 @@ const Index = () => {
           <Card>
             <CardHeader>
               <CardTitle>Reinstall</CardTitle>
-              <CardDescription>
+              <CardDescription className="h-[120px]">
                 Reinstall to update the snap, or if something isn't right.
               </CardDescription>
             </CardHeader>
@@ -264,7 +266,7 @@ const Index = () => {
         <Card>
           <CardHeader>
             <CardTitle>Reset Snap State</CardTitle>
-            <CardDescription>
+            <CardDescription className="h-[120px]">
               Clean all the data saved in this Snap. This does not affect your
               wallet in anyway.
             </CardDescription>
@@ -278,6 +280,31 @@ const Index = () => {
         </Card>
 
         <Card>
+          <CardHeader>
+            <CardTitle>Monitor your social profiles</CardTitle>
+            <CardDescription className="h-[120px]">
+              You can bind the profile you want to monitor on this page, and
+              then you will be able to monitor all the new activities from
+              people that your profile is following.
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            {/* <SendHelloButton
+              onClick={handleSendClearStateClick}
+              disabled={!state.installedSnap}
+            /> */}
+            <Button
+              disabled={!state.installedSnap}
+              onClick={() => {
+                navigate('/monitor/create');
+              }}
+            >
+              Forward
+            </Button>
+          </CardFooter>
+        </Card>
+
+        {/* <Card>
           <CardHeader>
             <CardTitle>Show Last Updated</CardTitle>
             <CardDescription>
@@ -349,7 +376,7 @@ const Index = () => {
               </Button>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   );
