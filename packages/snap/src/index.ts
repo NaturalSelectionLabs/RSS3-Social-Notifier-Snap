@@ -30,7 +30,7 @@ export enum Platform {
   Lens = 'Lens',
 }
 
-export type TRelationChainResult = {
+export type TSocialGraphResult = {
   platform: Platform;
   status: boolean;
   message: string;
@@ -455,7 +455,7 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
             return undefined;
           });
 
-        const watchedProfiles: TRelationChainResult[] = [];
+        const watchedProfiles: TSocialGraphResult[] = [];
         const promises = handles.map(async (exec) => {
           if (exec?.handle) {
             const fol = await exec.execute(exec.handle, item);

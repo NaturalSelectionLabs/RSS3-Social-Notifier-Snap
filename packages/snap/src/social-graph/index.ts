@@ -16,7 +16,7 @@ import {
   type TCSBProfile,
 } from './platforms/crossbell';
 
-export type TRelationChainResult = {
+export type TSocialGraphResult = {
   platform: Platform;
   status: boolean;
   message: string;

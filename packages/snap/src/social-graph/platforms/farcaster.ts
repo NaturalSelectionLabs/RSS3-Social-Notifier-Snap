@@ -1,4 +1,4 @@
-import { Platform, TProfile, TRelationChainResult } from '..';
+import { Platform, TProfile, TSocialGraphResult } from '..';
 
 const API = 'https://api.warpcast.com/v2';
 
@@ -126,12 +126,12 @@ export async function getFollowingByFid(fid: number) {
 }
 
 /**
- * Returns the relation chain for a given Farcaster handle.
+ * Returns the social graph for a given Farcaster handle.
  *
- * @param handle - The Farcaster handle to get the relation chain for.
- * @returns The relation chain for the given Farcaster handle.
+ * @param handle - The Farcaster handle to get the social graph for.
+ * @returns The social graph for the given Farcaster handle.
  */
-export async function handler(handle: string): Promise<TRelationChainResult> {
+export async function handler(handle: string): Promise<TSocialGraphResult> {
   const owner = await getOwnerProfileByUsername(handle);
   if (!owner.fid) {
     return {

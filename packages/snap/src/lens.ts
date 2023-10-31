@@ -2,7 +2,7 @@ import { Client, cacheExchange, fetchExchange, gql } from '@urql/core';
 import { isValidWalletAddress } from './utils';
 import { diffMonitor, getMultiple } from './fetch';
 import { SocialMonitor } from './state';
-import { TRelationChainResult, type TProfile, Platform } from '.';
+import { TSocialGraphResult, type TProfile, Platform } from '.';
 
 // only need handle, ownedBy and picture.
 const QueryFollowing = gql`
@@ -127,12 +127,12 @@ export const format = (data: any): TProfile[] => {
 };
 
 /**
- * Queries the Lens API for a user's following relation chain.
+ * Queries the Lens API for a user's following social graph.
  *
  * @param handle - The user's handle.
  * @param limit - The pagination limit.
  * @param cursor - The cursor for pagination.
- * @returns An object containing the user's following relation chain information.
+ * @returns An object containing the user's following social graph information.
  */
 export const query = async (handle: string, limit: number, cursor?: string) => {
   const queryOptions = {
@@ -178,20 +178,20 @@ export async function getAddressByHandle(handle: string) {
 }
 
 /**
- * Returns an object containing information about a user's relation chain.
+ * Returns an object containing information about a user's social graph.
  *
  * @param handle - The user's handle.
  * @param olderMonitor - The older monitor.
  * @param limit - The pagination limit.
  * @param queryMethod - The query method.
- * @returns An object containing the user's relation chain information.
+ * @returns An object containing the user's social graph information.
  */
 export async function handler(
   handle: string,
   olderMonitor: SocialMonitor,
   limit = 20,
   queryMethod: typeof query = query,
-): Promise<TRelationChainResult> {
+): Promise<TSocialGraphResult> {
   const following: TProfile[] = [];
   let cursor: string | undefined;
   let hasNextPage = true;

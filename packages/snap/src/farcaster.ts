@@ -1,6 +1,6 @@
 import { diffMonitor, getMultiple } from './fetch';
 import { SocialMonitor } from './state';
-import { Platform, TProfile, TRelationChainResult } from '.';
+import { Platform, TProfile, TSocialGraphResult } from '.';
 
 const API = 'https://api.warpcast.com/v2';
 
@@ -206,16 +206,16 @@ export async function getFollowingByFid(
 }
 
 /**
- * Returns the relation chain for a given Farcaster handle.
+ * Returns the social graph for a given Farcaster handle.
  *
- * @param handle - The Farcaster handle to get the relation chain for.
+ * @param handle - The Farcaster handle to get the social graph for.
  * @param olderMonitor - The older monitor.
- * @returns The relation chain for the given Farcaster handle.
+ * @returns The social graph for the given Farcaster handle.
  */
 export async function handler(
   handle: string,
   olderMonitor: SocialMonitor,
-): Promise<TRelationChainResult> {
+): Promise<TSocialGraphResult> {
   const owner = await getOwnerProfileByUsername(handle);
   if (!owner.fid) {
     return {

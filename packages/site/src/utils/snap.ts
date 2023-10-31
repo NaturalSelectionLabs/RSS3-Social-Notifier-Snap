@@ -79,7 +79,7 @@ export enum Platform {
   Lens = 'Lens',
 }
 
-export type TRelationChainResult = {
+export type TSocialGraphResult = {
   platform: Platform;
   status: boolean;
   message: string;
@@ -91,7 +91,7 @@ export type TRelationChainResult = {
 export type SocialMonitor = {
   search: string;
   profiles: Profile[];
-  watchedProfiles?: TRelationChainResult[];
+  watchedProfiles?: TSocialGraphResult[];
   latestUpdateTime?: string;
 };
 

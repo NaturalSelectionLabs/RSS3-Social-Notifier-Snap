@@ -1,7 +1,7 @@
 import { isValidWalletAddress } from './utils';
 import { diffMonitor, getMultiple } from './fetch';
 import { SocialMonitor } from './state';
-import { Platform, TProfile, TRelationChainResult } from '.';
+import { Platform, TProfile, TSocialGraphResult } from '.';
 
 const API = `https://indexer.crossbell.io/v1`;
 
@@ -228,18 +228,18 @@ export function format(profiles: TCSBProfile[]): TProfile[] {
 }
 
 /**
- * Retrieves the relation chain for the given handle from the Crossbell API.
+ * Retrieves the social graph for the given handle from the Crossbell API.
  *
- * @param handle - The handle to retrieve the relation chain for.
+ * @param handle - The handle to retrieve the social graph for.
  * @param oldMonitor - The old monitor.
  * @param fetchMethod - The method to use to fetch the following.
- * @returns The relation chain for the given handle.
+ * @returns The social graph for the given handle.
  */
 export async function handler(
   handle: string,
   oldMonitor: SocialMonitor,
   fetchMethod: typeof getFollowingByCharacterId = getFollowingByCharacterId,
-): Promise<TRelationChainResult> {
+): Promise<TSocialGraphResult> {
   // 1. Get owner profile
   const characterResult = await getCharacterId(handle);
   if (characterResult === null) {
