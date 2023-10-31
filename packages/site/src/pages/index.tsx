@@ -278,7 +278,7 @@ const Index = () => {
             <CardHeader>
               <CardTitle>Reinstall</CardTitle>
               <CardDescription className="h-[120px]">
-                Reinstall to update the snap, or if something isn't right.
+                Update the snap, or reinstall if something isn't right.
               </CardDescription>
             </CardHeader>
             <CardFooter>

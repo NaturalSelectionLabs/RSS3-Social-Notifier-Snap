@@ -21,6 +21,6 @@ Powered by RSS3's social aggretation capability, a truly platform-agnostic way t
 
 Simply visit <https://snap.rss3.io> and install the Snap.
 
-Permissionless, no registation required.
+Permissionless, no registration required.
 
 For more information on MetaMASK Snap: <https://metamask.io/snaps/>
