@@ -1,7 +1,7 @@
 <!-- markdownlint-disable -->
 <p align="center">
   <a href="https://rss3.io" target="_blank" rel="noopener noreferrer">
-    <img width="180" src="doc/RSS3.svg" alt="RSS3 logo">
+    <img width="180" src="images/RSS3.svg" alt="RSS3 logo">
   </a>
 </p>
 <p align="center">
