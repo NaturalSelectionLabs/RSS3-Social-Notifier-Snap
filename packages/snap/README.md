@@ -1,12 +1,26 @@
-# TypeScript Example Snap
+<!-- markdownlint-disable -->
+<p align="center">
+  <a href="https://rss3.io" target="_blank" rel="noopener noreferrer">
+    <img width="180" src="doc/RSS3.svg" alt="RSS3 logo">
+  </a>
+</p>
+<p align="center">
+  <a href="https://npmjs.com/package/@rss3/social-notifier-snap"><img src="https://img.shields.io/npm/v/%40rss3%2Fsocial-notifier-snap?style=flat&logo=npm&color=%230072ff" alt="npm package"></a>
+  <a href="https://twitter.com/intent/follow?screen_name=rss3_"><img src="https://img.shields.io/twitter/follow/rss3_?color=%230072ff" alt="follow RSS3 on X"></a>
+  <a href="https://discord.gg/vfhpMjdbGU"><img src="https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord&color=%230072ff" alt="discord chat"></a>
+</p>
+<!-- markdownlint-enable -->
 
-This snap demonstrates how to develop a snap with TypeScript. It is a simple
-snap that displays a confirmation dialog when the `hello` JSON-RPC method is
-called.
+# RSS3 Social Notifier Snap
 
-## Testing
+This MetaMask Snap offers a quick and easy way to stay on top of your frens' social activities.
 
-The snap comes with some basic tests, to demonstrate how to write tests for
-snaps. To test the snap, run `yarn test` in this directory. This will use
-[`@metamask/snaps-jest`](https://github.com/MetaMask/snaps/tree/main/packages/snaps-jest)
-to run the tests in `src/index.test.ts`.
+Powered by RSS3's social aggretation capability, a truly platform-agnostic way to aggregate social activities from multiple social graphs.
+
+## Getting Started
+
+Simply visit <snap.rss3.io> and install the Snap.
+
+Permissionless, no registation required.
+
+For more information on MetaMASK Snap: <https://metamask.io/snaps/>

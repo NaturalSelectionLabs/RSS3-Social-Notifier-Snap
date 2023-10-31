@@ -1,10 +1,10 @@
 {
-  "name": "rss3-metamask-snap",
+  "name": "@rss3/social-notifier-snap",
   "version": "0.1.0",
   "description": "Get notifications when your Web3 frens produce new activities.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NaturalSelectionLabs/RSS3-MetaMask-Snap.git"
+    "url": "https://github.com/NaturalSelectionLabs/RSS3-Social-Notifier-Snap.git"
   },
   "license": "Apache-2.0",
   "main": "./dist/bundle.js",

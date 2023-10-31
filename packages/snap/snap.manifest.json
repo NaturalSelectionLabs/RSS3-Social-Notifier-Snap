@@ -4,15 +4,15 @@
   "proposedName": "RSS3 Social Notifier",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NaturalSelectionLabs/RSS3-MetaMask-Snap.git"
+    "url": "https://github.com/NaturalSelectionLabs/RSS3-Social-Notifier-Snap.git"
   },
   "source": {
-    "shasum": "otV0CuKpgG18gqS4SPVejZdu0OtF7aN9RmFrx13s674=",
+    "shasum": "OL1G7QqcS044uW1IkkyypXcKT93wsRBH9C7hCghRVrU=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
         "iconPath": "images/icon.svg",
-        "packageName": "rss3-metamask-snap",
+        "packageName": "@rss3/social-notifier-snap",
         "registry": "https://registry.npmjs.org/"
       }
     }
