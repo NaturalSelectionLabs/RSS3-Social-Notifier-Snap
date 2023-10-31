@@ -11,6 +11,9 @@ const config: SnapConfig = {
     buffer: false,
     builtIns: false,
   },
+  polyfills: {
+    buffer: true,
+  },
 };
 
 export default config;

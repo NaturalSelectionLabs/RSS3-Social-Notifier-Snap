@@ -61,7 +61,7 @@ const MonitorList = () => {
                 className="flex flex-col items-start justify-center gap-4 border border-solid border-gray-100 w-full p-6 rounded-lg"
               >
                 <h3 className="text-lg font-bold">
-                  Monitor {monitor.search}'s following
+                  {monitor.search}'s following
                 </h3>
                 <p>
                   Last Updated:{' '}

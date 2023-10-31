@@ -197,13 +197,13 @@ export const showAllActivities = async () => {
   });
 };
 
-export const showAllMonitoredAddresses = async () => {
+export const showAllFollowedAddresses = async () => {
   await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
       request: {
-        method: 'showAllMonitoredAddresses',
+        method: 'showAllFollowedAddresses',
       },
     },
   });

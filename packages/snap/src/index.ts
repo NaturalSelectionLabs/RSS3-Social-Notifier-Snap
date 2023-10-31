@@ -175,10 +175,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       });
     }
 
-    // show the all monitored addresses
-    case 'showAllMonitoredAddresses': {
+    // show the all Followed addresses
+    case 'showAllFollowedAddresses': {
       const state = await getState();
-      const content: any = [heading('All Monitored Addresses')];
+      const content: any = [heading('Your Web3 frens')];
       state.socialActivities.forEach((activity) => {
         content.push(text(activity.address));
         content.push(divider());

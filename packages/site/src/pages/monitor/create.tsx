@@ -130,12 +130,13 @@ const MonitorCreate = () => {
             render={() => (
               <FormItem>
                 <div className="mb-4">
-                  <FormLabel className="text-base">Search Key</FormLabel>
+                  <FormLabel className="text-base">Stalk</FormLabel>
                   <FormDescription>
                     <p>
-                      Start monitoring a new address. Supported Web3 Name
-                      Service:
+                      Feeling stalk-y? Get notified for someone else's frens
+                      publish something on Web3 social platforms.
                     </p>
+                    <p>Supported Web3 Name Service:</p>
                     <b>
                       .eth, .lens, .csb, .bnb, .bit, .crypto, .zil, .nft, .x,
                       .wallet, .bitcoin, .dao, .888, .blockchain, .avax, .arb,
@@ -153,7 +154,7 @@ const MonitorCreate = () => {
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center space-x-2 leading-8 space-y-0">
                       <FormControl>
-                        <Input placeholder="Wallet Address" {...field} />
+                        <Input placeholder="Web3 DID" {...field} />
                       </FormControl>
                     </FormItem>
                   )}
@@ -171,7 +172,7 @@ const MonitorCreate = () => {
                 <div className="mb-4">
                   <FormLabel className="text-base">Platforms</FormLabel>
                   <FormDescription>
-                    Select the platforms you want to monitor in the snap.
+                    Select the platforms you want to get notified.
                   </FormDescription>
                 </div>
                 <div className="flex flex-row items-center justify-start gap-3">
@@ -212,13 +213,13 @@ const MonitorCreate = () => {
             )}
           />
 
-          <Button type="submit">query</Button>
+          <Button type="submit">Begin Stalking</Button>
         </form>
       </Form>
       {profiles.length > 0 && (
         <div className="flex flex-col items-start justify-center gap-3 mt-10">
           <h3 className="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-base">
-            Select you want to monitor profiles
+            Select the Profile(s)
           </h3>
           <div className="flex flex-wrap items-start justify-start gap-3">
             {profiles.map((item) => (
@@ -254,7 +255,11 @@ const MonitorCreate = () => {
                       </AvatarFallback>
                     </Avatar>
                     <h3 className="text-sm text-muted-foreground">
-                      {item.handle}
+                      {(item.handle?.length ?? 0) > 10
+                        ? `${item.handle?.slice(0, 6)}...${item.handle?.slice(
+                            -8,
+                          )}`
+                        : item.handle}
                     </h3>
                   </div>
                   <p className="text-sm line-clamp-1 min-h-[20px]">
@@ -266,7 +271,7 @@ const MonitorCreate = () => {
           </div>
 
           <Button onClick={addProfilesToMonitorFollowingHandler}>
-            Submit your monitor
+            Get Notfied!
           </Button>
         </div>
       )}

@@ -25,7 +25,7 @@ export const Header = () => {
     <div className="flex flex-row justify-between items-center p-4 border-b border-solid">
       <div className="flex flex-row items-center space-x-4">
         <SnapLogo />
-        <p>RSS3 Activity Monitor Snap</p>
+        <p>RSS3 Social Notifier Snap</p>
       </div>
       <div className="flex flex-row items-center">
         {/* <Toggle

@@ -22,7 +22,7 @@ import {
   ReconnectButton,
   SendHelloButton,
 } from '../components';
-import { defaultSnapOrigin } from '../config';
+import { defaultSnapOrigin, isProduction } from '../config';
 import {
   Card,
   // CardContent,
@@ -187,20 +187,47 @@ const Index = () => {
     <div className="container my-12">
       <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
         Welcome to{' '}
-        <span className="text-[#0072ff] drop-shadow-lg">
-          RSS3 Activity Monitor Snap
+        <span className="text-[#0072ff] drop-shadow-md">
+          RSS3 Social Notifier -
         </span>
+        <span className="text-[#E97C23] drop-shadow-md"> A MetaMask Snap</span>
       </h1>
       <h2 className="mt-5 mb-10 text-base text-left max-2xl text-muted-foreground sm:text-lg">
         <p>
-          This Snap for <span>MetaMask</span> allows you to monitor the
-          activities of any address.
+          This Snap for <span className="text-[#E97C23]">MetaMask</span> offers
+          a quick and easy way to stay on top of your frens' social activities.
         </p>
         <p>1. Connect to the Snap and install.</p>
-        <p>2. Start monitoring any address.</p>
         <p>
-          3. When there is a new activity produced by any of your monitored
-          addresses, <span>you will be notified</span>.
+          2. Your Web3 social graphs on{' '}
+          <a
+            className="text-[#F6C549] font-bold"
+            href="https://crossbell.io/"
+            target="_blank"
+          >
+            Crossbell
+          </a>
+          ,{' '}
+          <a
+            className="text-[#8A63D1] font-bold"
+            href="https://www.farcaster.xyz/"
+            target="_blank"
+          >
+            Farcaster
+          </a>
+          ,{' '}
+          <a
+            className="text-[#AAFE2D] font-bold"
+            href="https://www.lens.xyz/"
+            target="_blank"
+          >
+            Lens Protocol
+          </a>
+          , will be automatically imported.
+        </p>
+        <p>
+          3. When a new social activity initiated by any of your Web3 frens,{' '}
+          <span>you will be notified</span>.
         </p>
       </h2>
       {state.error && (
@@ -218,7 +245,7 @@ const Index = () => {
         {!isMetaMaskReady && (
           <Card>
             <CardHeader>
-              <CardTitle>Install</CardTitle>
+              <CardTitle>Install MetaMask Flask</CardTitle>
               <CardDescription className="h-[120px]">
                 Snaps is pre-release software only available in MetaMask Flask,
                 a canary distribution for developers with access to upcoming
@@ -267,8 +294,8 @@ const Index = () => {
           <CardHeader>
             <CardTitle>Reset Snap State</CardTitle>
             <CardDescription className="h-[120px]">
-              Clean all the data saved in this Snap. This does not affect your
-              wallet in anyway.
+              Reset the Snap's state, in case anything does not work properly.
+              This does not affect your wallet or assets in anyway.
             </CardDescription>
           </CardHeader>
           <CardFooter>
@@ -279,30 +306,27 @@ const Index = () => {
           </CardFooter>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Monitor your social profiles</CardTitle>
-            <CardDescription className="h-[120px]">
-              You can bind the profile you want to monitor on this page, and
-              then you will be able to monitor all the new activities from
-              people that your profile is following.
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            {/* <SendHelloButton
-              onClick={handleSendClearStateClick}
-              disabled={!state.installedSnap}
-            /> */}
-            <Button
-              disabled={!state.installedSnap}
-              onClick={() => {
-                navigate('/monitor/create');
-              }}
-            >
-              Forward
-            </Button>
-          </CardFooter>
-        </Card>
+        {!isProduction && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Stalk Someone</CardTitle>
+              <CardDescription className="h-[120px]">
+                You can get notified if someone else's frens publish something
+                (actually, this is for debugging purpose).
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <Button
+                disabled={!state.installedSnap}
+                onClick={() => {
+                  navigate('/monitor/create');
+                }}
+              >
+                Begin Stalking
+              </Button>
+            </CardFooter>
+          </Card>
+        )}
 
         {/* <Card>
           <CardHeader>
