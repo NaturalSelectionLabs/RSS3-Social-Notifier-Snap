@@ -484,14 +484,19 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
             (follower) =>
               follower.lastActivities?.map((activity) => activity.text) ?? [],
           );
-          lastActivities?.length &&
+
+          if (lastActivities && lastActivities.length > 0) {
             content.push(
               heading(
                 `${profile.owner.handle}'s following has new activities.`,
               ),
-              text(lastActivities.join('\n')),
-              divider(),
             );
+
+            lastActivities.forEach((activity) => {
+              content.push(text(activity));
+              content.push(divider());
+            });
+          }
         });
       });
 
