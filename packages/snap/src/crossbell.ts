@@ -1,5 +1,6 @@
 import { isValidWalletAddress } from './utils';
-import { getMultiple } from './fetch';
+import { diffMonitor, getMultiple } from './fetch';
+import { SocialMonitor } from './state';
 import { Platform, TProfile, TRelationChainResult } from '.';
 
 const API = `https://indexer.crossbell.io/v1`;
@@ -136,8 +137,14 @@ async function getCharacterId(handle: string) {
  * Retrieves the followers for the given character ID from the Crossbell API.
  *
  * @param id - The character ID to retrieve the followers for.
+ * @param olderMonitor - The older monitor.
+ * @param handle - The handle.
  */
-export async function getFollowingByCharacterId(id: string) {
+export async function getFollowingByCharacterId(
+  id: string,
+  olderMonitor: SocialMonitor,
+  handle: string,
+) {
   const following: TProfile[] = [];
   let hasNextPage = true;
   let cursor: string | undefined;
@@ -184,10 +191,17 @@ export async function getFollowingByCharacterId(id: string) {
       });
 
       if (findOut) {
+        const lastActivities = diffMonitor(
+          olderMonitor,
+          findOut.activities,
+          handle,
+          item.handle,
+        );
+
         return {
           ...item,
           activities: findOut.activities,
-          lastActivities: findOut.oldActivities,
+          lastActivities,
         };
       }
     }
@@ -217,11 +231,13 @@ export function format(profiles: TCSBProfile[]): TProfile[] {
  * Retrieves the relation chain for the given handle from the Crossbell API.
  *
  * @param handle - The handle to retrieve the relation chain for.
+ * @param oldMonitor - The old monitor.
  * @param fetchMethod - The method to use to fetch the following.
  * @returns The relation chain for the given handle.
  */
 export async function handler(
   handle: string,
+  oldMonitor: SocialMonitor,
   fetchMethod: typeof getFollowingByCharacterId = getFollowingByCharacterId,
 ): Promise<TRelationChainResult> {
   // 1. Get owner profile
@@ -265,7 +281,7 @@ export async function handler(
   }
 
   // 2. Get following
-  const following = await fetchMethod(data.characterId);
+  const following = await fetchMethod(data.characterId, oldMonitor, handle);
 
   // 3. Return result
   return {

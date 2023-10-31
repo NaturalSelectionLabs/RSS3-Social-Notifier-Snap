@@ -1,6 +1,7 @@
 import { Client, cacheExchange, fetchExchange, gql } from '@urql/core';
 import { isValidWalletAddress } from './utils';
-import { getMultiple } from './fetch';
+import { diffMonitor, getMultiple } from './fetch';
+import { SocialMonitor } from './state';
 import { TRelationChainResult, type TProfile, Platform } from '.';
 
 // only need handle, ownedBy and picture.
@@ -180,12 +181,14 @@ export async function getAddressByHandle(handle: string) {
  * Returns an object containing information about a user's relation chain.
  *
  * @param handle - The user's handle.
+ * @param olderMonitor - The older monitor.
  * @param limit - The pagination limit.
  * @param queryMethod - The query method.
  * @returns An object containing the user's relation chain information.
  */
 export async function handler(
   handle: string,
+  olderMonitor: SocialMonitor,
   limit = 20,
   queryMethod: typeof query = query,
 ): Promise<TRelationChainResult> {
@@ -231,6 +234,7 @@ export async function handler(
     .map((item) => item.address)
     .filter((addr) => addr !== undefined) as string[];
   const fetchedAddresses = await getMultiple(addresses);
+
   const fetchedFollowing = following.map((item) => {
     if (item.address !== undefined) {
       const findOut = fetchedAddresses.find((addr) => {
@@ -241,10 +245,17 @@ export async function handler(
       });
 
       if (findOut) {
+        const lastActivities = diffMonitor(
+          olderMonitor,
+          findOut.activities,
+          handle,
+          item.handle,
+        );
+
         return {
           ...item,
           activities: findOut.activities,
-          lastActivities: findOut.oldActivities,
+          lastActivities,
         };
       }
     }

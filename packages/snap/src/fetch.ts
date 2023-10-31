@@ -7,7 +7,7 @@ import {
 } from '@rss3/js-sdk';
 
 import { themePlain } from '@rss3/js-sdk/lib/readable/activity/theme';
-import { CronActivity } from './state';
+import { CronActivity, SocialMonitor } from './state';
 
 export const getSocialActivitiesUrl = (address: string) =>
   `https://testnet.rss3.io/data/accounts/${address}/activities?tag=social&direction=out`;
@@ -98,8 +98,8 @@ export async function getMultiple(addresses: string[]) {
 
   const executeAddresses = filtedAddresses;
 
-  // 1 day ago
-  const timestamp = moment().subtract(1, 'day').unix();
+  // 1 hour ago
+  const timestamp = moment().subtract(1, 'hour').unix();
   while (hasNextPage) {
     const params = {
       action_limit: 10,
@@ -151,13 +151,92 @@ export async function getMultiple(addresses: string[]) {
       return {
         owner: addr,
         activities: groupBy,
-        oldActivities: [],
       };
     }
     return {
       owner: addr,
       activities: [],
-      oldActivities: [],
     };
   });
 }
+
+/**
+ * Social monitor.
+ *
+ * @param olderMonitor - The old monitor.
+ * @param newer - The newer cron activities.
+ * @param ownerHandle - The owner handle.
+ * @param handle - The handle.
+ * @returns The difference between the cached social activities and the fetched social activities.
+ */
+export function diffMonitor(
+  olderMonitor: SocialMonitor,
+  newer: CronActivity[],
+  ownerHandle: string,
+  handle: string,
+) {
+  let lastActivities: CronActivity[] = newer;
+
+  const cachedProfiles = olderMonitor.watchedProfiles?.find(
+    (wProfile) =>
+      wProfile.owner.handle.toLocaleLowerCase() ===
+      ownerHandle.toLocaleLowerCase(),
+  );
+  if (cachedProfiles) {
+    const cachedProfilesFollowingProfiles = cachedProfiles.following;
+    if (cachedProfilesFollowingProfiles) {
+      const cachedProfilesFollowingProfile =
+        cachedProfilesFollowingProfiles.find(
+          (cProfile) =>
+            cProfile.handle.toLocaleLowerCase() === handle.toLocaleLowerCase(),
+        );
+      if (cachedProfilesFollowingProfile) {
+        const cachedProfilesFollowingProfilesActivities =
+          cachedProfilesFollowingProfile.activities;
+
+        if (cachedProfilesFollowingProfilesActivities !== undefined) {
+          lastActivities = newer
+            .map((activity) => {
+              if (
+                !cachedProfilesFollowingProfilesActivities.some(
+                  (cacheActivity) => cacheActivity.id === activity.id,
+                )
+              ) {
+                return activity;
+              }
+              return null;
+            })
+            .filter((item) => item !== null) as CronActivity[];
+        }
+      }
+    }
+  }
+  return lastActivities;
+}
+
+// /**
+//  * Get the last updated following social activities.
+//  *
+//  * @param monitors - The social monitors.
+//  */
+// export function getLastUpdatedFollowingSocialActivities(
+//   monitors: SocialMonitor[],
+// ) {
+//   const followingSocialActivities: CronActivity[] = [];
+//   monitors.forEach((monitor) => {
+//     if (monitor.watchedProfiles) {
+//       monitor.watchedProfiles.forEach((wProfile) => {
+//         if (wProfile.following) {
+//           wProfile.following.forEach((followingProfile) => {
+//             if (followingProfile.lastActivities) {
+//               followingSocialActivities.push(
+//                 ...followingProfile.lastActivities,
+//               );
+//             }
+//           });
+//         }
+//       });
+//     }
+//   });
+//   return followingSocialActivities;
+// }

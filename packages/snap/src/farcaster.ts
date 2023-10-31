@@ -1,4 +1,5 @@
-import { getMultiple } from './fetch';
+import { diffMonitor, getMultiple } from './fetch';
+import { SocialMonitor } from './state';
 import { Platform, TProfile, TRelationChainResult } from '.';
 
 const API = 'https://api.warpcast.com/v2';
@@ -142,9 +143,15 @@ export async function format(data: TFarcasterUser[]): Promise<TProfile[]> {
  * Returns the following profiles for a given Farcaster ID.
  *
  * @param fid - The Farcaster ID to get the following profiles for.
+ * @param olderMonitor - The older monitor.
+ * @param handle - The handle.
  * @returns An array of TProfile objects representing the following profiles.
  */
-export async function getFollowingByFid(fid: number) {
+export async function getFollowingByFid(
+  fid: number,
+  olderMonitor: SocialMonitor,
+  handle: string,
+) {
   let cursor: string | undefined;
   let hasNextPage = true;
   const following: TProfile[] = [];
@@ -179,10 +186,17 @@ export async function getFollowingByFid(fid: number) {
       });
 
       if (findOut) {
+        const lastActivities = diffMonitor(
+          olderMonitor,
+          findOut.activities,
+          handle,
+          item.handle,
+        );
+
         return {
           ...item,
           activities: findOut.activities,
-          lastActivities: findOut.oldActivities,
+          lastActivities,
         };
       }
     }
@@ -195,9 +209,13 @@ export async function getFollowingByFid(fid: number) {
  * Returns the relation chain for a given Farcaster handle.
  *
  * @param handle - The Farcaster handle to get the relation chain for.
+ * @param olderMonitor - The older monitor.
  * @returns The relation chain for the given Farcaster handle.
  */
-export async function handler(handle: string): Promise<TRelationChainResult> {
+export async function handler(
+  handle: string,
+  olderMonitor: SocialMonitor,
+): Promise<TRelationChainResult> {
   const owner = await getOwnerProfileByUsername(handle);
   if (!owner.fid) {
     return {
@@ -211,7 +229,7 @@ export async function handler(handle: string): Promise<TRelationChainResult> {
     };
   }
 
-  const following = await getFollowingByFid(owner.fid);
+  const following = await getFollowingByFid(owner.fid, olderMonitor, handle);
   return {
     owner: {
       handle: owner.handle,

@@ -458,7 +458,7 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
         const watchedProfiles: TRelationChainResult[] = [];
         const promises = handles.map(async (exec) => {
           if (exec?.handle) {
-            const fol = await exec.execute(exec.handle);
+            const fol = await exec.execute(exec.handle, item);
             if (fol) {
               watchedProfiles.push(fol);
             }
@@ -470,12 +470,40 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
           watchedProfiles,
         };
       });
-
       const monitor = await Promise.all(monitorPromises);
       await setState({
         ...state,
         monitor,
       });
+
+      // notify the latest social activities by the monitor
+      const content: any[] = [];
+      monitor.forEach((item) => {
+        item.watchedProfiles?.forEach((profile) => {
+          const lastActivities = profile.following?.flatMap(
+            (follower) =>
+              follower.lastActivities?.map((activity) => activity.text) ?? [],
+          );
+          lastActivities?.length &&
+            content.push(
+              heading(
+                `${profile.owner.handle}'s following has new activities.`,
+              ),
+              text(lastActivities.join('\n')),
+              divider(),
+            );
+        });
+      });
+
+      if (content.length > 0) {
+        await snap.request({
+          method: 'snap_dialog',
+          params: {
+            type: DialogType.Alert,
+            content: panel(content),
+          },
+        });
+      }
       return true;
     }
 
