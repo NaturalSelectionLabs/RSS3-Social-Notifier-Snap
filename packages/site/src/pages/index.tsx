@@ -201,7 +201,7 @@ const Index = () => {
         <p>
           2. Your Web3 social graphs on{' '}
           <a
-            className="text-[#F6C549] font-bold"
+            className="text-Crossbell font-bold"
             href="https://crossbell.io/"
             target="_blank"
           >
@@ -209,7 +209,7 @@ const Index = () => {
           </a>
           ,{' '}
           <a
-            className="text-[#8A63D1] font-bold"
+            className="text-Farcaster font-bold"
             href="https://www.farcaster.xyz/"
             target="_blank"
           >
@@ -217,7 +217,7 @@ const Index = () => {
           </a>
           ,{' '}
           <a
-            className="text-[#AAFE2D] font-bold"
+            className="text-Lens font-bold"
             href="https://www.lens.xyz/"
             target="_blank"
           >

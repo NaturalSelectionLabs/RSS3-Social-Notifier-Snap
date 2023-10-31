@@ -23,4 +23,4 @@ Simply visit <https://snap.rss3.io> and install the Snap.
 
 Permissionless, no registration required.
 
-For more information on MetaMASK Snap: <https://metamask.io/snaps/>
+For more information on MetaMask Snap: <https://metamask.io/snaps/>

@@ -19,6 +19,9 @@ module.exports = {
       colors: {
         RSS3: '#0072FF',
         MetaMask: '#E97C23',
+        Farcaster: '#8A63D1',
+        Lens: '#AAFE2D',
+        Crossbell: '#F6C549',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
