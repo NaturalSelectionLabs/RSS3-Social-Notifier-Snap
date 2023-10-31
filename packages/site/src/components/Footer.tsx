@@ -4,7 +4,7 @@ export const Footer = () => {
       <span>
         {' '}
         Powered by{' '}
-        <a className="text-[#0072ff]" href="https://rss3.io" about="_blank">
+        <a className="text-RSS3" href="https://rss3.io" about="_blank">
           RSS3
         </a>{' '}
       </span>

@@ -13,8 +13,8 @@ const config: GatsbyConfig = {
       resolve: 'gatsby-plugin-manifest',
       options: {
         name: 'Template Snap',
-        icon: 'src/assets/logo.svg',
-        theme_color: '#6F4CFF',
+        icon: 'src/assets/RSS3.svg',
+        theme_color: '#0072FF',
         background_color: '#FFFFFF',
         display: 'standalone',
       },

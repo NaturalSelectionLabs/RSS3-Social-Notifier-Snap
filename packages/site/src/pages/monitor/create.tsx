@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useContext } from 'react';
-import { formatAddressAndNS } from '@rss3/js-sdk';
 import * as z from 'zod';
-import { type Profile } from '@rss3/js-sdk';
+import { type Profile, formatAddressAndNS } from '@rss3/js-sdk';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { navigate } from 'gatsby';

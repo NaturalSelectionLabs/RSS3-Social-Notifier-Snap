@@ -17,6 +17,8 @@ module.exports = {
     },
     extend: {
       colors: {
+        RSS3: '#0072FF',
+        MetaMask: '#E97C23',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

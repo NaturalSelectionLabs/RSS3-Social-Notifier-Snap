@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import { connectSnap, getSnap } from '../utils';
 import { HeaderButtons } from './Buttons';
-import { SnapLogo } from './SnapLogo';
+import { RSS3Logo } from './RSS3Logo';
 
 export const Header = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
@@ -25,7 +25,9 @@ export const Header = () => {
     <div className="flex flex-row justify-between items-center p-4 border-b border-solid">
       <div className="flex flex-row items-center space-x-4">
         <a href="/">
-          <SnapLogo />
+          <RSS3Logo />
+        </a>
+        <a href="/">
           <p>RSS3 Social Notifier Snap</p>
         </a>
       </div>

@@ -187,15 +187,15 @@ const Index = () => {
     <div className="container my-12">
       <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
         Welcome to{' '}
-        <span className="text-[#0072ff] drop-shadow-md">
+        <span className="text-text-RSS3 drop-shadow-md">
           RSS3 Social Notifier -
         </span>
-        <span className="text-[#E97C23] drop-shadow-md"> A MetaMask Snap</span>
+        <span className="text-MetaMask drop-shadow-md"> A MetaMask Snap</span>
       </h1>
       <h2 className="mt-5 mb-10 text-base text-left max-2xl text-muted-foreground sm:text-lg">
         <p>
-          This Snap for <span className="text-[#E97C23]">MetaMask</span> offers
-          a quick and easy way to stay on top of your frens' social activities.
+          This Snap for <span className="text-MetaMask">MetaMask</span> offers a
+          quick and easy way to stay on top of your frens' social activities.
         </p>
         <p>1. Connect to the Snap and install.</p>
         <p>
