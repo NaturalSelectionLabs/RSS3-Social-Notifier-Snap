@@ -13367,6 +13367,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gatsby-plugin-env-variables@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "gatsby-plugin-env-variables@npm:2.3.0"
+  peerDependencies:
+    gatsby: ^5.0.0 || ^4.0.0 || ^3.0.0 || ^2.0.0
+  checksum: 4325a7a5cddadaf54346e9628029d038c3168c493e33704b05ae18bf4428b77c15cd499010aee70087f29806d0e4d2589c9405c07285f51415baa04dd4a98ea4
+  languageName: node
+  linkType: hard
+
 "gatsby-plugin-image@npm:^3.12.3":
   version: 3.12.3
   resolution: "gatsby-plugin-image@npm:3.12.3"
@@ -21294,6 +21303,7 @@ __metadata:
     eslint-plugin-node: ^11.1.0
     eslint-plugin-prettier: ^4.2.1
     gatsby: ^5.12.9
+    gatsby-plugin-env-variables: ^2.3.0
     gatsby-plugin-image: ^3.12.3
     gatsby-plugin-manifest: ^5.12.3
     gatsby-plugin-postcss: ^6.12.0

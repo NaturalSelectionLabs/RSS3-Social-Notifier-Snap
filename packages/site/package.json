@@ -4,13 +4,13 @@
   "private": true,
   "license": "(MIT-0 OR Apache-2.0)",
   "scripts": {
-    "build": "GATSBY_TELEMETRY_DISABLED=1 gatsby build",
+    "build": "NODE_ENV=production GATSBY_TELEMETRY_DISABLED=1 gatsby build",
     "clean": "rimraf public",
     "lint": "yarn lint:eslint && yarn lint:misc --check",
     "lint:eslint": "eslint . --cache --ext js,ts",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --ignore-path .gitignore",
-    "start": "GATSBY_TELEMETRY_DISABLED=1 gatsby develop"
+    "start": "NODE_ENV=development GATSBY_TELEMETRY_DISABLED=1 gatsby develop"
   },
   "browserslist": {
     "production": [
@@ -38,6 +38,7 @@
     "autoprefixer": "^10.4.16",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "gatsby-plugin-env-variables": "^2.3.0",
     "gatsby-plugin-image": "^3.12.3",
     "gatsby-plugin-postcss": "^6.12.0",
     "gatsby-plugin-sharp": "^5.12.3",
