@@ -424,6 +424,23 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
       return { result: true, content: panel(content) };
     }
 
+    case 'checkConnectedUserProfiles': {
+      const state = await getState();
+
+      const accounts = await getAccounts();
+      const profilesPromises = accounts.map(async (account) => {
+        const profiles = await getProfilesBySearch(account);
+        const monitor = state.monitor.filter((item) => item.search !== account);
+        await setState({
+          ...state,
+          monitor: [...monitor, { search: account, profiles }],
+        });
+      });
+      await Promise.all(profilesPromises);
+
+      return true;
+    }
+
     case 'executeFollow': {
       const state = await getState();
       const monitorPromises = state.monitor.map(async (item) => {
