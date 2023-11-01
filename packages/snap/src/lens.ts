@@ -127,12 +127,12 @@ export const format = (data: any): TProfile[] => {
 };
 
 /**
- * Queries the Lens API for a user's following social graph.
+ * Queries the Lens API for a user's social graph.
  *
  * @param handle - The user's handle.
  * @param limit - The pagination limit.
  * @param cursor - The cursor for pagination.
- * @returns An object containing the user's following social graph information.
+ * @returns An object containing the user's social graph information.
  */
 export const query = async (handle: string, limit: number, cursor?: string) => {
   const queryOptions = {

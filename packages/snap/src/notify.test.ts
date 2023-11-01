@@ -108,7 +108,7 @@ describe('check query profile', () => {
         );
         lastActivities?.length &&
           content.push(
-            heading(`${profile.owner.handle}'s following has new activities.`),
+            heading(`${profile.owner.handle}'s frens has new activities.`),
             text(lastActivities.join('\n')),
             divider(),
           );

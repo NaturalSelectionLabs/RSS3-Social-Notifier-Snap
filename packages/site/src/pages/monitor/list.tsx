@@ -60,9 +60,7 @@ const MonitorList = () => {
                 key={monitor.search}
                 className="flex flex-col items-start justify-center gap-4 border border-solid border-gray-100 w-full p-6 rounded-lg"
               >
-                <h3 className="text-lg font-bold">
-                  {monitor.search}'s following
-                </h3>
+                <h3 className="text-lg font-bold">{monitor.search}'s frens</h3>
                 <p>
                   Last Updated:{' '}
                   <span className="text-base text-muted-foreground">
