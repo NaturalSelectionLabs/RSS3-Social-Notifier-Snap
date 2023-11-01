@@ -504,9 +504,7 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
 
           if (lastActivities && lastActivities.length > 0) {
             content.push(
-              heading(
-                `${profile.owner.handle}'s following has new activities.`,
-              ),
+              heading(`${profile.owner.handle}'s frens has new activities.`),
             );
 
             lastActivities.forEach((activity) => {

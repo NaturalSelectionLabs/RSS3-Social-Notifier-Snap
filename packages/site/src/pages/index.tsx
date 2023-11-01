@@ -20,7 +20,7 @@ import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
-  SendHelloButton,
+  ResetButton,
 } from '../components';
 import { defaultSnapOrigin, isProduction } from '../config';
 import {
@@ -185,14 +185,14 @@ const Index = () => {
 
   return (
     <div className="container my-12">
-      <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
+      <h1 className="mx-auto max-w-fit text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
         Welcome to{' '}
         <span className="text-text-RSS3 drop-shadow-md">
           RSS3 Social Notifier -
         </span>
         <span className="text-MetaMask drop-shadow-md"> A MetaMask Snap</span>
       </h1>
-      <h2 className="mt-5 mb-10 text-base text-left max-2xl text-muted-foreground sm:text-lg">
+      <div className="mx-auto my-5 text-base text-left max-w-4xl text-muted-foreground sm:text-lg">
         <p>
           This Snap for <span className="text-MetaMask">MetaMask</span> offers a
           quick and easy way to stay on top of your frens' social activities.
@@ -229,7 +229,17 @@ const Index = () => {
           3. When a new social activity initiated by any of your Web3 frens,{' '}
           <span>you will be notified</span>.
         </p>
-      </h2>
+      </div>
+      <div className="mx-auto mb-10 text-base text-left  max-w-4xl text-muted-foreground sm:text-lg">
+        <p>
+          Behind the scene, this Snap works by aggregating your social graphs
+          from Web3 social platforms, and use the{' '}
+          <a href="https://rss3.io" className="text-RSS3 font-bold">
+            RSS3 Network
+          </a>{' '}
+          to constantly check your frens' social activities.
+        </p>
+      </div>
       {state.error && (
         <div className="max-w-[600px] my-4">
           <Alert variant="destructive">
@@ -299,7 +309,7 @@ const Index = () => {
             </CardDescription>
           </CardHeader>
           <CardFooter>
-            <SendHelloButton
+            <ResetButton
               onClick={handleSendClearStateClick}
               disabled={!state.installedSnap}
             />

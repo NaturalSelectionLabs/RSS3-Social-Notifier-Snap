@@ -43,8 +43,8 @@ export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
   );
 };
 
-export const SendHelloButton = (props: ComponentProps<typeof Button>) => {
-  return <Button {...props}>Trigger Now</Button>;
+export const ResetButton = (props: ComponentProps<typeof Button>) => {
+  return <Button {...props}>Reset Now</Button>;
 };
 
 export const HeaderButtons = ({
