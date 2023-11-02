@@ -1,5 +1,7 @@
-import { Platform, TProfile, type TSocialGraphResult } from '..';
 import { isValidWalletAddress } from '../utils';
+import { SocialMonitor } from '../../state';
+import { diffMonitor, getMultiple } from '../../fetch';
+import { Platform, TProfile, TSocialGraphResult } from '../..';
 
 const API = `https://indexer.crossbell.io/v1`;
 
@@ -10,6 +12,12 @@ export type TCSBProfile = {
   primary: boolean;
   metadata: {
     uri?: string;
+    content?: {
+      bio?: string;
+      name: string;
+      type: string;
+      avatars: string[];
+    };
   };
 };
 
@@ -129,8 +137,14 @@ async function getCharacterId(handle: string) {
  * Retrieves the followers for the given character ID from the Crossbell API.
  *
  * @param id - The character ID to retrieve the followers for.
+ * @param olderMonitor - The older monitor.
+ * @param handle - The handle.
  */
-export async function getFollowingByCharacterId(id: string) {
+export async function getFollowingByCharacterId(
+  id: string,
+  olderMonitor: SocialMonitor,
+  handle: string,
+) {
   const following: TProfile[] = [];
   let hasNextPage = true;
   let cursor: string | undefined;
@@ -162,7 +176,39 @@ export async function getFollowingByCharacterId(id: string) {
     }
   }
 
-  return following;
+  const addresses = following
+    .map((item) => item.address)
+    .filter((addr) => addr !== undefined) as string[];
+
+  const fetchedAddress = await getMultiple(addresses);
+  const fetchedFollowing = following.map((item) => {
+    if (item.address !== undefined) {
+      const findOut = fetchedAddress.find((addr) => {
+        if (addr.owner === undefined || item.address === undefined) {
+          return false;
+        }
+        return addr.owner.toLowerCase() === item.address.toLowerCase();
+      });
+
+      if (findOut) {
+        const lastActivities = diffMonitor(
+          olderMonitor,
+          findOut.activities,
+          handle,
+          item.handle,
+        );
+
+        return {
+          ...item,
+          activities: findOut.activities,
+          lastActivities,
+        };
+      }
+    }
+    return item;
+  });
+
+  return fetchedFollowing;
 }
 
 /**
@@ -185,12 +231,14 @@ export function format(profiles: TCSBProfile[]): TProfile[] {
  * Retrieves the social graph for the given handle from the Crossbell API.
  *
  * @param handle - The handle to retrieve the social graph for.
+ * @param oldMonitor - The old monitor.
  * @param fetchMethod - The method to use to fetch the following.
  * @returns The social graph for the given handle.
  */
 export async function handler(
   handle: string,
-  fetchMethod: typeof getFollowingByCharacterId,
+  oldMonitor: SocialMonitor,
+  fetchMethod: typeof getFollowingByCharacterId = getFollowingByCharacterId,
 ): Promise<TSocialGraphResult> {
   // 1. Get owner profile
   const characterResult = await getCharacterId(handle);
@@ -233,7 +281,7 @@ export async function handler(
   }
 
   // 2. Get following
-  const following = await fetchMethod(data.characterId);
+  const following = await fetchMethod(data.characterId, oldMonitor, handle);
 
   // 3. Return result
   return {
@@ -241,7 +289,7 @@ export async function handler(
     owner: {
       handle: csbHandle,
       address: characterResult.data?.owner,
-      avatar: characterResult.data?.metadata.uri,
+      avatar: characterResult.data?.metadata.content?.avatars?.[0],
     },
     status: true,
     message: 'success',

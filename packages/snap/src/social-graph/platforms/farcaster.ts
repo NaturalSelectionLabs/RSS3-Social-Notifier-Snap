@@ -1,4 +1,6 @@
-import { Platform, TProfile, TSocialGraphResult } from '..';
+import { Platform, TProfile, TSocialGraphResult } from '../..';
+import { diffMonitor, getMultiple } from '../../fetch';
+import { SocialMonitor } from '../../state';
 
 const API = 'https://api.warpcast.com/v2';
 
@@ -71,7 +73,15 @@ export async function getOwnerProfileByUsername(username: string) {
   /**
    * If there are no errors, return the owner profile.
    */
-  const { result } = json as { result: { user: TFarcasterUser } };
+  const { result } = json as {
+    result: {
+      user: TFarcasterUser;
+      extras: {
+        fid: number;
+        custodyAddress: string;
+      };
+    };
+  };
   return {
     handle: result.user.username,
     avatar: result.user.pfp.url,
@@ -79,6 +89,7 @@ export async function getOwnerProfileByUsername(username: string) {
     followerCount: result.user.followerCount,
     followingCount: result.user.followingCount,
     bio: result.user.profile.bio.text,
+    address: result.extras.custodyAddress,
   };
 }
 
@@ -88,22 +99,59 @@ export async function getOwnerProfileByUsername(username: string) {
  * @param data - The response data from FarCaster API.
  * @returns An array of TProfile objects.
  */
-export function format(data: TFarcasterUser[]): TProfile[] {
-  return data.map((item) => {
+export async function format(data: TFarcasterUser[]): Promise<TProfile[]> {
+  const promises = data.map(async (item) => {
+    const resp = await fetch(userByUsernameApi(item.username));
+    const json = (await resp.json()) as
+      | { result: { user: TFarcasterUser } }
+      | TFarcasterError;
+
+    /**
+     * If there are errors, return the handle.
+     */
+    if ((json as TFarcasterError)?.errors) {
+      return {
+        handle: item.username,
+        avatar: item.pfp.url,
+      };
+    }
+
+    /**
+     * If there are no errors, return the owner profile.
+     */
+    const { result } = json as {
+      result: {
+        user: TFarcasterUser;
+        extras: {
+          fid: number;
+          custodyAddress: string;
+        };
+      };
+    };
+
     return {
       handle: item.username,
       avatar: item.pfp.url,
+      address: result.extras.custodyAddress,
     };
   });
+
+  return await Promise.all(promises);
 }
 
 /**
  * Returns the following profiles for a given Farcaster ID.
  *
  * @param fid - The Farcaster ID to get the following profiles for.
+ * @param olderMonitor - The older monitor.
+ * @param handle - The handle.
  * @returns An array of TProfile objects representing the following profiles.
  */
-export async function getFollowingByFid(fid: number) {
+export async function getFollowingByFid(
+  fid: number,
+  olderMonitor: SocialMonitor,
+  handle: string,
+) {
   let cursor: string | undefined;
   let hasNextPage = true;
   const following: TProfile[] = [];
@@ -114,7 +162,7 @@ export async function getFollowingByFid(fid: number) {
         : `${getFollowingByFidApi(fid)}&cursor=${cursor}`;
     const resp = await fetch(url);
     const data = (await resp.json()) as TFarcasterFollowingResponse;
-    following.push(...format(data.result.users));
+    following.push(...(await format(data.result.users)));
     if (data.next === undefined) {
       hasNextPage = false;
     } else {
@@ -122,21 +170,58 @@ export async function getFollowingByFid(fid: number) {
     }
   }
 
-  return following;
+  const addresses = following
+    .map((item) => item.address)
+    .filter((addr) => addr !== undefined) as string[];
+
+  const fetchedAddresses = await getMultiple(addresses);
+
+  const fetchedFollowing = following.map((item) => {
+    if (item.address !== undefined) {
+      const findOut = fetchedAddresses.find((addr) => {
+        if (addr.owner === undefined || item.address === undefined) {
+          return false;
+        }
+        return addr.owner.toLowerCase() === item.address.toLowerCase();
+      });
+
+      if (findOut) {
+        const lastActivities = diffMonitor(
+          olderMonitor,
+          findOut.activities,
+          handle,
+          item.handle,
+        );
+
+        return {
+          ...item,
+          activities: findOut.activities,
+          lastActivities,
+        };
+      }
+    }
+    return item;
+  });
+  return fetchedFollowing;
 }
 
 /**
  * Returns the social graph for a given Farcaster handle.
  *
  * @param handle - The Farcaster handle to get the social graph for.
+ * @param olderMonitor - The older monitor.
  * @returns The social graph for the given Farcaster handle.
  */
-export async function handler(handle: string): Promise<TSocialGraphResult> {
+export async function handler(
+  handle: string,
+  olderMonitor: SocialMonitor,
+): Promise<TSocialGraphResult> {
   const owner = await getOwnerProfileByUsername(handle);
   if (!owner.fid) {
     return {
       owner: {
         handle,
+        address: owner.address,
       },
       status: false,
       message: `${handle} not found`,
@@ -144,11 +229,12 @@ export async function handler(handle: string): Promise<TSocialGraphResult> {
     };
   }
 
-  const following = await getFollowingByFid(owner.fid);
+  const following = await getFollowingByFid(owner.fid, olderMonitor, handle);
   return {
     owner: {
       handle: owner.handle,
       avatar: owner.avatar,
+      address: owner.address,
     },
     status: true,
     message: 'success',

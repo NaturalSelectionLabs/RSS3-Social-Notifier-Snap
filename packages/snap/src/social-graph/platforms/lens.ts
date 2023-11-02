@@ -1,7 +1,8 @@
 import { Client, cacheExchange, fetchExchange, gql } from '@urql/core';
-import CrossFetch from 'cross-fetch';
-import { TSocialGraphResult, type TProfile, Platform } from '..';
 import { isValidWalletAddress } from '../utils';
+import { diffMonitor, getMultiple } from '../../fetch';
+import { SocialMonitor } from '../../state';
+import { TSocialGraphResult, type TProfile, Platform } from '../..';
 
 // only need handle, ownedBy and picture.
 const QueryFollowing = gql`
@@ -99,7 +100,7 @@ const client = new Client({
   url: 'https://api.lens.dev/',
   exchanges: [cacheExchange, fetchExchange],
   // issue from https://github.com/urql-graphql/urql/issues/1700
-  fetch: CrossFetch,
+  fetch,
 });
 
 /**
@@ -180,12 +181,14 @@ export async function getAddressByHandle(handle: string) {
  * Returns an object containing information about a user's social graph.
  *
  * @param handle - The user's handle.
+ * @param olderMonitor - The older monitor.
  * @param limit - The pagination limit.
  * @param queryMethod - The query method.
  * @returns An object containing the user's social graph information.
  */
 export async function handler(
   handle: string,
+  olderMonitor: SocialMonitor,
   limit = 20,
   queryMethod: typeof query = query,
 ): Promise<TSocialGraphResult> {
@@ -227,6 +230,38 @@ export async function handler(
     }
   }
 
+  const addresses = following
+    .map((item) => item.address)
+    .filter((addr) => addr !== undefined) as string[];
+  const fetchedAddresses = await getMultiple(addresses);
+
+  const fetchedFollowing = following.map((item) => {
+    if (item.address !== undefined) {
+      const findOut = fetchedAddresses.find((addr) => {
+        if (addr.owner === undefined || item.address === undefined) {
+          return false;
+        }
+        return addr.owner.toLowerCase() === item.address.toLowerCase();
+      });
+
+      if (findOut) {
+        const lastActivities = diffMonitor(
+          olderMonitor,
+          findOut.activities,
+          handle,
+          item.handle,
+        );
+
+        return {
+          ...item,
+          activities: findOut.activities,
+          lastActivities,
+        };
+      }
+    }
+    return item;
+  });
+
   return {
     owner: {
       handle: lensProfile.handle,
@@ -236,6 +271,6 @@ export async function handler(
     platform: Platform.Lens,
     status: errorMessage === '',
     message: errorMessage || 'success',
-    following,
+    following: fetchedFollowing,
   };
 }

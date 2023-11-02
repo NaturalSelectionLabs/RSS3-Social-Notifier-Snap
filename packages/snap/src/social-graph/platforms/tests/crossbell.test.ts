@@ -1,3 +1,4 @@
+import { installSnap } from '@metamask/snaps-jest';
 import { expect } from '@jest/globals';
 import {
   CrossbellHandler,
@@ -5,6 +6,7 @@ import {
   type TCSBProfile,
   Platform,
 } from '../..';
+import { SocialMonitor, State } from '../../../state';
 
 describe('get following by crossbell', () => {
   const mockFollowing = [
@@ -31,8 +33,16 @@ describe('get following by crossbell', () => {
   it('should return following by query wallet address', async () => {
     const MOCK_CSB_WALLET_ADDRESS =
       '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0';
+    const { request } = await installSnap();
+    const response = await request({ method: 'getState' });
+    const currentMonitor =
+      (response as unknown as State).monitor?.find(
+        (item) => item.search === MOCK_CSB_WALLET_ADDRESS,
+      ) ?? ({ search: MOCK_CSB_WALLET_ADDRESS } as SocialMonitor);
+
     const resp = await CrossbellHandler(
       MOCK_CSB_WALLET_ADDRESS,
+      currentMonitor ?? ({ search: MOCK_CSB_WALLET_ADDRESS } as SocialMonitor),
       mockFetchFollowingMethod,
     );
     expect(resp).toStrictEqual({
@@ -40,7 +50,7 @@ describe('get following by crossbell', () => {
         handle: 'dmoo.csb',
         address: '0xe584ca8f30b93b3ed47270297a3e920e2d6d25f0',
         avatar:
-          'ipfs://bafkreih4o2egau6vewd6xjyklalp5emtcwdtwglgefiypbstqovpqevkn4',
+          'ipfs://bafkreid5l4tpl2sefl4sgtmv44ksgsbf56lpzxlh6nbpdmqnclnuw6hu6q',
       },
       platform: Platform.Crossbell,
       status: true,
@@ -51,8 +61,16 @@ describe('get following by crossbell', () => {
 
   it('should return following by query handle', async () => {
     const MOCK_CSB_HANDLE = 'dmoo.csb';
+    const { request } = await installSnap();
+    const response = await request({ method: 'getState' });
+    const currentMonitor =
+      (response as unknown as State).monitor?.find(
+        (item) => item.search === MOCK_CSB_HANDLE,
+      ) ?? ({ search: MOCK_CSB_HANDLE } as SocialMonitor);
+
     const resp = await CrossbellHandler(
       MOCK_CSB_HANDLE,
+      currentMonitor ?? ({ search: MOCK_CSB_HANDLE } as SocialMonitor),
       mockFetchFollowingMethod,
     );
 
@@ -60,7 +78,7 @@ describe('get following by crossbell', () => {
       owner: {
         address: '0xe584ca8f30b93b3ed47270297a3e920e2d6d25f0',
         avatar:
-          'ipfs://bafkreih4o2egau6vewd6xjyklalp5emtcwdtwglgefiypbstqovpqevkn4',
+          'ipfs://bafkreid5l4tpl2sefl4sgtmv44ksgsbf56lpzxlh6nbpdmqnclnuw6hu6q',
         handle: 'dmoo.csb',
       },
       platform: Platform.Crossbell,
