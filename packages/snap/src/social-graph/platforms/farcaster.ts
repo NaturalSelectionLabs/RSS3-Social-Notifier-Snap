@@ -4,7 +4,7 @@ import { SocialMonitor } from '../../state';
 
 const API = 'https://api.warpcast.com/v2';
 
-type TFarcasterUser = {
+export type TFarcasterUser = {
   fid: number;
   username: string;
   displayName: string;
@@ -22,13 +22,13 @@ type TFarcasterUser = {
   followingCount: number;
 };
 
-type TFarcasterError = {
+export type TFarcasterError = {
   errors: {
     message: string;
   }[];
 };
 
-type TFarcasterFollowingResponse = {
+export type TFarcasterFollowingResponse = {
   result: {
     users: TFarcasterUser[];
   };
@@ -203,6 +203,33 @@ export async function getFollowingByFid(
     return item;
   });
   return fetchedFollowing;
+}
+
+/**
+ * Returns the following profiles for a given Farcaster ID.
+ *
+ * @param fid - The Farcaster ID to get the following profiles for.
+ * @returns An array of TProfile objects representing the following profiles.
+ */
+export async function getFollowingByFidFromFarcaster(fid: number) {
+  let cursor: string | undefined;
+  let hasNextPage = true;
+  const following: TFarcasterUser[] = [];
+  while (hasNextPage) {
+    const url =
+      cursor === undefined
+        ? getFollowingByFidApi(fid)
+        : `${getFollowingByFidApi(fid)}&cursor=${cursor}`;
+    const resp = await fetch(url);
+    const data = (await resp.json()) as TFarcasterFollowingResponse;
+    following.push(...data.result.users);
+    if (data.next === undefined) {
+      hasNextPage = false;
+    } else {
+      cursor = data.next.cursor;
+    }
+  }
+  return following;
 }
 
 /**

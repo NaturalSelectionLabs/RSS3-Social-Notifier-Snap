@@ -8,31 +8,29 @@ import {
 } from '../..';
 import { SocialMonitor, State } from '../../../state';
 
+const MOCK_CSB_WALLET_ADDRESS = '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0';
+const MOCK_CSB_FOLLOWING_LIST = [
+  {
+    owner: '0x7eaf842d9a88db0372341150294f0285514f19ca',
+    metadata: {
+      uri: 'ipfs://bafkreifhxbbfsfi2q636najxfdviqqljitd537ijynsdgcmsi55oiiz6we',
+    },
+    handle: 'niracler',
+  },
+  {
+    address: '0xb461c1521ee9d96a9c950337f0851b79bd66cae1',
+    metadata: {
+      uri: 'ipfs://bafkreid2sck4s4oydbzwyfyh4ebg4xgl2azhkm2ozwsg56gba2hqv7thve',
+    },
+    handle: 'pseudoyu',
+  },
+];
 describe('get following by crossbell', () => {
-  const mockFollowing = [
-    {
-      owner: '0x7eaf842d9a88db0372341150294f0285514f19ca',
-      metadata: {
-        uri: 'ipfs://bafkreifhxbbfsfi2q636najxfdviqqljitd537ijynsdgcmsi55oiiz6we',
-      },
-      handle: 'niracler',
-    },
-    {
-      address: '0xb461c1521ee9d96a9c950337f0851b79bd66cae1',
-      metadata: {
-        uri: 'ipfs://bafkreid2sck4s4oydbzwyfyh4ebg4xgl2azhkm2ozwsg56gba2hqv7thve',
-      },
-      handle: 'pseudoyu',
-    },
-  ];
-
   const mockFetchFollowingMethod = async (_characterId: string) => {
-    return CrossbellFormat(mockFollowing as unknown as TCSBProfile[]);
+    return CrossbellFormat(MOCK_CSB_FOLLOWING_LIST as unknown as TCSBProfile[]);
   };
 
   it('should return following by query wallet address', async () => {
-    const MOCK_CSB_WALLET_ADDRESS =
-      '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0';
     const { request } = await installSnap();
     const response = await request({ method: 'getState' });
     const currentMonitor =
@@ -55,7 +53,9 @@ describe('get following by crossbell', () => {
       platform: Platform.Crossbell,
       status: true,
       message: 'success',
-      following: CrossbellFormat(mockFollowing as unknown as TCSBProfile[]),
+      following: CrossbellFormat(
+        MOCK_CSB_FOLLOWING_LIST as unknown as TCSBProfile[],
+      ),
     });
   });
 
@@ -84,7 +84,9 @@ describe('get following by crossbell', () => {
       platform: Platform.Crossbell,
       status: true,
       message: 'success',
-      following: CrossbellFormat(mockFollowing as unknown as TCSBProfile[]),
+      following: CrossbellFormat(
+        MOCK_CSB_FOLLOWING_LIST as unknown as TCSBProfile[],
+      ),
     });
   });
 });
