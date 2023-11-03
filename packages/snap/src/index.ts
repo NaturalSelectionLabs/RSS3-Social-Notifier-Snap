@@ -19,10 +19,12 @@ import {
   setState,
 } from './state';
 import { diff, getSocialActivities } from './fetch';
-import { getProfilesBySearch } from './profiles';
-import { handler as CrossbellHandler } from './crossbell';
-import { handler as LensHandler } from './lens';
-import { handler as FarcasterHandler } from './farcaster';
+import {
+  getProfilesBySearch,
+  CrossbellHandler,
+  LensHandler,
+  FarcasterHandler,
+} from './social-graph';
 
 export enum Platform {
   Crossbell = 'Crossbell',

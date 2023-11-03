@@ -1,11 +1,11 @@
 import { expect } from '@jest/globals';
 import { installSnap } from '@metamask/snaps-jest';
 import { CombinedError } from '@urql/core';
-import { Platform } from '..';
+import { Platform } from '../..';
 import {
   handler as LensHandler,
   format as LensFormat,
-} from '../platforms/lens';
+} from '../../social-graph/platforms/lens';
 import { SocialMonitor, State } from '../../state';
 
 const MOCK_HANDLE = '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0'; // dmoo.lens

@@ -1,5 +1,5 @@
 import { installSnap } from '@metamask/snaps-jest';
-import { Platform } from '..';
+import { Platform } from '../..';
 import {
   getOwnerProfileByUsername,
   userByUsernameApi,
@@ -7,9 +7,7 @@ import {
   format as FarcasterFormat,
   handler as FarcasterHandler,
   getFollowingByFidFromFarcaster,
-  // type TFarcasterUser,
-  // type TFarcasterError,
-} from '../platforms/farcaster';
+} from '../../social-graph/platforms/farcaster';
 import { SocialMonitor, State } from '../../state';
 import {
   MOCK_USER_BY_USERNAME,
@@ -20,7 +18,7 @@ import {
   MOCK_USER_BY_USERNAME_DWR,
   MOCK_FOLLOWING,
   FARCASTER_FOLLOWING_ACTIVITIES,
-} from './mocks/farcaster.data';
+} from '../mocks/farcaster.data';
 
 const MOCK_HANDLE = 'henryqw';
 // mock fetch response

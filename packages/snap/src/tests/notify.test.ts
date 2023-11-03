@@ -1,6 +1,6 @@
 import { divider, heading, panel, text } from '@metamask/snaps-ui';
-import { SocialMonitor } from './state';
-import { Platform } from '.';
+import { SocialMonitor } from '../state';
+import { Platform } from '..';
 
 describe('check query profile', () => {
   it('should return the profiles', async () => {
