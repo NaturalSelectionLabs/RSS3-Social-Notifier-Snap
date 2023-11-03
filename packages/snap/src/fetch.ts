@@ -213,30 +213,3 @@ export function diffMonitor(
   }
   return lastActivities;
 }
-
-// /**
-//  * Get the last updated following social activities.
-//  *
-//  * @param monitors - The social monitors.
-//  */
-// export function getLastUpdatedFollowingSocialActivities(
-//   monitors: SocialMonitor[],
-// ) {
-//   const followingSocialActivities: CronActivity[] = [];
-//   monitors.forEach((monitor) => {
-//     if (monitor.watchedProfiles) {
-//       monitor.watchedProfiles.forEach((wProfile) => {
-//         if (wProfile.following) {
-//           wProfile.following.forEach((followingProfile) => {
-//             if (followingProfile.lastActivities) {
-//               followingSocialActivities.push(
-//                 ...followingProfile.lastActivities,
-//               );
-//             }
-//           });
-//         }
-//       });
-//     }
-//   });
-//   return followingSocialActivities;
-// }

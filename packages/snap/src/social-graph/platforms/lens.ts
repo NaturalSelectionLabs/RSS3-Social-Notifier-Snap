@@ -118,6 +118,8 @@ export const format = (data: any): TProfile[] => {
   const list: TProfile[] = items.map((item: any) => {
     const avatar = item.profile.picture?.original?.url || undefined;
     return {
+      activities: [],
+      lastActivities: [],
       handle: item.profile.handle,
       address: item.profile.ownedBy,
       avatar,

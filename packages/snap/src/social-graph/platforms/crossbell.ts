@@ -5,6 +5,16 @@ import { Platform, TProfile, TSocialGraphResult } from '../..';
 
 const API = `https://indexer.crossbell.io/v1`;
 
+export const getCSBCharacterIdByWalletAddressUrl = (handle: string) =>
+  `${API}/addresses/${handle}/characters?limit=50`;
+export const getCSBCharacterIdByHandleUrl = (handle: string, limit = 20) =>
+  `${API}/handles/${handle}/character?limit=${limit}`;
+
+export const getCSBFollowingUrl = (id: string, cursor?: string) =>
+  `${API}/characters/${id}/links?linkType=follow&limit=50${
+    cursor ? `&cursor=${cursor}` : ''
+  }`;
+
 export type TCSBProfile = {
   characterId: string;
   handle: string;
@@ -45,10 +55,10 @@ type TCharacterResult = {
  * @param walletAddress - The walletAddress to retrieve the character ID for.
  * @returns The character ID associated with the given walletAddress.
  */
-async function getCSBCharacterIdByWalletAddress(
+export async function getCSBCharacterIdByWalletAddress(
   walletAddress: string,
 ): Promise<TCharacterResult> {
-  const url = `${API}/addresses/${walletAddress}/characters?limit=50`;
+  const url = getCSBCharacterIdByWalletAddressUrl(walletAddress);
   const resp = await fetch(url);
   const data = (await resp.json()) as TCSBError | TCSBProfiles;
 
@@ -94,12 +104,12 @@ async function getCSBCharacterIdByWalletAddress(
  * @param limit - The maximum number of results to return.
  * @returns The character ID associated with the given handle.
  */
-async function getCSBCharacterIdByHandle(
+export async function getCSBCharacterIdByHandle(
   inputHandle: string,
   limit = 20,
 ): Promise<TCharacterResult> {
   const handle = inputHandle.replace('.csb', '');
-  const url = `${API}/handles/${handle}/character?limit=${limit}`;
+  const url = getCSBCharacterIdByHandleUrl(handle, limit);
   const resp = await fetch(url);
   const data = (await resp.json()) as TCSBProfile | null;
   if (data) {
@@ -150,9 +160,7 @@ export async function getFollowingByCharacterId(
   let cursor: string | undefined;
   while (hasNextPage) {
     const url =
-      cursor === ''
-        ? `${API}/characters/${id}/links?linkType=follow&limit=50`
-        : `${API}/characters/${id}/links?linkType=follow&limit=50&cursor=${cursor}`;
+      cursor === '' ? getCSBFollowingUrl(id) : getCSBFollowingUrl(id, cursor);
 
     const resp = await fetch(url);
     if (resp.ok) {

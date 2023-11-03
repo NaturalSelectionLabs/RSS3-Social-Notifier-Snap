@@ -1,5 +1,5 @@
 import { installSnap } from '@metamask/snaps-jest';
-import { Platform } from '../..';
+import { Platform } from '..';
 import {
   getOwnerProfileByUsername,
   userByUsernameApi,
@@ -9,8 +9,8 @@ import {
   getFollowingByFidFromFarcaster,
   // type TFarcasterUser,
   // type TFarcasterError,
-} from '../farcaster';
-import { SocialMonitor, State } from '../../../state';
+} from '../platforms/farcaster';
+import { SocialMonitor, State } from '../../state';
 import {
   MOCK_USER_BY_USERNAME,
   MOCK_USER_BY_USERNAME_NOT_FOUND,
@@ -97,7 +97,7 @@ jest.spyOn(global, 'fetch').mockImplementation(
   }) as jest.Mock,
 );
 
-describe('getOwnerProfileByUsername', () => {
+describe('get owner profile by username', () => {
   it('should return the owner profile and include fid', async () => {
     const result = await getOwnerProfileByUsername(MOCK_HANDLE);
     expect(result).toStrictEqual({
@@ -117,7 +117,9 @@ describe('getOwnerProfileByUsername', () => {
       handle: 'notfound',
     });
   });
+});
 
+describe('get following', () => {
   it('should return following by farcaster', async () => {
     const result = await getFollowingByFidFromFarcaster(23901);
     expect(result).toStrictEqual(MOCK_FOLLOWING.result.users);
@@ -157,7 +159,7 @@ describe('getOwnerProfileByUsername', () => {
     ]);
   });
 
-  it('should return following by full', async () => {
+  it('should return following by full with new activities', async () => {
     const { request } = await installSnap();
     const response = await request({ method: 'getState' });
     const currentMonitor =
@@ -243,4 +245,6 @@ describe('getOwnerProfileByUsername', () => {
       ],
     });
   });
+
+  it.todo('should return following by full with empty activity');
 });

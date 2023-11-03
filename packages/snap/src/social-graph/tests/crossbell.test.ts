@@ -5,8 +5,8 @@ import {
   CrossbellFormat,
   type TCSBProfile,
   Platform,
-} from '../..';
-import { SocialMonitor, State } from '../../../state';
+} from '..';
+import { SocialMonitor, State } from '../../state';
 
 const MOCK_CSB_WALLET_ADDRESS = '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0';
 const MOCK_CSB_FOLLOWING_LIST = [

@@ -127,19 +127,20 @@ describe('onRpcRequest', () => {
       ).toRespondWith(true);
 
       expect(await request({ method: 'getState' })).toRespondWith({
+        lastUpdatedActivities: [],
+        monitor: [],
         socialActivities: [
           {
-            address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
             activities: '',
+            address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
             total: 0,
           },
           {
-            address: '0xc8b960d09c0078c18dcbe7eb9ab9d816bcca8944',
             activities: '',
+            address: '0xc8b960d09c0078c18dcbe7eb9ab9d816bcca8944',
             total: 0,
           },
         ],
-        lastUpdatedActivities: [],
       });
 
       await close();
@@ -153,8 +154,9 @@ describe('onRpcRequest', () => {
         method: 'getState',
       });
       expect(response).toRespondWith({
-        socialActivities: [],
         lastUpdatedActivities: [],
+        monitor: [],
+        socialActivities: [],
       });
       await close();
     });
@@ -185,6 +187,7 @@ describe('onRpcRequest', () => {
             total: mockData.data.length,
           },
         ],
+        monitor: [],
         lastUpdatedActivities: [],
       });
 
@@ -213,6 +216,7 @@ describe('onRpcRequest', () => {
       expect(await request({ method: 'getState' })).toRespondWith({
         socialActivities: [],
         lastUpdatedActivities: [],
+        monitor: [],
       });
 
       await close();
@@ -268,6 +272,7 @@ describe('onCronjob', () => {
             total: 0,
           },
         ],
+        monitor: [],
         lastUpdatedActivities: [],
       });
 
@@ -321,6 +326,7 @@ describe('onCronjob', () => {
           },
         ],
         lastUpdatedActivities: [],
+        monitor: [],
       });
 
       const execute = runCronjob({
@@ -351,6 +357,7 @@ describe('onCronjob', () => {
             total: 1,
           },
         ],
+        monitor: [],
         socialActivities: [
           {
             activities: [

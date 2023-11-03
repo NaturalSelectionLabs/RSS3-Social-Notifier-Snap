@@ -1,5 +1,5 @@
-import { profileApi, getProfilesBySearch } from './profile';
-import { Platform } from '.';
+import { profileApi, getProfilesBySearch } from '../profiles';
+import { Platform } from '..';
 
 const MOCK_HANDLE = 'henryqw.eth';
 const MOCK_PROFILES = {

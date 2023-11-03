@@ -115,6 +115,17 @@ describe('check query profile', () => {
       });
     });
 
-    expect(panel(content)).toStrictEqual([]);
+    expect(panel(content)).toStrictEqual({
+      children: [
+        { type: 'heading', value: "henryqw.lens's frens has new activities." },
+        {
+          type: 'text',
+          value:
+            'vitalik.eth published a post "Different types of layer 2s" on Farcaster Oct 31, 2023',
+        },
+        { type: 'divider' },
+      ],
+      type: 'panel',
+    });
   });
 });
