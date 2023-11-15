@@ -15,6 +15,7 @@ import {
   // showAllActivities,
   // showAllMonitoredAddresses,
   // showLastUpdated,
+  testImage,
 } from '../utils';
 import {
   ConnectButton,
@@ -31,51 +32,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-// import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-// import { Input } from '@/components/ui/input';
-
-// const supportedNSList = [
-//   '.eth',
-//   '.lens',
-//   '.csb',
-//   '.bnb',
-//   '.bit',
-//   '.crypto',
-//   '.zil',
-//   '.nft',
-//   '.x',
-//   '.wallet',
-//   '.bitcoin',
-//   '.dao',
-//   '.888',
-//   '.blockchain',
-//   '.avax',
-//   '.arb',
-//   '.cyber',
-// ];
-// const isValidNS = (handle: string | null) => {
-//   if (!handle) {
-//     return false;
-//   }
-//   let valid = false;
-//   supportedNSList.forEach((ns) => {
-//     if (handle.endsWith(ns)) {
-//       valid = true;
-//     }
-//   });
-//   return valid;
-// };
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
-
   const isMetaMaskReady = isLocalSnap(defaultSnapOrigin)
     ? state.isFlask
     : state.snapsDetected;
-
-  // const [walletAddress, setWalletAddress] = useState('');
 
   const handleConnectClick = async () => {
     try {
@@ -92,55 +56,6 @@ const Index = () => {
     }
   };
 
-  // const handleSendSetStateClick = async () => {
-  //   if (
-  //     isValidNS(walletAddress) ||
-  //     (walletAddress?.startsWith('0x') && walletAddress.length === 42)
-  //   ) {
-  //     try {
-  //       const originalState = await sendGetState();
-
-  //       // check address is already added
-  //       const isAlreadyAdded = originalState.socialActivities.find(
-  //         (account) =>
-  //           account.address.toLocaleLowerCase() ===
-  //           walletAddress.toLocaleLowerCase(),
-  //       );
-
-  //       if (isAlreadyAdded) {
-  //         await showAlert(
-  //           'Already Monitored',
-  //           `The wallet address: ${walletAddress}  is already monitored.`,
-  //         );
-  //         return;
-  //       }
-
-  //       // add address
-  //       await sendSetState([
-  //         ...originalState.socialActivities,
-  //         {
-  //           address: walletAddress,
-  //           activities: [],
-  //           total: 0,
-  //         },
-  //       ]);
-
-  //       await showAlert(
-  //         'Succeeded',
-  //         `The wallet address: ${walletAddress} is being monitored.`,
-  //       );
-  //     } catch (e) {
-  //       console.error(e);
-  //       dispatch({ type: MetamaskActions.SetError, payload: e });
-  //     }
-  //   } else {
-  //     await showAlert(
-  //       'invalid wallet address',
-  //       `please check your input. supported ns: ${supportedNSList.join(', ')}`,
-  //     );
-  //   }
-  // };
-
   const handleSendClearStateClick = async () => {
     try {
       const resp = await sendClearState();
@@ -156,32 +71,14 @@ const Index = () => {
     }
   };
 
-  // const handleShowLastUpdatedClick = async () => {
-  //   try {
-  //     await showLastUpdated();
-  //   } catch (e) {
-  //     console.error(e);
-  //     dispatch({ type: MetamaskActions.SetError, payload: e });
-  //   }
-  // };
-
-  // const handleShowAllActivitiesClick = async () => {
-  //   try {
-  //     await showAllActivities();
-  //   } catch (e) {
-  //     console.error(e);
-  //     dispatch({ type: MetamaskActions.SetError, payload: e });
-  //   }
-  // };
-
-  // const handleShowAllAddressesClick = async () => {
-  //   try {
-  //     await showAllMonitoredAddresses();
-  //   } catch (e) {
-  //     console.error(e);
-  //     dispatch({ type: MetamaskActions.SetError, payload: e });
-  //   }
-  // };
+  const handleGetTestImageClick = async () => {
+    try {
+      await testImage();
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
 
   return (
     <div className="container my-12">
@@ -317,100 +214,45 @@ const Index = () => {
         </Card>
 
         {!isProduction && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Stalk Someone</CardTitle>
-              <CardDescription className="h-[120px]">
-                You can get notified if someone else's frens publish something
-                (actually, this is for debugging purpose).
-              </CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <Button
-                disabled={!state.installedSnap}
-                onClick={() => {
-                  navigate('/monitor/create');
-                }}
-              >
-                Begin Stalking
-              </Button>
-            </CardFooter>
-          </Card>
+          <>
+            <Card>
+              <CardHeader>
+                <CardTitle>Stalk Someone</CardTitle>
+                <CardDescription className="h-[120px]">
+                  You can get notified if someone else's frens publish something
+                  (actually, this is for debugging purpose).
+                </CardDescription>
+              </CardHeader>
+              <CardFooter>
+                <Button
+                  disabled={!state.installedSnap}
+                  onClick={() => {
+                    navigate('/monitor/create');
+                  }}
+                >
+                  Begin Stalking
+                </Button>
+              </CardFooter>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Test Snap Dialog </CardTitle>
+                <CardDescription className="h-[120px]">
+                  For debugging.
+                </CardDescription>
+              </CardHeader>
+              <CardFooter>
+                <Button
+                  disabled={!state.installedSnap}
+                  onClick={handleGetTestImageClick}
+                >
+                  show
+                </Button>
+              </CardFooter>
+            </Card>
+          </>
         )}
-
-        {/* <Card>
-          <CardHeader>
-            <CardTitle>Show Last Updated</CardTitle>
-            <CardDescription>
-              Show the activities included in the last updated
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <SendHelloButton
-              onClick={handleShowLastUpdatedClick}
-              disabled={!state.installedSnap}
-            />
-          </CardFooter>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Show All Activities</CardTitle>
-            <CardDescription>
-              View all activities from all the addresses monitored.
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <SendHelloButton
-              onClick={handleShowAllActivitiesClick}
-              disabled={!state.installedSnap}
-            />
-          </CardFooter>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Show All Addresses</CardTitle>
-            <CardDescription>
-              View all addresses from all the addresses monitored.
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <SendHelloButton
-              onClick={handleShowAllAddressesClick}
-              disabled={!state.installedSnap}
-            />
-          </CardFooter>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Monitor Any Address</CardTitle>
-            <CardDescription>
-              <p>Start monitoring a new address.</p>
-              <p>Supported Web3 Name Service: {supportedNSList.join(', ')}.</p>
-              <p>
-                And of course, your favorite and easy-to-memorize 0x address.
-              </p>
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <div className="flex flex-row items-center gap-4">
-              <Input
-                type="text"
-                placeholder="someone.eth, or 0x..."
-                onChange={(e) => setWalletAddress(e.target.value)}
-              />
-              <Button
-                onClick={handleSendSetStateClick}
-                disabled={!state.installedSnap}
-              >
-                Add
-              </Button>
-            </div>
-          </CardContent>
-        </Card> */}
       </div>
     </div>
   );

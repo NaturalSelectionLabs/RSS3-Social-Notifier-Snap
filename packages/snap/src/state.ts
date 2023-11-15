@@ -5,6 +5,7 @@ import { TSocialGraphResult } from '.';
 export type CronActivity = {
   id: string;
   text: string;
+  image?: string;
   owner?: string;
 };
 

@@ -27,10 +27,11 @@
   },
   "dependencies": {
     "@metamask/snaps-types": "^2.0.0",
-    "@metamask/snaps-ui": "^2.0.0",
+    "@metamask/snaps-ui": "^3.1.0",
     "@metamask/utils": "^8.1.0",
     "@rss3/js-sdk": "^0.6.38",
     "@urql/core": "^4.1.4",
+    "axios": "^1.6.1",
     "buffer": "^6.0.3",
     "cross-fetch": "^4.0.0",
     "ethers": "^6.7.1",

@@ -3,11 +3,10 @@ import {
   OnCronjobHandler,
   OnRpcRequestHandler,
 } from '@metamask/snaps-types';
-import { divider, heading, panel, text } from '@metamask/snaps-ui';
+import { divider, heading, panel, text, image } from '@metamask/snaps-ui';
 import { assert } from '@metamask/utils';
 
 import { Profile } from '@rss3/js-sdk';
-import moment from 'moment';
 import {
   CronActivity,
   SocialActivity,
@@ -19,12 +18,18 @@ import {
   setState,
 } from './state';
 import { diff, getSocialActivities } from './fetch';
+import { getProfilesBySearch } from './social-graph';
 import {
-  getProfilesBySearch,
-  CrossbellHandler,
-  LensHandler,
-  FarcasterHandler,
-} from './social-graph';
+  coverIpfsToUrl,
+  imageBufferToBase64,
+  wrapBase64ToSvg,
+} from './utils/image';
+import {
+  addWatchedProfilesToState,
+  buildNeedToNotifyContents,
+} from './utils/activitiy';
+
+// import imageToBase64 from './utils/imageToBase64';
 
 export enum Platform {
   Crossbell = 'Crossbell',
@@ -116,7 +121,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
         method: 'snap_dialog',
         params: {
           type: DialogType.Alert,
-          content: panel([heading(title), text(content)]),
+          content: panel([heading(title), text(content)]) as any,
         },
       });
     }
@@ -152,7 +157,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
         method: 'snap_dialog',
         params: {
           type: DialogType.Alert,
-          content: panel(content),
+          content: panel(content) as any,
         },
       });
     }
@@ -172,7 +177,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
         method: 'snap_dialog',
         params: {
           type: DialogType.Alert,
-          content: panel(content),
+          content: panel(content) as any,
         },
       });
     }
@@ -189,7 +194,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
         method: 'snap_dialog',
         params: {
           type: DialogType.Alert,
-          content: panel(content),
+          content: panel(content) as any,
         },
       });
     }
@@ -229,6 +234,25 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case 'getProfilesToMonitorFollowing': {
       const state = await getState();
       return state.monitor;
+    }
+
+    case 'test-image': {
+      const url = 'ipfs://QmWF6jJkEC2hMhFX3jTsPqZyouTHZJdz3rGwo5MdEGNWgT';
+      const resp = await fetch(coverIpfsToUrl(url));
+      const buffer = await Buffer.from(await resp.arrayBuffer());
+      const base64 = await imageBufferToBase64(buffer);
+      // const data = await resp.json();
+      return snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: DialogType.Alert,
+          content: panel([
+            heading('Test Image'),
+            image(wrapBase64ToSvg(base64)),
+            text(coverIpfsToUrl(url)),
+          ]) as any,
+        },
+      });
     }
 
     default:
@@ -341,7 +365,7 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
         method: 'snap_dialog',
         params: {
           type: DialogType.Alert,
-          content: panel(content),
+          content: panel(content) as any,
         },
       });
       return { result: true };
@@ -444,85 +468,14 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
     }
 
     case 'executeFollow': {
-      const state = await getState();
-      const monitorPromises = state.monitor.map(async (item) => {
-        item.latestUpdateTime = moment().format('YYYY/MM/DD hh:mm:ss');
-        const handles = item.profiles
-          .filter((profile) => profile.handle !== undefined)
-          .map((profile) => {
-            if (profile.platform === Platform.Crossbell) {
-              return {
-                handle: profile.handle,
-                execute: CrossbellHandler,
-              };
-            }
-
-            if (profile.platform === Platform.Lens) {
-              return {
-                handle: profile.handle,
-                execute: LensHandler,
-              };
-            }
-
-            if (profile.platform === Platform.Farcaster) {
-              return {
-                handle: profile.handle,
-                execute: FarcasterHandler,
-              };
-            }
-
-            return undefined;
-          });
-
-        const watchedProfiles: TSocialGraphResult[] = [];
-        const promises = handles.map(async (exec) => {
-          if (exec?.handle) {
-            const fol = await exec.execute(exec.handle, item);
-            if (fol) {
-              watchedProfiles.push(fol);
-            }
-          }
-        });
-        await Promise.all(promises);
-        return {
-          ...item,
-          watchedProfiles,
-        };
-      });
-      const monitor = await Promise.all(monitorPromises);
-      await setState({
-        ...state,
-        monitor,
-      });
-
-      // notify the latest social activities by the monitor
-      const content: any[] = [];
-      monitor.forEach((item) => {
-        item.watchedProfiles?.forEach((profile) => {
-          const lastActivities = profile.following?.flatMap(
-            (follower) =>
-              follower.lastActivities?.map((activity) => activity.text) ?? [],
-          );
-
-          if (lastActivities && lastActivities.length > 0) {
-            content.push(
-              heading(`${profile.owner.handle}'s frens has new activities.`),
-            );
-
-            lastActivities.forEach((activity) => {
-              content.push(text(activity));
-              content.push(divider());
-            });
-          }
-        });
-      });
-
-      if (content.length > 0) {
+      await addWatchedProfilesToState();
+      const { count, panelContent } = await buildNeedToNotifyContents();
+      if (count > 0) {
         await snap.request({
           method: 'snap_dialog',
           params: {
             type: DialogType.Alert,
-            content: panel(content),
+            content: panelContent as any,
           },
         });
       }
