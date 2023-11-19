@@ -6114,25 +6114,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rss3/js-sdk@npm:^0.6.38":
-  version: 0.6.46
-  resolution: "@rss3/js-sdk@npm:0.6.46"
+"@rss3/js-sdk@npm:^0.6.53":
+  version: 0.6.53
+  resolution: "@rss3/js-sdk@npm:0.6.53"
   dependencies:
     debug: ^4.3.4
     openapi-fetch: ^0.7.10
     qs: ^6.11.2
-  checksum: 2f27136f2139f289b34bb0da3aa05bf3cd3f28571b927e0decfa26d1dbad98d6ae613a163adaa7c4c3926d976dde429a7de809a3dd9278d8e49d4c68c924f359
-  languageName: node
-  linkType: hard
-
-"@rss3/js-sdk@npm:^0.6.48":
-  version: 0.6.48
-  resolution: "@rss3/js-sdk@npm:0.6.48"
-  dependencies:
-    debug: ^4.3.4
-    openapi-fetch: ^0.7.10
-    qs: ^6.11.2
-  checksum: 343257a10f1a1d9b2dc2db20d0c27cc734680f2b1d2f8da7a29d7910a6ce821a0e3bb440e04551de6a00797e4940b67804b461ae0613e000f4b355d767ced445
+  checksum: 6f10e7397fe02e83b6bf3a55270b6e89a69a5e21bd649c9547d3236c0bd45ca4cc35c014525fcf0e5a19455370fb198c8322a02e64233650951794664cf69fc5
   languageName: node
   linkType: hard
 
@@ -6152,7 +6141,7 @@ __metadata:
     "@metamask/snaps-types": ^2.0.0
     "@metamask/snaps-ui": ^3.1.0
     "@metamask/utils": ^8.1.0
-    "@rss3/js-sdk": ^0.6.38
+    "@rss3/js-sdk": ^0.6.53
     "@typescript-eslint/eslint-plugin": ^5.33.0
     "@typescript-eslint/parser": ^5.33.0
     "@urql/core": ^4.1.4
@@ -21311,7 +21300,7 @@ __metadata:
     "@radix-ui/react-label": ^2.0.2
     "@radix-ui/react-slot": ^1.0.2
     "@radix-ui/react-toast": ^1.1.5
-    "@rss3/js-sdk": ^0.6.48
+    "@rss3/js-sdk": ^0.6.53
     "@testing-library/dom": ^8.17.1
     "@testing-library/jest-dom": ^5.16.4
     "@testing-library/react": ^13.3.0
