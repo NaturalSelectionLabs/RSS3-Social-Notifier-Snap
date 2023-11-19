@@ -62,9 +62,9 @@ export const HeaderButtons = ({
     return <ConnectButton onClick={onConnectClick} />;
   }
 
-  if (shouldDisplayReconnectButton(state.installedSnap)) {
-    return <ReconnectButton onClick={onConnectClick} />;
-  }
+  // if (shouldDisplayReconnectButton(state.installedSnap)) {
+  return <ReconnectButton onClick={onConnectClick} />;
+  // }
 
-  return <div>Connected</div>;
+  // return <div>Connected</div>;
 };
