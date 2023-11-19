@@ -1,7 +1,6 @@
 import { ComponentProps } from 'react';
 import { StaticImage } from 'gatsby-plugin-image';
 import { MetamaskState } from '../hooks';
-import { shouldDisplayReconnectButton } from '../utils';
 import { Button } from '@/components/ui/button';
 
 export const InstallFlaskButton = () => (
