@@ -1,5 +1,5 @@
 {
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Get notifications when your Web3 frens produce new activities.",
   "proposedName": "RSS3 Social Notifier",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/NaturalSelectionLabs/RSS3-Social-Notifier-Snap.git"
   },
   "source": {
-    "shasum": "iVvWRtq3+ItftteRvpnpxtl8+PrJ3tf7FNxhDZa1h+s=",
+    "shasum": "QNr18Mr6bJOgJbmq+IWPhb0qSU0+Crt9tMrkiGl6OGQ=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

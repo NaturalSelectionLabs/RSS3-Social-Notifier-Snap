@@ -1,6 +1,6 @@
 {
   "name": "@rss3/social-notifier-snap",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Get notifications when your Web3 frens produce new activities.",
   "repository": {
     "type": "git",
