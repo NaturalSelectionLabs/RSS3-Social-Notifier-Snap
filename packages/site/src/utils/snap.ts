@@ -270,4 +270,16 @@ export const getProfilesToMonitorFollowing = async () => {
     },
   })) as SocialMonitor[];
 };
+
+export const testImage = async () => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'test-image',
+      },
+    },
+  });
+};
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

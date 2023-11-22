@@ -1,7 +1,12 @@
 import { expect } from '@jest/globals';
+import { installSnap } from '@metamask/snaps-jest';
 import { CombinedError } from '@urql/core';
 import { Platform } from '../..';
-import { handler as LensHandler, format as LensFormat } from '../lens';
+import {
+  handler as LensHandler,
+  format as LensFormat,
+} from '../../social-graph/platforms/lens';
+import { SocialMonitor, State } from '../../state';
 
 const MOCK_HANDLE = '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0'; // dmoo.lens
 describe('get following by lens', () => {
@@ -46,7 +51,19 @@ describe('get following by lens', () => {
         error,
       };
     };
-    const result = await LensHandler(MOCK_HANDLE, 20, mockQueryMethod);
+    const { request } = await installSnap();
+    const response = await request({ method: 'getState' });
+    const currentMonitor =
+      (response as unknown as State).monitor?.find(
+        (item) => item.search === MOCK_HANDLE,
+      ) ?? ({ search: MOCK_HANDLE } as SocialMonitor);
+
+    const result = await LensHandler(
+      MOCK_HANDLE,
+      currentMonitor,
+      20,
+      mockQueryMethod,
+    );
     expect(result).toStrictEqual({
       owner: {
         address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
@@ -104,7 +121,20 @@ describe('get following by lens', () => {
         error,
       };
     };
-    const result = await LensHandler('dmoosocool.lens', 20, mockQueryMethod);
+
+    const { request } = await installSnap();
+    const response = await request({ method: 'getState' });
+    const currentMonitor =
+      (response as unknown as State).monitor?.find(
+        (item) => item.search === 'dmoosocool.lens',
+      ) ?? ({ search: 'dmoosocool.lens' } as SocialMonitor);
+
+    const result = await LensHandler(
+      'dmoosocool.lens',
+      currentMonitor,
+      20,
+      mockQueryMethod,
+    );
     expect(result).toStrictEqual({
       owner: {
         address: '0xE584Ca8F30b93b3Ed47270297a3E920e2D6D25f0',
@@ -135,7 +165,20 @@ describe('get following by lens', () => {
         error,
       };
     };
-    const result = await LensHandler(MOCK_HANDLE, 20, mockQueryMethod);
+
+    const { request } = await installSnap();
+    const response = await request({ method: 'getState' });
+    const currentMonitor =
+      (response as unknown as State).monitor?.find(
+        (item) => item.search === MOCK_HANDLE,
+      ) ?? ({ search: MOCK_HANDLE } as SocialMonitor);
+
+    const result = await LensHandler(
+      MOCK_HANDLE,
+      currentMonitor,
+      20,
+      mockQueryMethod,
+    );
 
     expect(result).toStrictEqual({
       owner: {

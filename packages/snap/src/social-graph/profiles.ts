@@ -1,5 +1,5 @@
 import { isSupportedNS, type Profile } from '@rss3/js-sdk';
-import { isValidWalletAddress } from './social-graph/utils';
+import { isValidWalletAddress } from './utils';
 import { Platform } from '.';
 
 export const profileApi = (search: string) =>

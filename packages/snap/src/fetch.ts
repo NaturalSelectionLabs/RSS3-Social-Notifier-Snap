@@ -3,6 +3,7 @@ import {
   type Activity,
   formatAddressAndNS,
   format as sdkFormat,
+  formatContent,
   type Theme,
 } from '@rss3/js-sdk';
 
@@ -22,10 +23,13 @@ export async function getSocialActivities(address: string) {
   const resp = await fetch(getSocialActivitiesUrl(address));
   const { data } = (await resp.json()) as { data: Activity[] };
   const activities = data.map((item: Activity) => {
-    return {
-      id: item.id,
-      text: format(item).join(''),
-    };
+    // formatContent only for social and governance tag.
+    const content = formatContent(item);
+
+    const { id } = item;
+    const text = format(item).join('');
+    const image = content?.media?.[0]?.address;
+    return content ? { id, text, image } : { id, text };
   });
 
   return {
@@ -127,13 +131,15 @@ export async function getMultiple(addresses: string[]) {
       meta: null | { cursor: string };
     };
 
-    data.map((item) =>
-      activities.push({
-        id: item.id,
-        text: format(item).join(''),
-        owner: item.owner,
-      }),
-    );
+    data.map((item) => {
+      const content = formatContent(item);
+      const { id, owner } = item;
+      const text = format(item).join('');
+      const image = content?.media?.[0]?.address;
+      return content
+        ? activities.push({ id, text, image, owner })
+        : activities.push({ id, text, owner });
+    });
 
     if (meta === null) {
       hasNextPage = false;
@@ -213,30 +219,3 @@ export function diffMonitor(
   }
   return lastActivities;
 }
-
-// /**
-//  * Get the last updated following social activities.
-//  *
-//  * @param monitors - The social monitors.
-//  */
-// export function getLastUpdatedFollowingSocialActivities(
-//   monitors: SocialMonitor[],
-// ) {
-//   const followingSocialActivities: CronActivity[] = [];
-//   monitors.forEach((monitor) => {
-//     if (monitor.watchedProfiles) {
-//       monitor.watchedProfiles.forEach((wProfile) => {
-//         if (wProfile.following) {
-//           wProfile.following.forEach((followingProfile) => {
-//             if (followingProfile.lastActivities) {
-//               followingSocialActivities.push(
-//                 ...followingProfile.lastActivities,
-//               );
-//             }
-//           });
-//         }
-//       });
-//     }
-//   });
-//   return followingSocialActivities;
-// }

@@ -1,6 +1,6 @@
 import { divider, heading, panel, text } from '@metamask/snaps-ui';
-import { SocialMonitor } from './state';
-import { Platform } from '.';
+import { SocialMonitor } from '../state';
+import { Platform } from '..';
 
 describe('check query profile', () => {
   it('should return the profiles', async () => {
@@ -115,6 +115,17 @@ describe('check query profile', () => {
       });
     });
 
-    expect(panel(content)).toStrictEqual([]);
+    expect(panel(content)).toStrictEqual({
+      children: [
+        { type: 'heading', value: "henryqw.lens's frens has new activities." },
+        {
+          type: 'text',
+          value:
+            'vitalik.eth published a post "Different types of layer 2s" on Farcaster Oct 31, 2023',
+        },
+        { type: 'divider' },
+      ],
+      type: 'panel',
+    });
   });
 });

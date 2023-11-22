@@ -1,4 +1,4 @@
-import { isValidWalletAddress, isSupportedNS } from './utils';
+import { isValidWalletAddress, isSupportedNS } from '../../social-graph/utils';
 
 describe('check utils', () => {
   it('should return true when address is valid', () => {
