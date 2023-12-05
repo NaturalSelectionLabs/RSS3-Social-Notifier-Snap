@@ -13386,6 +13386,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gatsby-plugin-csp@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "gatsby-plugin-csp@npm:1.1.4"
+  dependencies:
+    "@babel/runtime": ^7.0.0
+    lodash.flatten: ^4.4.0
+  checksum: caa8286644c58a15e0baf99c7985adb38c0fce35eabdb49a8d4b6c990d2070fadf7baff3d90d7822b513153ac619d6caeebd2a65b319c3fb43740388ad264af8
+  languageName: node
+  linkType: hard
+
 "gatsby-plugin-env-variables@npm:^2.3.0":
   version: 2.3.0
   resolution: "gatsby-plugin-env-variables@npm:2.3.0"
@@ -16712,6 +16722,13 @@ __metadata:
   version: 4.6.0
   resolution: "lodash.every@npm:4.6.0"
   checksum: bfb96426ccdf05ef230339ba57400c59a60a16ce6a4f41f50eb89e7ba612686900fcaf1c3a28f907a8ba993b96da681303bd622cdcadfc7d60e1f0f098384aa4
+  languageName: node
+  linkType: hard
+
+"lodash.flatten@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "lodash.flatten@npm:4.4.0"
+  checksum: 0ac34a393d4b795d4b7421153d27c13ae67e08786c9cbb60ff5b732210d46f833598eee3fb3844bb10070e8488efe390ea53bb567377e0cb47e9e630bf0811cb
   languageName: node
   linkType: hard
 
@@ -21346,6 +21363,7 @@ __metadata:
     eslint-plugin-node: ^11.1.0
     eslint-plugin-prettier: ^4.2.1
     gatsby: ^5.12.9
+    gatsby-plugin-csp: ^1.1.4
     gatsby-plugin-env-variables: ^2.3.0
     gatsby-plugin-image: ^3.12.3
     gatsby-plugin-manifest: ^5.12.3

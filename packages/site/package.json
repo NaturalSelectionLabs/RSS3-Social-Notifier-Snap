@@ -10,7 +10,8 @@
     "lint:eslint": "eslint . --cache --ext js,ts",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --ignore-path .gitignore",
-    "start": "NODE_ENV=development GATSBY_TELEMETRY_DISABLED=1 gatsby develop"
+    "start": "NODE_ENV=development GATSBY_TELEMETRY_DISABLED=1 gatsby develop",
+    "serve": "gatsby serve"
   },
   "browserslist": {
     "production": [
@@ -39,6 +40,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "dotenv": "^16.3.1",
+    "gatsby-plugin-csp": "^1.1.4",
     "gatsby-plugin-env-variables": "^2.3.0",
     "gatsby-plugin-image": "^3.12.3",
     "gatsby-plugin-postcss": "^6.12.0",
