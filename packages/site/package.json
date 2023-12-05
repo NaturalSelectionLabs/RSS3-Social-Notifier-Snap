@@ -43,6 +43,7 @@
     "gatsby-plugin-image": "^3.12.3",
     "gatsby-plugin-postcss": "^6.12.0",
     "gatsby-plugin-sharp": "^5.12.3",
+    "gatsby-plugin-sri": "^1.1.0",
     "gatsby-source-filesystem": "^5.12.1",
     "gatsby-transformer-sharp": "^5.12.3",
     "lucide-react": "^0.290.0",

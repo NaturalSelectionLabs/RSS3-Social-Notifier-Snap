@@ -15,6 +15,13 @@ const config: GatsbyConfig = {
     'gatsby-transformer-sharp',
     'gatsby-plugin-postcss',
     {
+      resolve: 'gatsby-plugin-sri',
+      options: {
+        hash: 'sha512',
+        crossorigin: false,
+      },
+    },
+    {
       resolve: `gatsby-plugin-env-variables`,
       options: {
         allowList: ['SNAP_ORIGIN', 'ENVIRONMENT'],
