@@ -21,7 +21,7 @@
         },
         {
           "key": " Access-Control-Allow-Origin",
-          "value": "null"
+          "value": "https://snap.rss3.io"
         }
       ]
     }
