@@ -6,10 +6,18 @@
         {
           "key": "Strict-Transport-Security",
           "value": "max-age=31536000"
+        },        
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
         },
         {
-          "key": "Content-Security-Policy",
-          "value": "default-src https:"
+          "key": "X-FRAME-OPTIONS",
+          "value": "DENY"
+        },
+        {
+          "key": " Access-Control-Allow-Origin",
+          "value": "https://snap.rss3.io"
         }
       ]
     }
