@@ -17,7 +17,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self' *.rss3.io"
+          "value": "default-src https:"
         },
         {
           "key": " Access-Control-Allow-Origin",
