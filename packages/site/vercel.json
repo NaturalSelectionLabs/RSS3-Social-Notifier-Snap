@@ -18,6 +18,10 @@
         {
           "key": " Access-Control-Allow-Origin",
           "value": "https://snap.rss3.io"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "base-uri 'self'; default-src 'self'; script-src 'self' 'unsafe-inline' www.google-analytics.com; style-src 'self' 'unsafe-inline'; object-src 'none'; form-action 'self'; font-src 'self' data:; connect-src 'self'; img-src 'self' data: www.google-analytics.com;"
         }
       ]
     }
