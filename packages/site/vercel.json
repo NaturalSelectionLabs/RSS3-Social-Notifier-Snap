@@ -16,7 +16,7 @@
           "value": "DENY"
         },
         {
-          "key": " Access-Control-Allow-Origin",
+          "key": "Access-Control-Allow-Origin",
           "value": "https://snap.rss3.io"
         },
         {
