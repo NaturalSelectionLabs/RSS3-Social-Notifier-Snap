@@ -10,8 +10,8 @@
     "lint:eslint": "eslint . --cache --ext js,ts",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --ignore-path .gitignore",
-    "start": "NODE_ENV=development GATSBY_TELEMETRY_DISABLED=1 gatsby develop",
-    "serve": "gatsby serve"
+    "serve": "gatsby serve",
+    "start": "NODE_ENV=development GATSBY_TELEMETRY_DISABLED=1 gatsby develop"
   },
   "browserslist": {
     "production": [
