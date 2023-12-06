@@ -8,19 +8,18 @@ dotenv.config({
 const config: GatsbyConfig = {
   // This is required to make use of the React 17+ JSX transform.
   jsxRuntime: 'automatic',
-
   plugins: [
     'gatsby-plugin-image',
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
     'gatsby-plugin-postcss',
-    {
-      resolve: 'gatsby-plugin-sri',
-      options: {
-        hash: 'sha512',
-        crossorigin: false,
-      },
-    },
+    // {
+    //   resolve: 'gatsby-plugin-sri',
+    //   options: {
+    //     hash: 'sha512',
+    //     crossorigin: false,
+    //   },
+    // },
     {
       resolve: 'gatsby-plugin-csp',
       options: {

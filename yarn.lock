@@ -14057,7 +14057,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.2.2":
+"glob@npm:^10.2.2, glob@npm:^10.3.10":
   version: 10.3.10
   resolution: "glob@npm:10.3.10"
   dependencies:
@@ -14086,7 +14086,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^8.0.0, glob@npm:^8.0.1":
+"glob@npm:^8.0.0, glob@npm:^8.0.1, glob@npm:^8.1.0":
   version: 8.1.0
   resolution: "glob@npm:8.1.0"
   dependencies:
@@ -20590,6 +20590,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"replace-in-file@npm:^7.0.2":
+  version: 7.0.2
+  resolution: "replace-in-file@npm:7.0.2"
+  dependencies:
+    chalk: ^4.1.2
+    glob: ^8.1.0
+    yargs: ^17.7.2
+  bin:
+    replace-in-file: bin/cli.js
+  checksum: f958cfc88e58036a227d7d45d08bdc3fa4e2487c4ff8033f614bb9221233d9746c7f303e26ed664754564a1f7ecd69c6b55183bcd962a04c3f2836b9078d7547
+  languageName: node
+  linkType: hard
+
 "require-directory@npm:^2.1.1":
   version: 2.1.1
   resolution: "require-directory@npm:2.1.1"
@@ -21372,6 +21385,7 @@ __metadata:
     gatsby-plugin-sri: ^1.1.0
     gatsby-source-filesystem: ^5.12.1
     gatsby-transformer-sharp: ^5.12.3
+    glob: ^10.3.10
     lucide-react: ^0.290.0
     postcss: ^8.4.31
     prettier: ^2.2.1
@@ -21380,6 +21394,7 @@ __metadata:
     react-dom: ^18.2.0
     react-hook-form: ^7.47.0
     react-is: ^18.2.0
+    replace-in-file: ^7.0.2
     rimraf: ^3.0.2
     tailwind-merge: ^1.14.0
     tailwindcss: ^3.3.5
@@ -24127,7 +24142,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:17.7.2, yargs@npm:^17.0.1, yargs@npm:^17.3.1, yargs@npm:^17.7.1":
+"yargs@npm:17.7.2, yargs@npm:^17.0.1, yargs@npm:^17.3.1, yargs@npm:^17.7.1, yargs@npm:^17.7.2":
   version: 17.7.2
   resolution: "yargs@npm:17.7.2"
   dependencies:

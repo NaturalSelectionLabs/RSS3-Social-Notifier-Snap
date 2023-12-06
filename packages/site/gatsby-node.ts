@@ -1,4 +1,5 @@
 import * as path from 'path';
+import { autoAddSRI } from './plugins/sri';
 
 export const onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
@@ -12,4 +13,8 @@ export const onCreateWebpackConfig = ({ actions }) => {
       },
     },
   });
+};
+
+export const onPostBuild = async () => {
+  await autoAddSRI();
 };
