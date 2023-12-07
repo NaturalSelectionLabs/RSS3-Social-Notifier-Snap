@@ -11,7 +11,7 @@ import {
   // sendGetState,
   // sendSetState,
   shouldDisplayReconnectButton,
-  showAlert,
+  // showAlert,
   // showAllActivities,
   // showAllMonitoredAddresses,
   // showLastUpdated,
@@ -58,13 +58,7 @@ const Index = () => {
 
   const handleSendClearStateClick = async () => {
     try {
-      const resp = await sendClearState();
-      if (resp) {
-        await showAlert(
-          'Clear Succeeded',
-          'Start adding some new addresses now!',
-        );
-      }
+      await sendClearState();
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });

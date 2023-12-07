@@ -157,21 +157,21 @@ export const addOwnWalletAddress = async () => {
   return resp;
 };
 
-export const showAlert = async (title: string, content: string) => {
-  await window.ethereum.request({
-    method: 'wallet_invokeSnap',
-    params: {
-      snapId: defaultSnapOrigin,
-      request: {
-        method: 'showAlert',
-        params: {
-          title,
-          content,
-        },
-      },
-    },
-  });
-};
+// export const showAlert = async (title: string, content: string) => {
+//   await window.ethereum.request({
+//     method: 'wallet_invokeSnap',
+//     params: {
+//       snapId: defaultSnapOrigin,
+//       request: {
+//         method: 'showAlert',
+//         params: {
+//           title,
+//           content,
+//         },
+//       },
+//     },
+//   });
+// };
 
 export const showLastUpdated = async () => {
   await window.ethereum.request({
