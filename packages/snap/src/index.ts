@@ -11,7 +11,7 @@ import {
   CronActivity,
   SocialActivity,
   State,
-  addAddressToState,
+  // addAddressToState,
   addMultipleAddressesToState,
   clearState,
   getState,
@@ -87,7 +87,31 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
 
     // clear the state
     case 'clearState': {
-      await clearState();
+      const result = await snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: DialogType.Confirmation,
+          content: panel([
+            heading('Clear State'),
+            text('Are you sure you want to clear the state?'),
+          ]) as any,
+        },
+      });
+
+      if (result === true) {
+        await clearState();
+        await snap.request({
+          method: 'snap_dialog',
+          params: {
+            type: DialogType.Alert,
+            content: panel([
+              heading('Clear Succeeded'),
+              text('Start adding some new addresses now!'),
+            ]) as any,
+          },
+        });
+      }
+
       return true;
     }
 
@@ -96,14 +120,38 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       return await getAccounts();
     }
 
-    // add account to state
-    case 'addAccount': {
-      const { account } = request.params as { account: string | undefined };
-      if (!account) {
-        return true;
-      }
-      return await addAddressToState(account);
-    }
+    // add account to state, unused for now.
+    // case 'addAccount': {
+    //   const { account } = request.params as { account: string | undefined };
+    //   if (!account) {
+    //     return true;
+    //   }
+    //   const result = await snap.request({
+    //     method: 'snap_dialog',
+    //     params: {
+    //       type: DialogType.Confirmation,
+    //       content: panel([
+    //         heading('Add Account'),
+    //         text(`Are you sure you want to add ${account}?`),
+    //       ]) as any,
+    //     },
+    //   });
+
+    //   if (result === true) {
+    //     await addAddressToState(account);
+    //     await snap.request({
+    //       method: 'snap_dialog',
+    //       params: {
+    //         type: DialogType.Alert,
+    //         content: panel([
+    //           heading('Add Succeeded'),
+    //           text(`${account} has been added to the state!`),
+    //         ]) as any,
+    //       },
+    //     });
+    //   }
+    //   return true;
+    // }
 
     // add multiple accounts by own wallet to state
     case 'addOwnWalletAddresses': {
@@ -111,20 +159,20 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       return await addMultipleAddressesToState(accounts);
     }
 
-    // User-defined Dialog.Alert
-    case 'showAlert': {
-      const { title, content } = request.params as {
-        title: string;
-        content: string;
-      };
-      return snap.request({
-        method: 'snap_dialog',
-        params: {
-          type: DialogType.Alert,
-          content: panel([heading(title), text(content)]) as any,
-        },
-      });
-    }
+    // User-defined Dialog.Alert, but it is not recommended to use it.
+    // case 'showAlert': {
+    //   const { title, content } = request.params as {
+    //     title: string;
+    //     content: string;
+    //   };
+    //   return snap.request({
+    //     method: 'snap_dialog',
+    //     params: {
+    //       type: DialogType.Alert,
+    //       content: panel([heading(title), text(content)]) as any,
+    //     },
+    //   });
+    // }
 
     // fetch the social activities by @rss3/js-sdk.
     case 'fetchSocialCount': {
