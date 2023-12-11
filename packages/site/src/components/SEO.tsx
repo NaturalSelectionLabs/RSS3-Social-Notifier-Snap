@@ -38,28 +38,6 @@ export const SEO = ({
     keywords,
   };
 
-  // const websiteJsonld = {
-  //   '@context': 'https://schema.org',
-  //   '@type': 'WebSite',
-  //   name: 'RSS3',
-  //   image: seo.image,
-  //   description: seo.description,
-  //   url: seo.url,
-  //   sameAs: ['https://twitter.com/rss3_'],
-  // };
-
-  // const organizationJsonld = {
-  //   '@context': 'https://schema.org',
-  //   '@type': 'Organization',
-  //   name: 'RSS3',
-  //   image: 'https://rss3.io/images/og.png',
-  //   description:
-  //     'RSS3 structures open information for the next Twitter, Google, and OpenAI.',
-  //   url: 'https://rss3.io',
-  //   sameAs: ['https://twitter.com/rss3_'],
-  //   logo: 'https://rss3.io/images/logo.svg',
-  // };
-
   return (
     <>
       <title>{seo.title}</title>

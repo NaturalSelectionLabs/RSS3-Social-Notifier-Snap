@@ -1,10 +1,15 @@
+const site =
+  process.env.NODE_ENV === 'production'
+    ? 'https://snap.rss3.io'
+    : 'http://localhost:8000';
+
 export const SEO_DATA = {
   title: 'RSS3 Snap - The Open Information Snap',
   description:
     "RSS3 Snap for MetaMask offers a quick and easy way to stay on top of your frens' social activities.",
   language: 'en-US',
-  url: 'https://snap.rss3.io',
-  image: 'https://snap.rss3.io/images/og.png',
+  url: site,
+  image: `${site}/images/og.png`,
   logo: 'https://rss3.io/images/logo.svg',
   twitter: '@rss3_',
   website: {
