@@ -1,32 +1,24 @@
 import { useContext } from 'react';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { navigate } from 'gatsby';
-import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
-  // addOwnWalletAddress,
   connectSnap,
   getSnap,
   isLocalSnap,
   sendClearState,
-  // sendGetState,
-  // sendSetState,
   shouldDisplayReconnectButton,
-  // showAlert,
-  // showAllActivities,
-  // showAllMonitoredAddresses,
-  // showLastUpdated,
   testImage,
-} from '../utils';
+} from '@/utils';
 import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
   ResetButton,
-} from '../components';
-import { defaultSnapOrigin, isProduction } from '../config';
+} from '@/components';
+import { defaultSnapOrigin, isProduction } from '@/config';
+import { MetamaskActions, MetaMaskContext } from '@/hooks';
 import {
   Card,
-  // CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -34,6 +26,7 @@ import {
 } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { SEO } from '@/components/SEO';
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
@@ -253,3 +246,5 @@ const Index = () => {
 };
 
 export default Index;
+
+export const Head = () => <SEO />;

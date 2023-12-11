@@ -1,5 +1,6 @@
 import { GatsbyConfig } from 'gatsby';
 import dotenv from 'dotenv';
+import { SEO_DATA } from './seo-data';
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`,
@@ -13,13 +14,6 @@ const config: GatsbyConfig = {
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
     'gatsby-plugin-postcss',
-    // {
-    //   resolve: 'gatsby-plugin-sri',
-    //   options: {
-    //     hash: 'sha512',
-    //     crossorigin: false,
-    //   },
-    // },
     {
       resolve: 'gatsby-plugin-csp',
       options: {
@@ -44,7 +38,7 @@ const config: GatsbyConfig = {
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        name: 'Template Snap',
+        name: 'RSS3 Social Notifier Snap',
         icon: 'src/assets/RSS3.svg',
         theme_color: '#0072FF',
         background_color: '#FFFFFF',
@@ -52,6 +46,7 @@ const config: GatsbyConfig = {
       },
     },
   ],
+  siteMetadata: SEO_DATA,
 };
 
 export default config;
