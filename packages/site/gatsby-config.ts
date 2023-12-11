@@ -38,7 +38,7 @@ const config: GatsbyConfig = {
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        name: 'Template Snap',
+        name: 'RSS3 Social Notifier Snap',
         icon: 'src/assets/RSS3.svg',
         theme_color: '#0072FF',
         background_color: '#FFFFFF',
