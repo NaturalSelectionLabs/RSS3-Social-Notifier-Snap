@@ -152,9 +152,10 @@ const Index = () => {
                 {isProduction ? 'Install MetaMask' : 'Install MetaMask Flask'}
               </CardTitle>
               <CardDescription className="h-[120px]">
-                Snaps is pre-release software only available in MetaMask Flask,
-                a canary distribution for developers with access to upcoming
-                features.
+                MetaMask Snaps allows users to add features and functionality to
+                their MetaMask wallet. Individual Snaps are features created by
+                third-party developers that MetaMask users can install directly
+                into their wallet.
               </CardDescription>
             </CardHeader>
             <CardFooter>
@@ -162,7 +163,7 @@ const Index = () => {
             </CardFooter>
           </Card>
         )}
-        {!state.installedSnap && (
+        {isMetaMaskReady && !state.installedSnap && (
           <Card>
             <CardHeader>
               <CardTitle>Install</CardTitle>
@@ -194,24 +195,25 @@ const Index = () => {
             </CardFooter>
           </Card>
         )}
+        {state.installedSnap && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Reset Snap State</CardTitle>
+              <CardDescription className="h-[120px]">
+                Reset the Snap's state, in case anything does not work properly.
+                This does not affect your wallet or assets in anyway.
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <ResetButton
+                onClick={handleSendClearStateClick}
+                disabled={!state.installedSnap}
+              />
+            </CardFooter>
+          </Card>
+        )}
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Reset Snap State</CardTitle>
-            <CardDescription className="h-[120px]">
-              Reset the Snap's state, in case anything does not work properly.
-              This does not affect your wallet or assets in anyway.
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <ResetButton
-              onClick={handleSendClearStateClick}
-              disabled={!state.installedSnap}
-            />
-          </CardFooter>
-        </Card>
-
-        {!isProduction && (
+        {!isProduction && state.installedSnap && (
           <>
             <Card>
               <CardHeader>
