@@ -2,44 +2,47 @@ import { ComponentProps } from 'react';
 import { StaticImage } from 'gatsby-plugin-image';
 import { MetamaskState } from '../hooks';
 import { Button } from '@/components/ui/button';
+import { isProduction } from '@/config';
 
-export const InstallFlaskButton = () => (
-  <a href="https://metamask.io/flask/" target="_blank">
-    <Button>
-      <StaticImage
-        src="../assets/flask_fox.svg"
-        alt="flask fox icon"
-        className="mr-2"
-      />
-      Install MetaMask Flask
-    </Button>
-  </a>
-);
-
-export const ConnectButton = (props: ComponentProps<typeof Button>) => {
+const WithLogoButton = ({
+  label,
+  ...props
+}: { label: string } & ComponentProps<typeof Button>) => {
+  const alt = isProduction ? 'metamask icon' : 'flask fox icon';
   return (
     <Button {...props}>
-      <StaticImage
-        src="../assets/flask_fox.svg"
-        alt="flask fox icon"
-        className="mr-2"
-      />
-      Install
+      {isProduction ? (
+        <StaticImage
+          src="../assets/metamask_fox.svg"
+          alt={alt}
+          className="mr-2"
+        />
+      ) : (
+        <StaticImage src="../assets/flask_fox.svg" alt={alt} className="mr-2" />
+      )}
+      {label}
     </Button>
   );
 };
 
-export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
-  return (
-    <Button {...props}>
-      <StaticImage
-        src="../assets/flask_fox.svg"
-        alt="flask fox icon"
-        className="mr-2"
-      />
-      Reinstall
-    </Button>
+export const InstallFlaskButton = () => {
+  return isProduction ? (
+    <a href="https://metamask.io/download/" target="_blank">
+      <WithLogoButton label="Install MetaMask" />
+    </a>
+  ) : (
+    <a href="https://metamask.io/flask/" target="_blank">
+      <WithLogoButton label="Install MetaMask Flask" />
+    </a>
   );
+};
+
+export const ConnectButton = (props: ComponentProps<typeof Button>) => {
+  return <WithLogoButton label="Install" {...props} />;
+};
+
+export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
+  return <WithLogoButton label="Reinstall" {...props} />;
 };
 
 export const ResetButton = (props: ComponentProps<typeof Button>) => {
@@ -53,7 +56,11 @@ export const HeaderButtons = ({
   state: MetamaskState;
   onConnectClick(): unknown;
 }) => {
-  if (!state.isFlask && !state.installedSnap) {
+  if (!isProduction && !state.isFlask && !state.installedSnap) {
+    return <InstallFlaskButton />;
+  }
+
+  if (isProduction && !state.isMetaMask && !state.installedSnap) {
     return <InstallFlaskButton />;
   }
 

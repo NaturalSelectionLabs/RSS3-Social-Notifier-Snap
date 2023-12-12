@@ -30,9 +30,19 @@ import { SEO } from '@/components/SEO';
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
-  const isMetaMaskReady = isLocalSnap(defaultSnapOrigin)
-    ? state.isFlask
-    : state.snapsDetected;
+  let isMetaMaskReady;
+
+  console.log(state);
+
+  if (isLocalSnap(defaultSnapOrigin)) {
+    if (isProduction) {
+      isMetaMaskReady = state.isMetaMask;
+    } else {
+      isMetaMaskReady = state.isFlask;
+    }
+  } else {
+    isMetaMaskReady = state.snapsDetected;
+  }
 
   const handleConnectClick = async () => {
     try {
@@ -138,7 +148,9 @@ const Index = () => {
         {!isMetaMaskReady && (
           <Card>
             <CardHeader>
-              <CardTitle>Install MetaMask Flask</CardTitle>
+              <CardTitle>
+                {isProduction ? 'Install MetaMask' : 'Install MetaMask Flask'}
+              </CardTitle>
               <CardDescription className="h-[120px]">
                 Snaps is pre-release software only available in MetaMask Flask,
                 a canary distribution for developers with access to upcoming
