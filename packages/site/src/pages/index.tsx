@@ -71,9 +71,7 @@ const Index = () => {
     <div className="container my-12">
       <h1 className="mx-auto max-w-fit text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
         Welcome to{' '}
-        <span className="text-text-RSS3 drop-shadow-md">
-          RSS3 Social Notifier -
-        </span>
+        <span className="text-RSS3 drop-shadow-md">RSS3 Social Notifier -</span>
         <span className="text-MetaMask drop-shadow-md"> A MetaMask Snap</span>
       </h1>
       <div className="mx-auto my-5 text-base text-left max-w-4xl text-muted-foreground sm:text-lg">
@@ -117,11 +115,12 @@ const Index = () => {
       <div className="mx-auto mb-10 text-base text-left  max-w-4xl text-muted-foreground sm:text-lg">
         <p>
           Behind the scene, this Snap works by aggregating your social graphs
-          from Web3 social platforms, and use the{' '}
+          from Web3 social platforms, and retrieving your frens' social
+          activities from the{' '}
           <a href="https://rss3.io" className="text-RSS3 font-bold">
             RSS3 Network
-          </a>{' '}
-          to constantly check your frens' social activities.
+          </a>
+          .
         </p>
       </div>
       {state.error && (
@@ -234,7 +233,7 @@ const Index = () => {
                   disabled={!state.installedSnap}
                   onClick={handleGetTestImageClick}
                 >
-                  show
+                  Show
                 </Button>
               </CardFooter>
             </Card>

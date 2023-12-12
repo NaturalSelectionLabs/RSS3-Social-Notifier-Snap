@@ -68,7 +68,7 @@ export const SEO = ({
       <link
         rel="mask-icon"
         href="https://rss3.io/safari-pinned-tab.svg"
-        color="#0072ff"
+        color="#1477FB"
       />
       <link
         rel="apple-touch-icon"
@@ -76,7 +76,7 @@ export const SEO = ({
       />
 
       {/** Other */}
-      <meta name="msapplication-TileColor" content="#0072ff" />
+      <meta name="msapplication-TileColor" content="#1477FB" />
       <meta name="google" content="notranslate" />
 
       {/** ld json */}

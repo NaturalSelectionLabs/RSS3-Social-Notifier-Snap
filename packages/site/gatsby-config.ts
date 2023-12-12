@@ -40,7 +40,7 @@ const config: GatsbyConfig = {
       options: {
         name: 'RSS3 Social Notifier Snap',
         icon: 'src/assets/RSS3.svg',
-        theme_color: '#0072FF',
+        theme_color: '#1477FB',
         background_color: '#FFFFFF',
         display: 'standalone',
       },
