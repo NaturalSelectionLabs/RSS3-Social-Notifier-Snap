@@ -166,7 +166,7 @@ const Index = () => {
         {isMetaMaskReady && !state.installedSnap && (
           <Card>
             <CardHeader>
-              <CardTitle>Install</CardTitle>
+              <CardTitle>Install Snap</CardTitle>
               <CardDescription className="h-[120px]">
                 Get started by installing this snap.
               </CardDescription>
@@ -182,7 +182,7 @@ const Index = () => {
         {shouldDisplayReconnectButton(state.installedSnap) && (
           <Card>
             <CardHeader>
-              <CardTitle>Reinstall</CardTitle>
+              <CardTitle>Update/Reinstall Snap</CardTitle>
               <CardDescription className="h-[120px]">
                 Update the snap, or reinstall if something isn't right.
               </CardDescription>
