@@ -53,7 +53,7 @@ export async function getState(): Promise<State> {
 
     // For this particular example, we use the `ManageStateOperation.GetState`
     // enum value, but you can also use the string value `'get'` instead.
-    params: { operation: ManageStateOperation.GetState },
+    params: { operation: ManageStateOperation.GetState, encrypted: false },
   });
 
   // If the snap does not have state, `state` will be `null`. Instead, we return
@@ -77,6 +77,7 @@ export async function setState(newState: State) {
     params: {
       operation: ManageStateOperation.UpdateState,
       newState,
+      encrypted: false,
     },
   });
 }
@@ -94,7 +95,8 @@ export async function clearState() {
     method: 'snap_manageState',
     // For this particular example, we use the `ManageStateOperation.ClearState`
     // enum value, but you can also use the string value `'clear'` instead.
-    params: { operation: ManageStateOperation.ClearState },
+
+    params: { operation: ManageStateOperation.ClearState, encrypted: false },
   });
 }
 
