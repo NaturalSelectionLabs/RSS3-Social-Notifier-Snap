@@ -68,3 +68,26 @@ export const isFlask = async () => {
     return false;
   }
 };
+
+/**
+ * Detect if the wallet injecting the ethereum object is MetaMask Flask.
+ *
+ * @returns True if the MetaMask version is Flask, false otherwise.
+ */
+export const isMetamask = async () => {
+  const provider = window.ethereum;
+
+  try {
+    const clientVersion = await provider?.request({
+      method: 'web3_clientVersion',
+    });
+
+    const isMetaMaskDetected =
+      (clientVersion as string[])?.includes('MetaMask') &&
+      !(clientVersion as string[])?.includes('flask');
+
+    return Boolean(provider && isMetaMaskDetected);
+  } catch {
+    return false;
+  }
+};

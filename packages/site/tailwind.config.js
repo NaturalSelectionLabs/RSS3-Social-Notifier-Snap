@@ -16,8 +16,11 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        poppins: ['Poppins', 'Noto Sans', 'sans-serif'],
+      },
       colors: {
-        RSS3: '#0072FF',
+        RSS3: '#1477FB',
         MetaMask: '#E97C23',
         Farcaster: '#8A63D1',
         Lens: '#AAFE2D',

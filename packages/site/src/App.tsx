@@ -9,7 +9,7 @@ export type AppProps = {
 export const App: FunctionComponent<AppProps> = ({ children }) => {
   return (
     <>
-      <div className="flex flex-col w-full min-h-screen max-w-[100vw]">
+      <div className="flex flex-col w-full min-h-screen max-w-[100vw] font-poppins">
         <Header />
         {children}
         <Footer />

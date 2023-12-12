@@ -1,6 +1,6 @@
 export const Footer = () => {
   return (
-    <footer className="flex flex-row items-center justify-center my-10 border-t border-solid">
+    <footer className="flex flex-row items-center justify-end m-2">
       <span>
         {' '}
         Powered by{' '}
