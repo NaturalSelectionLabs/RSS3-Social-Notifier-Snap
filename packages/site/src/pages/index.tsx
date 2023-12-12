@@ -32,7 +32,7 @@ const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   let isMetaMaskReady;
 
-  console.log(state);
+  // console.log(state);
 
   if (isLocalSnap(defaultSnapOrigin)) {
     if (isProduction) {
@@ -144,7 +144,7 @@ const Index = () => {
           </Alert>
         </div>
       )}
-      <div className="grid lg:grid-cols-3 grid-cols-2 items-start justify-start gap-4">
+      <div className="flex justify-center gap-3">
         {!isMetaMaskReady && (
           <Card>
             <CardHeader>
@@ -152,10 +152,7 @@ const Index = () => {
                 {isProduction ? 'Install MetaMask' : 'Install MetaMask Flask'}
               </CardTitle>
               <CardDescription className="h-[120px]">
-                MetaMask Snaps allows users to add features and functionality to
-                their MetaMask wallet. Individual Snaps are features created by
-                third-party developers that MetaMask users can install directly
-                into their wallet.
+                MetaMask is the leading self-custodial wallet.
               </CardDescription>
             </CardHeader>
             <CardFooter>

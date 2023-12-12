@@ -30,7 +30,7 @@ const MonitorList = () => {
   const [monitorList, setMonitorList] = useState<SocialMonitor[]>([]);
   const handleGetState = async () => {
     const snapState = await sendGetState();
-    console.log(snapState);
+    // console.log(snapState);
   };
 
   useEffect(() => {
