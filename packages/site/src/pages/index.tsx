@@ -134,7 +134,7 @@ const Index = () => {
         </p>
       </div>
       {state.error && (
-        <div className="max-w-[600px] my-4">
+        <div className="mx-auto max-w-[600px] my-4">
           <Alert variant="destructive">
             <ExclamationTriangleIcon className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
