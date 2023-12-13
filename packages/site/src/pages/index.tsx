@@ -122,7 +122,7 @@ const Index = () => {
           <span>you will be notified</span>.
         </p>
       </div>
-      <div className="mx-auto mb-10 text-base text-left  max-w-4xl text-muted-foreground sm:text-lg">
+      <div className="mx-auto mb-10 text-base text-left max-w-4xl text-muted-foreground sm:text-lg">
         <p>
           Behind the scene, this Snap works by aggregating your social graphs
           from Web3 social platforms, and retrieving your frens' social
@@ -250,6 +250,69 @@ const Index = () => {
             </Card>
           </>
         )}
+      </div>
+
+      <h1 className="pt-24 mx-auto max-w-fit text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
+        <span className="text-RSS3 drop-shadow-md">FAQ</span>
+      </h1>
+      <div className="mx-auto my-5 text-base text-left max-w-4xl text-muted-foreground sm:text-lg">
+        <ul className="list-disc">
+          <li>What does this Snap do?</li>
+          <p className="pb-6">
+            As the name suggests, this Snap sends notifications via MetaMask,
+            whenever your frens posted something on{' '}
+            <a
+              className="text-Crossbell font-bold"
+              href="https://crossbell.io/"
+              target="_blank"
+            >
+              Crossbell
+            </a>
+            ,{' '}
+            <a
+              className="text-Farcaster font-bold"
+              href="https://www.farcaster.xyz/"
+              target="_blank"
+            >
+              Farcaster
+            </a>
+            ,{' '}
+            <a
+              className="text-Lens font-bold"
+              href="https://www.lens.xyz/"
+              target="_blank"
+            >
+              Lens Protocol
+            </a>
+            .
+          </p>
+          <li>What does this Snap NOT do?</li>
+          <p className="pb-6">
+            This Snap does NOT have access to your assets. <br />
+            It operates in a read-only mode with data from the supported
+            platforms, aggregated on the{' '}
+            <a
+              className="text-RSS3 font-bold"
+              href="https://rss3.io/"
+              target="_blank"
+            >
+              RSS3 Network
+            </a>{' '}
+            .
+          </p>
+          <li>What is required to use this Snap? </li>
+          <p className="pb-6">
+            You need to have MetaMask installed, and have some frens on the
+            supported platforms. Other than that, it's permissionless and
+            completely free.
+          </p>
+
+          <li>How to use this Snap? </li>
+          <p className="pb-6">
+            Just install it, and it will work silently in the background, there
+            is nothing to configure.
+          </p>
+        </ul>
       </div>
     </div>
   );
