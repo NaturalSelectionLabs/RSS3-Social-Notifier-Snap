@@ -78,7 +78,7 @@ const Index = () => {
   };
 
   return (
-    <div className="container my-12">
+    <div className="container flex-1 my-12">
       <h1 className="mx-auto max-w-fit text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
         Welcome to{' '}
         <span className="text-RSS3 drop-shadow-md">RSS3 Social Notifier -</span>
