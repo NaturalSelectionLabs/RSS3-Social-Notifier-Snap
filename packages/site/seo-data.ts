@@ -3,10 +3,12 @@ const site =
     ? 'https://snap.rss3.io'
     : 'http://localhost:8000';
 
+const title = 'RSS3 Social Notifier Snap - The Open Information Snap';
+
 export const SEO_DATA = {
-  title: 'RSS3 Snap - The Open Information Snap',
+  title,
   description:
-    "RSS3 Snap for MetaMask offers a quick and easy way to stay on top of your frens' social activities.",
+    "RSS3 Social Notifier Snap for MetaMask offers a quick and easy way to stay on top of your frens' social activities.",
   language: 'en-US',
   url: site,
   image: `${site}/images/og.png`,
@@ -15,8 +17,8 @@ export const SEO_DATA = {
   website: {
     context: 'https://schema.org',
     type: 'WebSite',
-    name: 'RSS3',
-    url: 'https://rss3.io',
+    name: title,
+    url: site,
   },
   organization: {
     context: 'https://schema.org',
@@ -28,17 +30,18 @@ export const SEO_DATA = {
   },
   keywords: [
     'blockchain',
-    'notifier',
-    'RSS3 Notifier',
-    'decentralization',
-    'RSS3 Metamask snap',
     'Metamask snap',
     'Open Information',
     'Open Information Layer',
     'Open Web',
     'RSS3',
     'RSS3 Explorer',
+    'RSS3 Metamask snap',
+    'RSS3 Notifier',
+    'RSS3 Social Notifier Snap',
     'web3',
-    'web3 activities',
+    'web3 activity',
+    'web3 social',
+    'web3 social activity',
   ],
 };
