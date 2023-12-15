@@ -351,6 +351,8 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
       );
       const socialActivities = await Promise.all(resultPromise);
 
+      // remove duplicates by following list address
+
       // filter the changed social count
       const changedSocialCounts = socialActivities.filter((activity) =>
         state.socialActivities.find(

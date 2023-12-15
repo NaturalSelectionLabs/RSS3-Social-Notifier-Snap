@@ -14,10 +14,10 @@ export const getSocialActivitiesUrl = (address: string) =>
   `https://testnet.rss3.io/data/accounts/${address}/activities?tag=social&direction=out`;
 
 /**
- * Get social count by rss3.
+ * Get social activities by rss3.
  *
  * @param address - The wallet address.
- * @returns The social count.
+ * @returns The social activities.
  */
 export async function getSocialActivities(address: string) {
   const resp = await fetch(getSocialActivitiesUrl(address));
