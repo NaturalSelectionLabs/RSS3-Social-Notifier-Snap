@@ -4,7 +4,6 @@ import { navigate } from 'gatsby';
 import {
   connectSnap,
   getSnap,
-  isLocalSnap,
   sendClearState,
   shouldDisplayReconnectButton,
   testImage,
@@ -15,7 +14,7 @@ import {
   ReconnectButton,
   ResetButton,
 } from '@/components';
-import { defaultSnapOrigin, isProduction } from '@/config';
+import { isProduction } from '@/config';
 import { MetamaskActions, MetaMaskContext } from '@/hooks';
 import {
   Card,
@@ -27,22 +26,11 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { SEO } from '@/components/SEO';
+import { useIsMetaMaskReady } from '@/hooks/use-is-meta-mask-ready';
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
-  let isMetaMaskReady;
-
-  // console.log(state);
-
-  if (isLocalSnap(defaultSnapOrigin)) {
-    if (isProduction) {
-      isMetaMaskReady = state.isMetaMask;
-    } else {
-      isMetaMaskReady = state.isFlask;
-    }
-  } else {
-    isMetaMaskReady = state.snapsDetected;
-  }
+  const isMetaMaskReady = useIsMetaMaskReady();
 
   const handleConnectClick = async () => {
     try {
