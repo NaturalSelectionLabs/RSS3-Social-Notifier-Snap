@@ -26,10 +26,10 @@ export async function getSocialActivities(address: string) {
     // formatContent only for social and governance tag.
     const content = formatContent(item);
 
-    const { id } = item;
+    const { id, platform = null } = item;
     const text = format(item).join('');
     const image = content?.media?.[0]?.address;
-    return content ? { id, text, image } : { id, text };
+    return content ? { id, text, image, platform } : { id, text, platform };
   });
 
   return {
@@ -133,12 +133,12 @@ export async function getMultiple(addresses: string[]) {
 
     data.map((item) => {
       const content = formatContent(item);
-      const { id, owner } = item;
+      const { id, owner, platform = null } = item;
       const text = format(item).join('');
       const image = content?.media?.[0]?.address;
       return content
-        ? activities.push({ id, text, image, owner })
-        : activities.push({ id, text, owner });
+        ? activities.push({ id, text, image, owner, platform })
+        : activities.push({ id, text, owner, platform });
     });
 
     if (meta === null) {

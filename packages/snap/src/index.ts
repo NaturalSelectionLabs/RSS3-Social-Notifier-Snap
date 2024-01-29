@@ -16,6 +16,8 @@ import {
   clearState,
   getState,
   setState,
+  Platform,
+  PlatformInfo,
 } from './state';
 import { diff, getSocialActivities } from './fetch';
 import { getProfilesBySearch } from './social-graph';
@@ -28,14 +30,12 @@ import {
   addWatchedProfilesToState,
   buildNeedToNotifyContents,
 } from './utils/activitiy';
+import { getPlatformDisplayName } from './utils/platform-display-name';
+import { filterByPlatforms } from './utils/filter-by-platforms';
 
 // import imageToBase64 from './utils/imageToBase64';
 
-export enum Platform {
-  Crossbell = 'Crossbell',
-  Farcaster = 'Farcaster',
-  Lens = 'Lens',
-}
+export { Platform };
 
 export type TSocialGraphResult = {
   platform: Platform;
@@ -303,6 +303,29 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       });
     }
 
+    case 'togglePlatform': {
+      const state = await getState();
+      const { enabled, platform } = request.params as {
+        platform: Platform;
+        enabled: boolean;
+      };
+
+      return setState({
+        ...state,
+        platforms: { ...state.platforms, [platform]: { enabled } },
+      });
+    }
+
+    case 'getPlatformInfos': {
+      const { platforms } = await getState();
+
+      return Object.values(Platform).map((platform) => ({
+        enabled: platforms?.[platform]?.enabled ?? true,
+        id: platform,
+        name: getPlatformDisplayName(platform),
+      })) satisfies PlatformInfo[];
+    }
+
     default:
       throw new Error('Method not found.');
   }
@@ -374,7 +397,9 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
       }
 
       const diffArray: SocialActivity[] = [];
-      const content: any = [heading('New Social Count')];
+      const content: Parameters<typeof panel>[0] = [
+        heading('New Social Count'),
+      ];
 
       for (const activity of changedSocialCounts) {
         const cachedActivity = state.socialActivities.find(
@@ -398,11 +423,13 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
           total: diffActivities.length,
         });
 
-        content.push(heading(`${activity.address}`));
-        diffActivities.forEach((item) => {
-          content.push(text(item.text));
-          content.push(divider());
-        });
+        if (filterByPlatforms(diffActivities, state).length > 0) {
+          content.push(heading(`${activity.address}`));
+          diffActivities.forEach((item) => {
+            content.push(text(item.text));
+            content.push(divider());
+          });
+        }
       }
 
       await setState({
@@ -411,13 +438,16 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
         lastUpdatedActivities: diffArray,
       });
 
-      await snap.request({
-        method: 'snap_dialog',
-        params: {
-          type: DialogType.Alert,
-          content: panel(content) as any,
-        },
-      });
+      if (content.length > 1) {
+        await snap.request({
+          method: 'snap_dialog',
+          params: {
+            type: DialogType.Alert,
+            content: panel(content),
+          },
+        });
+      }
+
       return { result: true };
     }
 
@@ -484,11 +514,13 @@ export const onCronjob: OnCronjobHandler = async ({ request }) => {
           total: diffActivities.length,
         });
 
-        content.push(heading(`${activity.address}`));
-        diffActivities.forEach((item) => {
-          content.push(text(item.text));
-          content.push(divider());
-        });
+        if (filterByPlatforms(diffActivities, state).length > 0) {
+          content.push(heading(`${activity.address}`));
+          diffActivities.forEach((item) => {
+            content.push(text(item.text));
+            content.push(divider());
+          });
+        }
       }
 
       await setState({

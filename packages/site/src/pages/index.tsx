@@ -26,6 +26,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { SEO } from '@/components/SEO';
+import { Preferences } from '@/modules/preferences';
 import { useIsMetaMaskReady } from '@/hooks/use-is-meta-mask-ready';
 
 const Index = () => {
@@ -239,6 +240,12 @@ const Index = () => {
           </>
         )}
       </div>
+
+      {state.installedSnap && (
+        <div>
+          <Preferences />
+        </div>
+      )}
 
       <h1 className="pt-24 mx-auto max-w-fit text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
         <span className="text-RSS3 drop-shadow-md">FAQ</span>

@@ -17,6 +17,7 @@ import {
 } from '../social-graph';
 import { TSocialGraphResult } from '..';
 import { downloadAndCovertImage, wrapBase64ToSvg } from './image';
+import { filterByPlatforms } from './filter-by-platforms';
 
 /**
  * Build alert content.
@@ -51,7 +52,7 @@ export async function buildAlertContent(
  * Build need to notify contents.
  */
 export async function buildNeedToNotifyContents() {
-  const { monitor } = await getState();
+  const { monitor, platforms } = await getState();
   const watchedProfiles = monitor?.flatMap(
     (item) => item.watchedProfiles ?? [],
   );
@@ -77,9 +78,12 @@ export async function buildNeedToNotifyContents() {
 
   const AllContents: Component[][] = [];
   const contentPromises = filteredProfiles.flatMap(async (profile) => {
-    const latestActivities =
+    const latestActivities = filterByPlatforms(
       profile.following?.flatMap((fProfile) => fProfile.lastActivities ?? []) ??
-      [];
+        [],
+      { platforms },
+    );
+
     if (latestActivities.length > 0) {
       const content = await buildAlertContent(
         latestActivities,

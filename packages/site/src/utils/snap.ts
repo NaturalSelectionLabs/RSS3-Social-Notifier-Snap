@@ -1,7 +1,7 @@
 import { MetaMaskInpageProvider } from '@metamask/providers';
 import type { Profile } from '@rss3/js-sdk';
 import { defaultSnapOrigin } from '../config';
-import { GetSnapsResponse, Snap } from '../types';
+import { GetSnapsResponse, Snap, Platform, PlatformInfo } from '../types';
 
 /**
  * Get the installed snaps in MetaMask.
@@ -72,12 +72,6 @@ export type TProfile = {
   activities?: CronActivity[];
   lastActivities?: CronActivity[];
 };
-
-export enum Platform {
-  Crossbell = 'Crossbell',
-  Farcaster = 'Farcaster',
-  Lens = 'Lens',
-}
 
 export type TSocialGraphResult = {
   platform: Platform;
@@ -282,4 +276,30 @@ export const testImage = async () => {
     },
   });
 };
+
+export const togglePlatform = async (platform: string, enabled: boolean) => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'togglePlatform',
+        params: { platform, enabled },
+      },
+    },
+  });
+};
+
+export const getPlatformInfos = async () => {
+  return (await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: {
+        method: 'getPlatformInfos',
+      },
+    },
+  })) as PlatformInfo[];
+};
+
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
