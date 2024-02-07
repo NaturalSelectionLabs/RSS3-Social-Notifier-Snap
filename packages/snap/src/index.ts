@@ -326,6 +326,17 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       })) satisfies PlatformInfo[];
     }
 
+    case 'isFeatureSupported': {
+      const { feature } = request.params as { feature: string };
+
+      switch (feature) {
+        case 'togglePlatform':
+          return true;
+        default:
+          return false;
+      }
+    }
+
     default:
       throw new Error('Method not found.');
   }

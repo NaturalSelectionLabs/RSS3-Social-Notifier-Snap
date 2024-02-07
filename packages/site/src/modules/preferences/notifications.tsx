@@ -1,5 +1,8 @@
-import { useToggleNotifications } from '@/hooks/use-toggle-notifications';
+import React from 'react';
+
 import { Checkbox } from '@/components/ui/checkbox';
+import { useToggleNotifications } from '@/hooks/use-toggle-notifications';
+import { FeatureGuard } from '@/components/feature-guard';
 
 export function Notifications() {
   const { toggle, platforms } = useToggleNotifications();
@@ -15,17 +18,20 @@ export function Notifications() {
           <div className="max-w-xl text-sm text-gray-500">
             Choose which platforms you want to receive notifications on.
           </div>
-          <div className="flex items-center gap-4">
-            {platforms.map((platform) => (
-              <label key={platform.id} className="flex items-center gap-2">
-                <Checkbox
-                  checked={platform.enabled}
-                  onCheckedChange={() => toggle(platform.id)}
-                />
-                {platform.name}
-              </label>
-            ))}
-          </div>
+
+          <FeatureGuard feature="togglePlatform">
+            <div className="flex items-center gap-4">
+              {platforms.map((platform) => (
+                <label key={platform.id} className="flex items-center gap-2">
+                  <Checkbox
+                    checked={platform.enabled}
+                    onCheckedChange={() => toggle(platform.id)}
+                  />
+                  {platform.name}
+                </label>
+              ))}
+            </div>
+          </FeatureGuard>
         </div>
       </div>
     </div>

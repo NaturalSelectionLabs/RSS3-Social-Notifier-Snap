@@ -2,8 +2,6 @@ import { useContext } from 'react';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { navigate } from 'gatsby';
 import {
-  connectSnap,
-  getSnap,
   sendClearState,
   shouldDisplayReconnectButton,
   testImage,
@@ -28,25 +26,12 @@ import { Button } from '@/components/ui/button';
 import { SEO } from '@/components/SEO';
 import { Preferences } from '@/modules/preferences';
 import { useIsMetaMaskReady } from '@/hooks/use-is-meta-mask-ready';
+import { useInstallSnap } from '@/hooks/use-install-snap';
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
   const isMetaMaskReady = useIsMetaMaskReady();
-
-  const handleConnectClick = async () => {
-    try {
-      await connectSnap();
-      const installedSnap = await getSnap();
-
-      dispatch({
-        type: MetamaskActions.SetInstalled,
-        payload: installedSnap,
-      });
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
-  };
+  const handleConnectClick = useInstallSnap();
 
   const handleSendClearStateClick = async () => {
     try {

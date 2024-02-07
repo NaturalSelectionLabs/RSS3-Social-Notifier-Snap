@@ -302,4 +302,24 @@ export const getPlatformInfos = async () => {
   })) as PlatformInfo[];
 };
 
+export type FeatureToCheck = 'togglePlatform';
+
+export const isFeatureSupported = (
+  feature: FeatureToCheck,
+): Promise<boolean> => {
+  return window.ethereum
+    .request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: defaultSnapOrigin,
+        request: {
+          method: 'isFeatureSupported',
+          params: { feature },
+        },
+      },
+    })
+    .then((result) => result as boolean)
+    .catch(() => false);
+};
+
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
