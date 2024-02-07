@@ -2,9 +2,6 @@ import { useContext } from 'react';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { navigate } from 'gatsby';
 import {
-  connectSnap,
-  getSnap,
-  isLocalSnap,
   sendClearState,
   shouldDisplayReconnectButton,
   testImage,
@@ -15,7 +12,7 @@ import {
   ReconnectButton,
   ResetButton,
 } from '@/components';
-import { defaultSnapOrigin, isProduction } from '@/config';
+import { isProduction } from '@/config';
 import { MetamaskActions, MetaMaskContext } from '@/hooks';
 import {
   Card,
@@ -27,37 +24,14 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { SEO } from '@/components/SEO';
+import { Preferences } from '@/modules/preferences';
+import { useIsMetaMaskReady } from '@/hooks/use-is-meta-mask-ready';
+import { useInstallSnap } from '@/hooks/use-install-snap';
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
-  let isMetaMaskReady;
-
-  // console.log(state);
-
-  if (isLocalSnap(defaultSnapOrigin)) {
-    if (isProduction) {
-      isMetaMaskReady = state.isMetaMask;
-    } else {
-      isMetaMaskReady = state.isFlask;
-    }
-  } else {
-    isMetaMaskReady = state.snapsDetected;
-  }
-
-  const handleConnectClick = async () => {
-    try {
-      await connectSnap();
-      const installedSnap = await getSnap();
-
-      dispatch({
-        type: MetamaskActions.SetInstalled,
-        payload: installedSnap,
-      });
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
-  };
+  const isMetaMaskReady = useIsMetaMaskReady();
+  const handleConnectClick = useInstallSnap();
 
   const handleSendClearStateClick = async () => {
     try {
@@ -251,6 +225,12 @@ const Index = () => {
           </>
         )}
       </div>
+
+      {state.installedSnap && (
+        <div>
+          <Preferences />
+        </div>
+      )}
 
       <h1 className="pt-24 mx-auto max-w-fit text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
         <span className="text-RSS3 drop-shadow-md">FAQ</span>

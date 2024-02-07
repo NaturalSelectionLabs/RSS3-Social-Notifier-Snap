@@ -23,7 +23,7 @@ export const RSS3Logo = () => (
       height="139.02"
       rx="10.0196"
       stroke="#1477FB"
-      stroke-width="8.58823"
+      strokeWidth="8.58823"
     />
     <mask
       id="path-6-outside-1_7920_8260"

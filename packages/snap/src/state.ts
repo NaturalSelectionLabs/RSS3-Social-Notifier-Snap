@@ -2,11 +2,21 @@ import { ManageStateOperation } from '@metamask/snaps-types';
 import { Profile } from '@rss3/js-sdk';
 import { TSocialGraphResult } from '.';
 
+// TODO: - share the types with the site
+export enum Platform {
+  Crossbell = 'Crossbell',
+  Farcaster = 'Farcaster',
+  Lens = 'Lens',
+}
+
+export type PlatformInfo = { name: string; id: Platform; enabled: boolean };
+
 export type CronActivity = {
   id: string;
   text: string;
   image?: string;
   owner?: string;
+  platform: string | null;
 };
 
 export type SocialActivity = {
@@ -22,7 +32,12 @@ export type SocialMonitor = {
   latestUpdateTime?: string;
 };
 
+// `State` should mark its properties as optional to avoid the error of missing properties.
+// Because the user might have installed an older version.
 export type State = {
+  // We might have more platforms in the future,
+  // so we use `Partial` here to make it future-proof.
+  platforms?: Partial<Record<Platform, { enabled: boolean }>>;
   socialActivities: SocialActivity[];
   lastUpdatedActivities: SocialActivity[];
   monitor: SocialMonitor[];
@@ -32,7 +47,12 @@ export type State = {
  * The default state of the snap. This is returned by the {@link getState}
  * function if the state has not been set yet.
  */
-const DEFAULT_STATE = {
+const DEFAULT_STATE: State = {
+  platforms: {
+    [Platform.Crossbell]: { enabled: true },
+    [Platform.Farcaster]: { enabled: true },
+    [Platform.Lens]: { enabled: true },
+  },
   socialActivities: [],
   lastUpdatedActivities: [],
   monitor: [],
