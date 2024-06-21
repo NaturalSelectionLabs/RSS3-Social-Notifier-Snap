@@ -6403,14 +6403,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rss3/js-sdk@npm:^0.6.53":
-  version: 0.6.53
-  resolution: "@rss3/js-sdk@npm:0.6.53"
+"@rss3/api-core@npm:0.0.9, @rss3/api-core@npm:^0.0.9":
+  version: 0.0.9
+  resolution: "@rss3/api-core@npm:0.0.9"
   dependencies:
-    debug: ^4.3.4
-    openapi-fetch: ^0.7.10
-    qs: ^6.11.2
-  checksum: 6f10e7397fe02e83b6bf3a55270b6e89a69a5e21bd649c9547d3236c0bd45ca4cc35c014525fcf0e5a19455370fb198c8322a02e64233650951794664cf69fc5
+    openapi-fetch: ^0.10.2
+    ts-case-convert: ^2.0.7
+    type-fest: ^4.20.1
+  checksum: 2d1178273702d30b5f2ff069919e31ef9c30c264e139157c2145399fdae51e8185bcca25bfc351904890ea43f3ec3770b296c2cac21f9fc09cca2cad1f630398
+  languageName: node
+  linkType: hard
+
+"@rss3/api-utils@npm:^0.0.9":
+  version: 0.0.9
+  resolution: "@rss3/api-utils@npm:0.0.9"
+  dependencies:
+    "@rss3/api-core": 0.0.9
+  checksum: 3c0d97411306075e581f48cca693787ab215e6328b389ca3ba88c6b1eb976446d2b841b33d55d4c2b23de16f5032c46e7b4adfe8a554b08b1cb9765263528cfe
   languageName: node
   linkType: hard
 
@@ -6430,7 +6439,8 @@ __metadata:
     "@metamask/snaps-types": ^3.1.0
     "@metamask/snaps-ui": ^3.1.0
     "@metamask/utils": ^8.1.0
-    "@rss3/js-sdk": ^0.6.53
+    "@rss3/api-core": ^0.0.9
+    "@rss3/api-utils": ^0.0.9
     "@typescript-eslint/eslint-plugin": ^5.33.0
     "@typescript-eslint/parser": ^5.33.0
     "@urql/core": ^4.1.4
@@ -18560,19 +18570,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openapi-fetch@npm:^0.7.10":
-  version: 0.7.10
-  resolution: "openapi-fetch@npm:0.7.10"
+"openapi-fetch@npm:^0.10.2":
+  version: 0.10.2
+  resolution: "openapi-fetch@npm:0.10.2"
   dependencies:
-    openapi-typescript-helpers: ^0.0.4
-  checksum: cf9042de76d58585bcb4b93e069f7846031a4a86e0ccae36f8caa0b41f5237369badea88b81fbd801a0d4f456997bc7c6cbded68b2c1b6b78d2d42b19955e3be
+    openapi-typescript-helpers: ^0.0.9
+  checksum: 16e5a366318b5d6297ccd561dd48787fddfa1843dd3e2ab3051f93cf7b991c34184b309634f0498ef07ddc5fbf3579277cb74a48824ade23e3de4764f7b4fefd
   languageName: node
   linkType: hard
 
-"openapi-typescript-helpers@npm:^0.0.4":
-  version: 0.0.4
-  resolution: "openapi-typescript-helpers@npm:0.0.4"
-  checksum: d06d62f9669db5110f32ef36a70f9f2698dd7ad03ba41968baf13e1091caaf23c4af6f8a79103cfd68f65046da4284dcc2f75e9950e9170115189b545e3030fc
+"openapi-typescript-helpers@npm:^0.0.9":
+  version: 0.0.9
+  resolution: "openapi-typescript-helpers@npm:0.0.9"
+  checksum: 4052cf58e0eca87f24764ddd2157d5c91ab2ddbfa1fbe8fbe52b12cf8d1b9d10669d2506c9511270cb4e6155c5315cac59f9ee824313c88bc2edd7eaf27136ee
   languageName: node
   linkType: hard
 
@@ -21677,7 +21687,8 @@ __metadata:
     "@radix-ui/react-label": ^2.0.2
     "@radix-ui/react-slot": ^1.0.2
     "@radix-ui/react-toast": ^1.1.5
-    "@rss3/js-sdk": ^0.6.53
+    "@rss3/api-core": ^0.0.9
+    "@rss3/api-utils": ^0.0.9
     "@testing-library/dom": ^8.17.1
     "@testing-library/jest-dom": ^5.16.4
     "@testing-library/react": ^13.3.0
@@ -22968,6 +22979,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-case-convert@npm:^2.0.7":
+  version: 2.0.7
+  resolution: "ts-case-convert@npm:2.0.7"
+  checksum: 25ec59a8a18b766dc8faca012cec5b47390bf5008fe048285233ba456a4f904fa6e0d479971d2f2889ef07870e009d62806f23c25be576cd14645671afcf9511
+  languageName: node
+  linkType: hard
+
 "ts-interface-checker@npm:^0.1.9":
   version: 0.1.13
   resolution: "ts-interface-checker@npm:0.1.13"
@@ -23151,6 +23169,13 @@ __metadata:
   version: 4.6.0
   resolution: "type-fest@npm:4.6.0"
   checksum: e38f2b4b35e912bf60dbe7d4350653fb76b241a456e849fab85002ba08e938a26a7c44a330dd5620dd48ce57566be7c97e997064dc0d5066d5b6949b8c444430
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^4.20.1":
+  version: 4.20.1
+  resolution: "type-fest@npm:4.20.1"
+  checksum: 8cc8d86c900be4a803a4b252840b761153541f18b03c5bcc02fa2684d0237d48895cc675cd234049f110004d9ce63770242255c04890b85a133f72643c49e342
   languageName: node
   linkType: hard
 

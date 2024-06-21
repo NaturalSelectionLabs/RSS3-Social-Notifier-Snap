@@ -6,7 +6,6 @@ import {
   panel,
   type Component,
 } from '@metamask/snaps-ui';
-import { Profile } from '@rss3/js-sdk';
 import moment from 'moment';
 import { CronActivity, getState, setState } from '../state';
 import {
@@ -14,6 +13,7 @@ import {
   FarcasterHandler,
   LensHandler,
   Platform,
+  Profile,
 } from '../social-graph';
 import { TSocialGraphResult } from '..';
 import { downloadAndCovertImage, wrapBase64ToSvg } from './image';

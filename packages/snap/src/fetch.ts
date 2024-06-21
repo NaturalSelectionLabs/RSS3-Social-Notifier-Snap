@@ -1,13 +1,13 @@
 import moment from 'moment';
+import { type Activity, getActivities } from '@rss3/api-core';
 import {
-  type Activity,
   formatAddressAndNS,
   format as sdkFormat,
   formatContent,
+  themePlain,
   type Theme,
-} from '@rss3/js-sdk';
+} from '@rss3/api-utils';
 
-import { themePlain } from '@rss3/js-sdk/lib/readable/activity/theme';
 import { CronActivity, SocialMonitor } from './state';
 
 export const getSocialActivitiesUrl = (address: string) =>
@@ -20,9 +20,12 @@ export const getSocialActivitiesUrl = (address: string) =>
  * @returns The social activities.
  */
 export async function getSocialActivities(address: string) {
-  const resp = await fetch(getSocialActivitiesUrl(address));
-  const { data } = (await resp.json()) as { data: Activity[] };
-  const activities = data.map((item: Activity) => {
+  const { data } = await getActivities({
+    account: address,
+    tag: ['social'],
+    direction: 'out',
+  });
+  const activities = data.map((item): CronActivity => {
     // formatContent only for social and governance tag.
     const content = formatContent(item);
 
@@ -88,67 +91,57 @@ export function format(activity: Activity) {
  * @returns The social count array.
  */
 export async function getMultiple(addresses: string[]) {
-  const activities: CronActivity[] = [];
-  let hasNextPage = true;
-  let cursor: string | undefined;
-
-  const filtedAddresses = addresses.filter(
+  const filteredAddresses = addresses.filter(
     (addr) => addr !== undefined,
   ) as string[];
 
-  if (filtedAddresses.length === 0) {
+  if (filteredAddresses.length === 0) {
     return [];
   }
 
-  const executeAddresses = filtedAddresses;
-
   // 1 hour ago
   const timestamp = moment().subtract(1, 'hour').unix();
-  while (hasNextPage) {
-    const params = {
-      action_limit: 10,
-      limit: 500,
-      account: executeAddresses,
-      tag: ['social'],
-      type: ['post', 'comment'],
-      direction: 'out',
-      since_timestamp: timestamp,
-      cursor,
-    };
-    const resp = await fetch(
-      'https://testnet.rss3.io/data/accounts/activities',
-      {
-        method: 'POST',
-        headers: {
-          accept: 'application/json',
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify(params),
-      },
-    );
-    const { data, meta } = (await resp.json()) as {
-      data: Activity[];
-      meta: null | { cursor: string };
-    };
 
-    data.map((item) => {
-      const content = formatContent(item);
-      const { id, owner } = item;
-      const text = format(item).join('');
-      const image = content?.media?.[0]?.address;
-      return content
-        ? activities.push({ id, text, image, owner })
-        : activities.push({ id, text, owner });
-    });
+  const activities = (
+    await Promise.all(
+      filteredAddresses.map(async (account) => {
+        let cursor: string | undefined;
+        const result: CronActivity[] = [];
 
-    if (meta === null) {
-      hasNextPage = false;
-    } else {
-      cursor = meta.cursor;
-    }
-  }
+        do {
+          const res = await getActivities({
+            account,
+            actionLimit: 10,
+            limit: 500,
+            tag: ['social'],
+            type: ['post', 'comment'],
+            direction: 'out',
+            sinceTimestamp: timestamp,
+            cursor,
+          });
 
-  return executeAddresses.map((addr) => {
+          res.data.forEach((item) => {
+            const content = formatContent(item);
+            const { id, owner } = item;
+            const text = format(item).join('');
+            const image = content?.media?.[0]?.address;
+
+            if (content) {
+              result.push({ id, text, image, owner });
+            } else {
+              result.push({ id, text, owner });
+            }
+          });
+
+          cursor = res.cursor;
+        } while (cursor);
+
+        return result;
+      }),
+    )
+  ).flat();
+
+  return filteredAddresses.map((addr) => {
     const groupBy = activities.filter(
       (activity) =>
         activity.owner?.toLocaleLowerCase() === addr?.toLocaleLowerCase(),
