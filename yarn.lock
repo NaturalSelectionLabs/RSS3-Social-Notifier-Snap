@@ -6403,23 +6403,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rss3/api-core@npm:0.0.9, @rss3/api-core@npm:^0.0.9":
-  version: 0.0.9
-  resolution: "@rss3/api-core@npm:0.0.9"
+"@rss3/api-core@npm:0.0.11":
+  version: 0.0.11
+  resolution: "@rss3/api-core@npm:0.0.11"
   dependencies:
     openapi-fetch: ^0.10.2
     ts-case-convert: ^2.0.7
     type-fest: ^4.20.1
-  checksum: 2d1178273702d30b5f2ff069919e31ef9c30c264e139157c2145399fdae51e8185bcca25bfc351904890ea43f3ec3770b296c2cac21f9fc09cca2cad1f630398
+  checksum: 2c5728ca8e6dadfdc6e463af5eca47b3385f1dc79094a89a0bd04a1aa60739bcc7d652d4538d72bd3151da3931c043cfaff7f6b7e91b3dd213ceb77d396c0372
   languageName: node
   linkType: hard
 
-"@rss3/api-utils@npm:^0.0.9":
-  version: 0.0.9
-  resolution: "@rss3/api-utils@npm:0.0.9"
+"@rss3/api-utils@npm:0.0.11":
+  version: 0.0.11
+  resolution: "@rss3/api-utils@npm:0.0.11"
   dependencies:
-    "@rss3/api-core": 0.0.9
-  checksum: 3c0d97411306075e581f48cca693787ab215e6328b389ca3ba88c6b1eb976446d2b841b33d55d4c2b23de16f5032c46e7b4adfe8a554b08b1cb9765263528cfe
+    "@rss3/api-core": 0.0.11
+  checksum: b6221e302a1c0bdb701678a81164e0655ddd321b04032cae980244130729d0ca6d5c8aec0970b7bc3b5bb4f70a35f19ec79313f5094e1826edd8870fe7c29589
+  languageName: node
+  linkType: hard
+
+"@rss3/sdk@npm:^0.0.11":
+  version: 0.0.11
+  resolution: "@rss3/sdk@npm:0.0.11"
+  dependencies:
+    "@rss3/api-core": 0.0.11
+    "@rss3/api-utils": 0.0.11
+  checksum: ac26dd03ab693637809c1d6fd5b0e1599d94d373107bfac6adae2b68e9cb29429989b8b69e7ffc434480bc921231ce385b1f08b9e2d737fff741b3505eed7c16
   languageName: node
   linkType: hard
 
@@ -6439,8 +6449,7 @@ __metadata:
     "@metamask/snaps-types": ^3.1.0
     "@metamask/snaps-ui": ^3.1.0
     "@metamask/utils": ^8.1.0
-    "@rss3/api-core": ^0.0.9
-    "@rss3/api-utils": ^0.0.9
+    "@rss3/sdk": ^0.0.11
     "@typescript-eslint/eslint-plugin": ^5.33.0
     "@typescript-eslint/parser": ^5.33.0
     "@urql/core": ^4.1.4
@@ -21687,8 +21696,7 @@ __metadata:
     "@radix-ui/react-label": ^2.0.2
     "@radix-ui/react-slot": ^1.0.2
     "@radix-ui/react-toast": ^1.1.5
-    "@rss3/api-core": ^0.0.9
-    "@rss3/api-utils": ^0.0.9
+    "@rss3/sdk": ^0.0.11
     "@testing-library/dom": ^8.17.1
     "@testing-library/jest-dom": ^5.16.4
     "@testing-library/react": ^13.3.0

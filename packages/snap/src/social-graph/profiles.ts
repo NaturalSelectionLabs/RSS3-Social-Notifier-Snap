@@ -1,4 +1,4 @@
-import { isSupportedNS } from '@rss3/api-utils';
+import { isSupportedNS } from '@rss3/sdk';
 
 import { isValidWalletAddress } from './utils';
 import { Platform } from '.';

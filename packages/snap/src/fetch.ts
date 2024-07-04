@@ -1,12 +1,13 @@
 import moment from 'moment';
-import { type Activity, getActivities } from '@rss3/api-core';
 import {
+  type Activity,
+  getActivities,
   formatAddressAndNS,
   format as sdkFormat,
   formatContent,
   themePlain,
   type Theme,
-} from '@rss3/api-utils';
+} from '@rss3/sdk';
 
 import { CronActivity, SocialMonitor } from './state';
 
