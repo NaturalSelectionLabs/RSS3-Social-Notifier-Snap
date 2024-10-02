@@ -1,5 +1,6 @@
 import { ManageStateOperation } from '@metamask/snaps-types';
-import { Profile } from '@rss3/js-sdk';
+
+import { Profile } from './social-graph';
 import { TSocialGraphResult } from '.';
 
 export type CronActivity = {

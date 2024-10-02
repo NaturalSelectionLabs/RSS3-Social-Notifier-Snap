@@ -31,4 +31,4 @@ export { Platform };
 export { LensHandler, LensFormat };
 export { FarcasterHandler, FarcasterFormat };
 export { CrossbellHandler, CrossbellFormat, type TCSBProfile };
-export { getProfilesBySearch } from './profiles';
+export { getProfilesBySearch, type Profile } from './profiles';

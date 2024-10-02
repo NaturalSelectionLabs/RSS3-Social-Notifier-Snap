@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo, useContext } from 'react';
 import * as z from 'zod';
-import { type Profile, formatAddressAndNS } from '@rss3/js-sdk';
+import { formatAddressAndNS } from '@rss3/sdk';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { navigate } from 'gatsby';
+import { Profile } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 

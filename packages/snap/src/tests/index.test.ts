@@ -1,6 +1,6 @@
 import { installSnap } from '@metamask/snaps-jest';
 import { expect } from '@jest/globals';
-import { type Activity } from '@rss3/js-sdk';
+import { type Activity } from '@rss3/sdk';
 import { format, getSocialActivitiesUrl } from '../fetch';
 
 const DEFAULT_WALLET_ADDRESS = '0xc6d5a3c98ec9073b54fa0969957bd582e8d874bf';

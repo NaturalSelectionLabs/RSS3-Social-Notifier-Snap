@@ -1,7 +1,6 @@
-import { MetaMaskInpageProvider } from '@metamask/providers';
-import type { Profile } from '@rss3/js-sdk';
+import type { MetaMaskInpageProvider } from '@metamask/providers';
 import { defaultSnapOrigin } from '../config';
-import { GetSnapsResponse, Snap } from '../types';
+import type { GetSnapsResponse, Snap, Profile } from '../types';
 
 /**
  * Get the installed snaps in MetaMask.

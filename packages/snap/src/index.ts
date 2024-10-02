@@ -6,7 +6,6 @@ import {
 import { divider, heading, panel, text, image } from '@metamask/snaps-ui';
 import { assert } from '@metamask/utils';
 
-import { Profile } from '@rss3/js-sdk';
 import {
   CronActivity,
   SocialActivity,
@@ -18,7 +17,7 @@ import {
   setState,
 } from './state';
 import { diff, getSocialActivities } from './fetch';
-import { getProfilesBySearch } from './social-graph';
+import { getProfilesBySearch, type Profile } from './social-graph';
 import {
   coverIpfsToUrl,
   imageBufferToBase64,
